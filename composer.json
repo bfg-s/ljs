@@ -1,0 +1,37 @@
+{
+    "name": "lar/ljs",
+    "description": "Laravel Application JS core",
+    "type": "library",
+    "keywords": ["laravel", "application", "js", "core"],
+    "homepage": "https://bitbucket.org/lar-repo/ljs",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "xsaven",
+            "email": "dev.xsaven@gmail.com"
+        }
+    ],
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "Lar\\LJS\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Lar\\LJS\\ServiceProvider"
+            ],
+            "aliases": {
+                "LJS": "Lar\\LJS\\Facade"
+            }
+        }
+    }
+}

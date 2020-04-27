@@ -1,0 +1,1 @@
+require('script-loader!jquery/dist/jquery.min');

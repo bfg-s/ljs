@@ -551,7 +551,7 @@ var Nav = /** @class */ (function () {
             }
             d.cancelContext(_this.cancelContext);
         });
-        $(document).on('pjax:complete', function (xhr, req, status, q, w, r) {
+        $(document).on('pjax:complete', function (xhr, req, status) {
             _this.ljs.exec('var::clear');
             document.body.style.cursor = "auto";
             _this.ljs.switchProcess(false);

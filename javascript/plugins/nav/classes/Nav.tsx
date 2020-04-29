@@ -117,7 +117,7 @@ export class Nav {
 
         $(document).on("pjax:popstate", () => {
 
-            $(document).on("pjax:end", (event) => {
+            $(document).on("pjax:end", (event: any) => {
 
                 $(event.target).find("script[data-exec-on-popstate]").each(function () {
 
@@ -126,7 +126,7 @@ export class Nav {
             });
         });
 
-        $(document).on('pjax:send', (xhr) => {
+        $(document).on('pjax:send', (xhr: any) => {
 
             this.ljs.progress.start();
 
@@ -137,7 +137,7 @@ export class Nav {
             this.ljs._dispatch_event("ljs:nav:send", {nav: this, xhr});
         });
 
-        $(document).on('pjax:beforeReplace', (a,b,c,d) => {
+        $(document).on('pjax:beforeReplace', (a: any,b: any,c: any,d: any) => {
 
             if (!this.cancelContext && this.ljs.$vue) {
 
@@ -147,7 +147,7 @@ export class Nav {
             d.cancelContext(this.cancelContext);
         });
 
-        $(document).on('pjax:complete', (xhr, req, status, q, w, r) => {
+        $(document).on('pjax:complete', (xhr: any, req: any, status: any) => {
 
             this.ljs.exec('var::clear');
 
@@ -184,7 +184,7 @@ export class Nav {
             this.ljs._dispatch_event("ljs:nav:complete", {nav: this, req, xhr, container: obj});
         });
 
-        $(document).on('pjax:error', (xhr, textStatus, error, options) => {
+        $(document).on('pjax:error', (xhr: any, textStatus: any, error: any, options: any) => {
 
             document.body.style.cursor = "auto";
 

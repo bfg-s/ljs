@@ -6139,7 +6139,7 @@ Helper_1.Helper.before_load(function (ljs) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/scrap/vendor/lar/ljs/javascript/plugins/fancy.tsx */"./javascript/plugins/fancy.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/fancy.tsx */"./javascript/plugins/fancy.tsx");
 
 
 /***/ })

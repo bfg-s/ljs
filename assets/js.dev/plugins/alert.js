@@ -19228,7 +19228,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/scrap/vendor/lar/ljs/javascript/plugins/alert/alert.tsx */"./javascript/plugins/alert/alert.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/alert/alert.tsx */"./javascript/plugins/alert/alert.tsx");
 
 
 /***/ })

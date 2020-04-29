@@ -556,9 +556,9 @@ var Nav = /** @class */ (function () {
             document.body.style.cursor = "auto";
             _this.ljs.switchProcess(false);
             _this.ljs._onload_header(req.getAllResponseHeaders());
-            if (status !== 'error' && !document.querySelector(_this.ljs.cfg("pjax-container")) && _this.ljs.config("route_url", false)) {
+            if (status !== 'error' && !document.querySelector(_this.ljs.cfg("pjax-container"))) {
                 _this.cancelContext = true;
-                window.location = _this.ljs.cfg("route_url");
+                window.location.reload();
                 return;
             }
             try {
@@ -7353,7 +7353,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/scrap/vendor/lar/ljs/javascript/plugins/nav/nav.tsx */"./javascript/plugins/nav/nav.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/nav/nav.tsx */"./javascript/plugins/nav/nav.tsx");
 
 
 /***/ })

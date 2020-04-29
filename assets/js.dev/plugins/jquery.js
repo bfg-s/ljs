@@ -167,7 +167,7 @@ __webpack_require__(/*! !./node_modules/script-loader/addScript.js */ "./node_mo
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/scrap/vendor/lar/ljs/javascript/plugins/jquery.tsx */"./javascript/plugins/jquery.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/jquery.tsx */"./javascript/plugins/jquery.tsx");
 
 
 /***/ })

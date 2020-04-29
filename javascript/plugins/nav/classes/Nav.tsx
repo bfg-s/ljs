@@ -157,11 +157,11 @@ export class Nav {
 
             this.ljs._onload_header(req.getAllResponseHeaders());
 
-            if (status !== 'error' && !document.querySelector(this.ljs.cfg("pjax-container")) && this.ljs.config("route_url", false)) {
+            if (status !== 'error' && !document.querySelector(this.ljs.cfg("pjax-container"))) {
 
                 this.cancelContext = true;
 
-                window.location = this.ljs.cfg("route_url");
+                window.location.reload();
 
                 return ;
             }

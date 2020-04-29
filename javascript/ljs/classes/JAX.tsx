@@ -73,7 +73,7 @@ export class Jax
 
         return new Proxy(window.ljs.jax(prop), {
 
-            get: function (tar, method) {
+            get: function (tar: any, method: string) {
 
                 if (method === 'call') {
 

@@ -39,6 +39,7 @@
     "@fancyapps/fancybox": "^3.5.7",
     "@types/jquery": "^3.3.35",
     "@types/lodash": "^4.14.149",
+    "@types/node": "^13.13.4",
     "dotenv": "^7.0.0",
     "golden-layout": "^1.5.9",
     "inputmask": "^5.0.3",

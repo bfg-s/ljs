@@ -1,3 +1,21 @@
+declare interface Model {
+    withoutGlobalScope ($scope: string): Model //Remove a registered global scope.
+    withoutGlobalScopes ($scopes: string[]): Model //Remove all or passed registered global scopes.
+
+    whereKey ($id: string): Model //Add a where clause on the primary key to the query.
+    whereKeyNot ($id: string): Model //Add a where clause on the primary key to the query.
+    where ($column: string, $operator?: string, $value?: any, $boolean?: string): Model //Add a basic where clause to the query.
+    firstWhere ($column: string, $operator?: string, $value?: any, $boolean?: string): Model //Add a basic where clause to the query, and return the first result.
+    orWhere ($column: string, $operator?: string, $value?: any): Model //Add an "or where" clause to the query.
+    latest ($column?: string): Model //Add an "order by" clause for a timestamp to the query.
+    oldest ($column?: string): Model //Add an "order by" clause for a timestamp to the query.
+    find($id?: number|string, $columns?: string[]): Model //Find a model by its primary key.
+    findMany($ids?: number|string, $columns?: string[]): Model //Find multiple models by their primary keys.
+    findOrFail($id?: number|string, $columns?: string[]): Model //Find a model by its primary key or throw an exception.
+    findOrNew($id?: number|string, $columns?: string[]): Model //Find a model by its primary key or return fresh model instance.
+
+}
+
 declare interface Window {
     Executor: ExecutorParentInterface,
     StateWatcher: StateWatcherInterface,
@@ -528,21 +546,7 @@ interface ToastrResponse {
 }
 
 interface Toastr {
-    /**
-     * Clear toasts
-     */
-    clear: {
-        /**
-         * Clear specific toast
-         *
-         * @param toast Toast to clear
-         * @param clearOptions force clearing a toast, ignoring focus
-         */
-        (toast?: JQuery, clearOptions?: {force: boolean}): void;
-    };
-    /**
-     * Removes toasts (without animation)
-     */
+    clear: { (toast?: JQuery, clearOptions?: {force: boolean}): void; };
     remove: {
         /**
          * Removes all toasts (without animation)

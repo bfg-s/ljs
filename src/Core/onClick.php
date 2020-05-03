@@ -45,7 +45,6 @@ class onClick extends Collection implements Renderable
         $id = $this->tag->haveAndGetSelectorID();
 
         $options = [];
-        //$options["data"] = [ajaxForm::ID_NAME => ssl_encrypt($id)];
 
         $this->tag->js()->on("click", $id, "\$js.\$jax.form('{$selector}'," . json_encode($options) . ")");
 

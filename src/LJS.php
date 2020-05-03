@@ -19,7 +19,7 @@ class LJS implements Renderable
      */
     static $_global_vars = [
         "global" => [
-            //"@doc" => "@$(document)"
+
         ]
     ];
 
@@ -559,8 +559,6 @@ class LJS implements Renderable
     public function render()
     {
         $return = $this->renderVariables() . $this->renderLines() . $this->renderEvents();
-
-        //dump(LJS::$_lines);
 
         if (request()->ajax()) {
 

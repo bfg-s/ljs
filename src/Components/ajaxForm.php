@@ -37,11 +37,5 @@ class ajaxForm extends FORM
     public function js_config()
     {
         $this->lj("submit")->form_submit($this);
-
-        //$id = $this->haveAndGetSelectorID();
-
-        //$this->options["data"] = [static::ID_NAME => ssl_encrypt($id)];
-
-        //$this->js()->on("submit", $id, "e.preventDefault();\$js.\$jax.form(this," . json_encode($this->options) . ")");
     }
 }

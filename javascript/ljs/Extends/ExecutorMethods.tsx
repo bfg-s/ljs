@@ -57,7 +57,7 @@ export class ExecutorMethods {
                         send_now = returns[i-1];
                         break;
                     case ">>":
-                        send_now = key_map[i-1];
+                        send_now = key_map[i-1]//.call(storage_data);
                         break;
                     case (key.match(/^[0-9]\>$/) || {}).input:
                         let int_num = returns.length - parseInt(key);

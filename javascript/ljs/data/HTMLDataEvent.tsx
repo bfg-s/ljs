@@ -25,6 +25,11 @@ export class HTMLDataEvent {
             let withs = data.with ? data.with : {},
                 props = data[propsName]? data[propsName] : (data[propName] ? data[propName] : data.props ? data.props : (data.prop ? data.prop : []));
 
+            if (typeof after === 'function') {
+
+                after();
+            }
+
             try { withs = JSON.parse(withs); }catch (e) { if (typeof withs === "string") { withs = withs.split('&&').map(i => i.trim()); } }
             try { props = JSON.parse(props); }catch (e) { if (typeof props === "string") { props = props.split('&&').map(i => i.trim().exec(storage)); } }
 
@@ -46,12 +51,12 @@ export class HTMLDataEvent {
 
         else {
 
+            if (typeof after === 'function') {
+
+                after();
+            }
+
             window.ljs.exec(exec, params ? params : [], storage);
-        }
-
-        if (typeof after === 'function') {
-
-            after();
         }
     }
 }

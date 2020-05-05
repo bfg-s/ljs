@@ -1105,7 +1105,7 @@ var ExecutorMethods = /** @class */ (function () {
                         send_now = returns[i - 1];
                         break;
                     case ">>":
-                        send_now = key_map[i - 1];
+                        send_now = key_map[i - 1]; //.call(storage_data);
                         break;
                     case (key.match(/^[0-9]\>$/) || {}).input:
                         var int_num = returns.length - parseInt(key);
@@ -3946,6 +3946,9 @@ var HTMLDataEvent = /** @class */ (function () {
         }
         if (data.jax) {
             var withs = data.with ? data.with : {}, props = data[propsName] ? data[propsName] : (data[propName] ? data[propName] : data.props ? data.props : (data.prop ? data.prop : []));
+            if (typeof after === 'function') {
+                after();
+            }
             try {
                 withs = JSON.parse(withs);
             }
@@ -3975,10 +3978,10 @@ var HTMLDataEvent = /** @class */ (function () {
             });
         }
         else {
+            if (typeof after === 'function') {
+                after();
+            }
             window.ljs.exec(exec, params ? params : [], storage);
-        }
-        if (typeof after === 'function') {
-            after();
         }
     }
     return HTMLDataEvent;

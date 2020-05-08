@@ -250,6 +250,17 @@ var Helper = /** @class */ (function () {
             return urlParams;
         }
     };
+    /**
+     * Determine if a given string matches a given pattern.
+     * @param pattern
+     * @param text
+     */
+    Helper.string_is = function (pattern, text) {
+        pattern = pattern
+            .replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\#-]', 'g'), '\\$&')
+            .replace(/\\\*/g, '.*');
+        return (new RegExp(pattern + '$', 'u')).test(text);
+    };
     return Helper;
 }());
 exports.Helper = Helper;
@@ -2774,11 +2785,13 @@ var LStorage_1 = __webpack_require__(/*! ./LStorage */ "./javascript/ljs/classes
 var StateInstance_1 = __webpack_require__(/*! ./StateInstance */ "./javascript/ljs/classes/StateInstance.tsx");
 var ProServer_1 = __webpack_require__(/*! ./ProServer */ "./javascript/ljs/classes/ProServer.tsx");
 var JaxInstance_1 = __webpack_require__(/*! ./JaxInstance */ "./javascript/ljs/classes/JaxInstance.tsx");
+var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
 var LJS = /** @class */ (function (_super) {
     __extends(LJS, _super);
     function LJS() {
         var _this = _super.call(this) || this;
         _this.process = false;
+        _this.help = Helper_1.Helper;
         _this.$storage = new LStorage_1.LStorage(_this);
         _this.$state = new StateInstance_1.StateInstance();
         _this.instance();

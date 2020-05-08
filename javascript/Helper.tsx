@@ -211,4 +211,18 @@ export class Helper {
             return urlParams;
         }
     }
+
+    /**
+     * Determine if a given string matches a given pattern.
+     * @param pattern
+     * @param text
+     */
+    static string_is (pattern: string, text: string) {
+
+        pattern = pattern
+            .replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\#-]', 'g'), '\\$&')
+            .replace(/\\\*/g, '.*');
+
+        return (new RegExp(pattern + '$', 'u')).test(text);
+    }
 }

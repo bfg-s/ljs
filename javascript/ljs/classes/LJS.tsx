@@ -3,7 +3,7 @@ import {LStorage} from "./LStorage";
 import {StateInstance} from "./StateInstance";
 import {ProServer} from "./ProServer";
 import {JaxInstance} from "./JaxInstance";
-import map from 'lodash/map';
+import {Helper} from "../../Helper";
 
 export class LJS extends LJSConstructor implements Ljs {
 
@@ -16,6 +16,7 @@ export class LJS extends LJSConstructor implements Ljs {
     public toast: Toastr|any
     public $nav: any
     public $vue: any
+    public help: any
     public vue: any
     public swal: any
 
@@ -23,6 +24,8 @@ export class LJS extends LJSConstructor implements Ljs {
     constructor () {
 
         super();
+
+        this.help = Helper;
 
         this.$storage = new LStorage(this);
 

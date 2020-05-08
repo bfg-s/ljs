@@ -42,6 +42,7 @@ declare interface Ljs {
     $storage: LStorageInterface
     $nav: any
     $vue: any
+    help: any|Helper
     vue: any
     swal: any
     toast: Toastr
@@ -83,6 +84,19 @@ declare interface Ljs {
     _checkSend(data: any, storage_data: any): any
     _jqueryed (obj: any, name: string): any
     _query (name: string): any
+}
+
+declare interface Helper {
+    before_load(applyScript: () => void): Helper
+    document_load(readyScript: () => void): Helper
+    ready_script(readyFn: () => void): Helper
+    isArrayOrObject(val: any): boolean
+    isObject(val: any): boolean
+    isEmptyObject(val: any): boolean
+    dot(obj: any, tgt?: any, path?: any, useBrackets?: boolean, keepArray?: boolean, separator?: string): any
+    http_build_query(obj: any, num_prefix?: number|null, temp_key?: string|null): any
+    query_get(name?: string|null): any
+    string_is(pattern: string, text: string): boolean
 }
 
 declare interface StateWatcherInterface {

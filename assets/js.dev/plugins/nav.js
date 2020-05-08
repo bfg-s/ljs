@@ -250,6 +250,17 @@ var Helper = /** @class */ (function () {
             return urlParams;
         }
     };
+    /**
+     * Determine if a given string matches a given pattern.
+     * @param pattern
+     * @param text
+     */
+    Helper.string_is = function (pattern, text) {
+        pattern = pattern
+            .replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\#-]', 'g'), '\\$&')
+            .replace(/\\\*/g, '.*');
+        return (new RegExp(pattern + '$', 'u')).test(text);
+    };
     return Helper;
 }());
 exports.Helper = Helper;

@@ -95,9 +95,25 @@
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Helper = /** @class */ (function () {
+var IsConditions_1 = __webpack_require__(/*! ./IsConditions */ "./javascript/IsConditions.tsx");
+var Helper = /** @class */ (function (_super) {
+    __extends(Helper, _super);
     function Helper() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     /**
      * Execute before load
@@ -143,27 +159,6 @@ var Helper = /** @class */ (function () {
             readyFn(document);
         });
         return this;
-    };
-    /**
-     * Is Array or Object
-     * @param val
-     */
-    Helper.isArrayOrObject = function (val) {
-        return Object(val) === val;
-    };
-    /**
-     * Is Object
-     * @param val
-     */
-    Helper.isObject = function (val) {
-        return Object.prototype.toString.call(val) === '[object Object]';
-    };
-    /**
-     * Is empty object
-     * @param val
-     */
-    Helper.isEmptyObject = function (val) {
-        return Object.keys(val).length === 0;
     };
     /**
      * Make dot object
@@ -250,20 +245,61 @@ var Helper = /** @class */ (function () {
             return urlParams;
         }
     };
+    return Helper;
+}(IsConditions_1.IsConditions));
+exports.Helper = Helper;
+
+
+/***/ }),
+
+/***/ "./javascript/IsConditions.tsx":
+/*!*************************************!*\
+  !*** ./javascript/IsConditions.tsx ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var IsConditions = /** @class */ (function () {
+    function IsConditions() {
+    }
+    /**
+     * Is Array or Object
+     * @param val
+     */
+    IsConditions.isArrayOrObject = function (val) {
+        return Object(val) === val;
+    };
+    /**
+     * Is Object
+     * @param val
+     */
+    IsConditions.isObject = function (val) {
+        return Object.prototype.toString.call(val) === '[object Object]';
+    };
+    /**
+     * Is empty object
+     * @param val
+     */
+    IsConditions.isEmptyObject = function (val) {
+        return Object.keys(val).length === 0;
+    };
     /**
      * Determine if a given string matches a given pattern.
      * @param pattern
      * @param text
      */
-    Helper.string_is = function (pattern, text) {
+    IsConditions.string_is = function (pattern, text) {
         pattern = pattern
             .replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\#-]', 'g'), '\\$&')
             .replace(/\\\*/g, '.*');
         return (new RegExp(pattern + '$', 'u')).test(text);
     };
-    return Helper;
+    return IsConditions;
 }());
-exports.Helper = Helper;
+exports.IsConditions = IsConditions;
 
 
 /***/ }),

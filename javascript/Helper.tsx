@@ -1,6 +1,6 @@
-import {IsConditions} from "./IsConditions";
+import {Conditions} from "./Conditions";
 
-export class Helper extends IsConditions {
+export class Helper extends Conditions {
 
     /**
      * Execute before load

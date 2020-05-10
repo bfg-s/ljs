@@ -145,9 +145,39 @@ export class HTMLRegisterEvents {
 
                 ja(...props).then();
             });
+
+            let $methods: any = ["delete","get","post","put","head"];
+
+            $methods.map((meth: string) => this.makeJaxMethods(eve, event_name, meth))
         });
 
         return this;
+    }
+
+    /**
+     * Create method jax
+     * @param on_eve
+     * @param event_name
+     * @param method
+     */
+    makeJaxMethods (on_eve: string, event_name: string, method: string) {
+
+        window.ljs.on(on_eve, `[data-${event_name}-${method}]`, (event: any) => {
+
+            let m = method[0].toUpperCase() + method.slice(1);
+
+            let paramsName = `${event_name}Params`,
+                paramName = `${event_name}Param`,
+                obj = event.currentTarget,
+                data = obj.dataset,
+                jaxUrl = data[`${event_name}${m}`],
+                storage = {object: obj, target: event.target, event, eventName: event_name, request_method: method, request_url: jaxUrl},
+                params = data[paramsName]? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : {})));
+
+            try { params = JSON.parse(params); }catch (e) { if (typeof params === "string") { params = {data: params}; } }
+
+            (window.$jax as any)[method](jaxUrl, params, storage);
+        });
     }
 
     /**

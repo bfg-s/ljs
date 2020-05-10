@@ -1,5 +1,4 @@
-
-export class IsConditions {
+export class Conditions {
 
     /**
      * Is Array or Object

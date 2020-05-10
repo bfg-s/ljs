@@ -3,7 +3,8 @@ import merge from 'lodash/merge';
 import isObject from 'lodash/isObject';
 import {Helper} from "../../Helper";
 
-export class JaxInstance implements JaxInterface {
+export class
+JaxInstance implements JaxInterface {
 
     public ljs: Ljs
     public jax_executor: JaxExecInterface
@@ -126,7 +127,11 @@ export class JaxInstance implements JaxInterface {
                 window.ljs._detail(`Method: [${method}] Jax`);
             }
 
-            if (method === 'post') {
+            if (method === 'put') {method = 'post';params['_method'] = 'PUT';}
+            if (method === 'head') {method = 'post';params['_method'] = 'HEAD';}
+            if (method === 'delete') {method = 'post';params['_method'] = 'DELETE';}
+
+            if (method !== 'get') {
 
                 let isForm = params instanceof HTMLFormElement,
                     form = isForm ? new FormData(params) : new FormData();

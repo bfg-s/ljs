@@ -86,6 +86,58 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./javascript/Conditions.tsx":
+/*!***********************************!*\
+  !*** ./javascript/Conditions.tsx ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Conditions = /** @class */ (function () {
+    function Conditions() {
+    }
+    /**
+     * Is Array or Object
+     * @param val
+     */
+    Conditions.isArrayOrObject = function (val) {
+        return Object(val) === val;
+    };
+    /**
+     * Is Object
+     * @param val
+     */
+    Conditions.isObject = function (val) {
+        return Object.prototype.toString.call(val) === '[object Object]';
+    };
+    /**
+     * Is empty object
+     * @param val
+     */
+    Conditions.isEmptyObject = function (val) {
+        return Object.keys(val).length === 0;
+    };
+    /**
+     * Determine if a given string matches a given pattern.
+     * @param pattern
+     * @param text
+     */
+    Conditions.string_is = function (pattern, text) {
+        pattern = pattern
+            .replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\#-]', 'g'), '\\$&')
+            .replace(/\\\*/g, '.*');
+        return (new RegExp(pattern + '$', 'u')).test(text);
+    };
+    return Conditions;
+}());
+exports.Conditions = Conditions;
+
+
+/***/ }),
+
 /***/ "./javascript/Helper.tsx":
 /*!*******************************!*\
   !*** ./javascript/Helper.tsx ***!
@@ -109,7 +161,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var IsConditions_1 = __webpack_require__(/*! ./IsConditions */ "./javascript/IsConditions.tsx");
+var Conditions_1 = __webpack_require__(/*! ./Conditions */ "./javascript/Conditions.tsx");
 var Helper = /** @class */ (function (_super) {
     __extends(Helper, _super);
     function Helper() {
@@ -246,60 +298,8 @@ var Helper = /** @class */ (function (_super) {
         }
     };
     return Helper;
-}(IsConditions_1.IsConditions));
+}(Conditions_1.Conditions));
 exports.Helper = Helper;
-
-
-/***/ }),
-
-/***/ "./javascript/IsConditions.tsx":
-/*!*************************************!*\
-  !*** ./javascript/IsConditions.tsx ***!
-  \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var IsConditions = /** @class */ (function () {
-    function IsConditions() {
-    }
-    /**
-     * Is Array or Object
-     * @param val
-     */
-    IsConditions.isArrayOrObject = function (val) {
-        return Object(val) === val;
-    };
-    /**
-     * Is Object
-     * @param val
-     */
-    IsConditions.isObject = function (val) {
-        return Object.prototype.toString.call(val) === '[object Object]';
-    };
-    /**
-     * Is empty object
-     * @param val
-     */
-    IsConditions.isEmptyObject = function (val) {
-        return Object.keys(val).length === 0;
-    };
-    /**
-     * Determine if a given string matches a given pattern.
-     * @param pattern
-     * @param text
-     */
-    IsConditions.string_is = function (pattern, text) {
-        pattern = pattern
-            .replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\#-]', 'g'), '\\$&')
-            .replace(/\\\*/g, '.*');
-        return (new RegExp(pattern + '$', 'u')).test(text);
-    };
-    return IsConditions;
-}());
-exports.IsConditions = IsConditions;
 
 
 /***/ }),

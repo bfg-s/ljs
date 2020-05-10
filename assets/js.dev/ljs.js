@@ -86,6 +86,58 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./javascript/Conditions.tsx":
+/*!***********************************!*\
+  !*** ./javascript/Conditions.tsx ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Conditions = /** @class */ (function () {
+    function Conditions() {
+    }
+    /**
+     * Is Array or Object
+     * @param val
+     */
+    Conditions.isArrayOrObject = function (val) {
+        return Object(val) === val;
+    };
+    /**
+     * Is Object
+     * @param val
+     */
+    Conditions.isObject = function (val) {
+        return Object.prototype.toString.call(val) === '[object Object]';
+    };
+    /**
+     * Is empty object
+     * @param val
+     */
+    Conditions.isEmptyObject = function (val) {
+        return Object.keys(val).length === 0;
+    };
+    /**
+     * Determine if a given string matches a given pattern.
+     * @param pattern
+     * @param text
+     */
+    Conditions.string_is = function (pattern, text) {
+        pattern = pattern
+            .replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\#-]', 'g'), '\\$&')
+            .replace(/\\\*/g, '.*');
+        return (new RegExp(pattern + '$', 'u')).test(text);
+    };
+    return Conditions;
+}());
+exports.Conditions = Conditions;
+
+
+/***/ }),
+
 /***/ "./javascript/Helper.tsx":
 /*!*******************************!*\
   !*** ./javascript/Helper.tsx ***!
@@ -109,7 +161,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var IsConditions_1 = __webpack_require__(/*! ./IsConditions */ "./javascript/IsConditions.tsx");
+var Conditions_1 = __webpack_require__(/*! ./Conditions */ "./javascript/Conditions.tsx");
 var Helper = /** @class */ (function (_super) {
     __extends(Helper, _super);
     function Helper() {
@@ -246,60 +298,8 @@ var Helper = /** @class */ (function (_super) {
         }
     };
     return Helper;
-}(IsConditions_1.IsConditions));
+}(Conditions_1.Conditions));
 exports.Helper = Helper;
-
-
-/***/ }),
-
-/***/ "./javascript/IsConditions.tsx":
-/*!*************************************!*\
-  !*** ./javascript/IsConditions.tsx ***!
-  \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var IsConditions = /** @class */ (function () {
-    function IsConditions() {
-    }
-    /**
-     * Is Array or Object
-     * @param val
-     */
-    IsConditions.isArrayOrObject = function (val) {
-        return Object(val) === val;
-    };
-    /**
-     * Is Object
-     * @param val
-     */
-    IsConditions.isObject = function (val) {
-        return Object.prototype.toString.call(val) === '[object Object]';
-    };
-    /**
-     * Is empty object
-     * @param val
-     */
-    IsConditions.isEmptyObject = function (val) {
-        return Object.keys(val).length === 0;
-    };
-    /**
-     * Determine if a given string matches a given pattern.
-     * @param pattern
-     * @param text
-     */
-    IsConditions.string_is = function (pattern, text) {
-        pattern = pattern
-            .replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\#-]', 'g'), '\\$&')
-            .replace(/\\\*/g, '.*');
-        return (new RegExp(pattern + '$', 'u')).test(text);
-    };
-    return IsConditions;
-}());
-exports.IsConditions = IsConditions;
 
 
 /***/ }),
@@ -2751,7 +2751,19 @@ var JaxInstance = /** @class */ (function () {
             if (true) {
                 window.ljs._detail("Method: [" + method + "] Jax");
             }
-            if (method === 'post') {
+            if (method === 'put') {
+                method = 'post';
+                params['_method'] = 'PUT';
+            }
+            if (method === 'head') {
+                method = 'post';
+                params['_method'] = 'HEAD';
+            }
+            if (method === 'delete') {
+                method = 'post';
+                params['_method'] = 'DELETE';
+            }
+            if (method !== 'get') {
                 var isForm = params instanceof HTMLFormElement, form_1 = isForm ? new FormData(params) : new FormData();
                 if (!isForm)
                     map_1.default(params, function (item, key) { return form_1.append(key, item); });
@@ -4150,6 +4162,7 @@ var HTMLRegisterEvents = /** @class */ (function () {
      * MakeEvents on datasets
      */
     HTMLRegisterEvents.prototype.makeEvents = function () {
+        var _this = this;
         map_1.default([
             'click', 'submit', 'dblclick', 'change', 'blur', 'focus',
             'formchange', 'forminput', 'input', 'keydown', 'keypress',
@@ -4197,8 +4210,31 @@ var HTMLRegisterEvents = /** @class */ (function () {
                     props = [props];
                 ja.apply(void 0, props).then();
             });
+            var $methods = ["delete", "get", "post", "put", "head"];
+            $methods.map(function (meth) { return _this.makeJaxMethods(eve, event_name, meth); });
         });
         return this;
+    };
+    /**
+     * Create method jax
+     * @param on_eve
+     * @param event_name
+     * @param method
+     */
+    HTMLRegisterEvents.prototype.makeJaxMethods = function (on_eve, event_name, method) {
+        window.ljs.on(on_eve, "[data-" + event_name + "-" + method + "]", function (event) {
+            var m = method[0].toUpperCase() + method.slice(1);
+            var paramsName = event_name + "Params", paramName = event_name + "Param", obj = event.currentTarget, data = obj.dataset, jaxUrl = data["" + event_name + m], storage = { object: obj, target: event.target, event: event, eventName: event_name, request_method: method, request_url: jaxUrl }, params = data[paramsName] ? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : {})));
+            try {
+                params = JSON.parse(params);
+            }
+            catch (e) {
+                if (typeof params === "string") {
+                    params = { data: params };
+                }
+            }
+            window.$jax[method](jaxUrl, params, storage);
+        });
     };
     /**
      * Register data events state change

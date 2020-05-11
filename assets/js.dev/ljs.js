@@ -649,9 +649,8 @@ var Doc = /** @class */ (function (_super) {
         }, $ms);
     };
     /**
-     * Copy data to bp
+     * Copy data to clipboard
      * @param $data
-     * @returns {string}
      */
     Doc.prototype.pbcopy = function ($data) {
         if ($data === void 0) { $data = ""; }
@@ -664,6 +663,16 @@ var Doc = /** @class */ (function (_super) {
         document.execCommand('copy');
         document.body.removeChild(el);
         document.execCommand("copy");
+        return $data;
+    };
+    /**
+     * Copy data to clipboard and show info
+     * @param $data
+     */
+    Doc.prototype.informed_pbcopy = function ($data) {
+        if ($data === this.pbcopy($data)) {
+            "toast::success".exec("Copied to clipboard");
+        }
         return $data;
     };
     /**

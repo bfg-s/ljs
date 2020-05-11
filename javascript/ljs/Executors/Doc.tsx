@@ -175,9 +175,8 @@ export class Doc extends ExecutorParent {
     }
 
     /**
-     * Copy data to bp
+     * Copy data to clipboard
      * @param $data
-     * @returns {string}
      */
     pbcopy($data: string = "") {
 
@@ -189,6 +188,20 @@ export class Doc extends ExecutorParent {
         document.execCommand('copy');
         document.body.removeChild(el);
         document.execCommand("copy");
+        return $data;
+    }
+
+    /**
+     * Copy data to clipboard and show info
+     * @param $data
+     */
+    informed_pbcopy ($data: string) {
+
+        if ($data === this.pbcopy($data)) {
+
+            "toast::success".exec("Copied to clipboard");
+        }
+
         return $data;
     }
 

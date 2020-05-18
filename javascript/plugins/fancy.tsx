@@ -1,12 +1,27 @@
 import {Helper} from "../Helper";
 import {ExecutorParent} from "../ljs/Extends/ExecutorParent";
+import get from 'lodash/get';
 
 require('@fancyapps/fancybox');
 
 Helper.before_load((ljs: Ljs) => {
 
-    class FancyBox extends ExecutorParent
-    {
+    ljs.regExec(class extends ExecutorParent {
+
+        __call ($name: string, $args: any = []) {
+
+            return get(window.jax, $name)(...$args).then((params: any) => {
+
+                return "fancy::mess".exec(params[0]);
+            });
+        }
+
+        static __name () {
+            return 'load_modal';
+        }
+    });
+
+    ljs.regExec(class extends ExecutorParent {
         mess (items: any, opts: any, index: any) {
 
             return ($ as any).fancybox.open(items, opts, index);
@@ -45,7 +60,5 @@ Helper.before_load((ljs: Ljs) => {
 
             return 'fancy';
         }
-    }
-
-    ljs.regExec(FancyBox);
+    });
 });

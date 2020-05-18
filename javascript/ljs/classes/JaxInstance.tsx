@@ -89,7 +89,7 @@ JaxInstance implements JaxInterface {
             return new Promise(() => false);
         }
 
-        return this.get(location.href, merge({_exec: data.render()}, data.getParams()), data.getStorage());
+        return this.get(window.location.href, merge({_exec: data.render()}, data.getParams()), data.getStorage());
     }
 
     /**

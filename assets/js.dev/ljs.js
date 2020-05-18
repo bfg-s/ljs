@@ -2726,7 +2726,7 @@ var JaxInstance = /** @class */ (function () {
             }
             return new Promise(function () { return false; });
         }
-        return this.get(location.href, merge_1.default({ _exec: data.render() }, data.getParams()), data.getStorage());
+        return this.get(window.location.href, merge_1.default({ _exec: data.render() }, data.getParams()), data.getStorage());
     };
     /**
      * Create jax command

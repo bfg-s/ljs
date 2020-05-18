@@ -12,7 +12,7 @@ Helper.before_load((ljs: Ljs) => {
 
             return get(window.jax, $name)(...$args).then((params: any) => {
 
-                return "fancy::mess".exec(params[0]);
+                return "fancy::mess".exec(params[0], {touch: false});
             });
         }
 

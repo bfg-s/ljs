@@ -505,7 +505,7 @@ Helper_1.Helper.before_load(function (ljs) {
         class_1.prototype.__call = function ($name, $args) {
             if ($args === void 0) { $args = []; }
             return get_1.default(window.jax, $name).apply(void 0, $args).then(function (params) {
-                return "fancy::mess".exec(params[0]);
+                return "fancy::mess".exec(params[0], { touch: false });
             });
         };
         class_1.__name = function () {

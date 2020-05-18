@@ -60,8 +60,8 @@ export class ExecutorMethods {
                         send_now = key_map[i-1].call(storage_data);
                         break;
                     case (key.match(/^[0-9]\>$/) || {}).input:
-                        let int_num = returns.length - parseInt(key);
-                        send_now = returns[int_num] !== undefined ? returns[int_num] : null
+                        let int_num = parseInt(key);
+                        send_now = params[int_num] !== undefined ? params[int_num] : null
                         break;
                     case ">":
                         send_now = concat(returns, (Array.isArray(item) ? item : [item]));

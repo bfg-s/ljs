@@ -1164,8 +1164,8 @@ var ExecutorMethods = /** @class */ (function () {
                         send_now = key_map[i - 1].call(storage_data);
                         break;
                     case (key.match(/^[0-9]\>$/) || {}).input:
-                        var int_num = returns.length - parseInt(key);
-                        send_now = returns[int_num] !== undefined ? returns[int_num] : null;
+                        var int_num = parseInt(key);
+                        send_now = params[int_num] !== undefined ? params[int_num] : null;
                         break;
                     case ">":
                         send_now = concat_1.default(returns, (Array.isArray(item) ? item : [item]));

@@ -499,14 +499,23 @@ __webpack_require__(/*! @fancyapps/fancybox */ "./node_modules/@fancyapps/fancyb
 Helper_1.Helper.before_load(function (ljs) {
     ljs.regExec(/** @class */ (function (_super) {
         __extends(class_1, _super);
-        function class_1() {
-            return _super !== null && _super.apply(this, arguments) || this;
+        function class_1(params) {
+            var _this = _super.call(this, params) || this;
+            _this.ins = null;
+            return _this;
         }
         class_1.prototype.__call = function ($name, $args) {
+            var _this = this;
             if ($args === void 0) { $args = []; }
             return get_1.default(window.jax, $name).apply(void 0, $args).then(function (params) {
-                return "fancy::mess".exec(params[0], { touch: false });
+                _this.ins = "fancy::mess".exec(params[0], { touch: false });
+                return;
             });
+        };
+        class_1.prototype.close = function () {
+            if (this.ins) {
+                this.ins.close();
+            }
         };
         class_1.__name = function () {
             return 'load_modal';

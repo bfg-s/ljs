@@ -8,12 +8,29 @@ Helper.before_load((ljs: Ljs) => {
 
     ljs.regExec(class extends ExecutorParent {
 
+        public ins: any;
+
+        constructor(params: any) {
+            super(params);
+            this.ins = null;
+        }
+
         __call ($name: string, $args: any = []) {
 
             return get(window.jax, $name)(...$args).then((params: any) => {
 
-                return "fancy::mess".exec(params[0], {touch: false});
+                this.ins = "fancy::mess".exec(params[0], {touch: false});
+
+                return
             });
+        }
+
+        close () {
+
+            if (this.ins) {
+
+                this.ins.close();
+            }
         }
 
         static __name () {

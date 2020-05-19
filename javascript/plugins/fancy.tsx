@@ -17,9 +17,16 @@ Helper.before_load((ljs: Ljs) => {
 
         __call ($name: string, $args: any = []) {
 
+            let closable = this.target ? (this.target.dataset.closable ? true : false) : false;
+
             return get(window.jax, $name)(...$args).then((params: any) => {
 
-                this.ins = "fancy::mess".exec(params[0], {touch: false});
+                this.ins = "fancy::mess".exec(params[0], {
+                    touch: false,
+                    smallBtn: closable,
+                    toolbar: false,
+                    clickSlide: closable
+                });
 
                 return
             });

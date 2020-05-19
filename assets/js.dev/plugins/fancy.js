@@ -507,8 +507,14 @@ Helper_1.Helper.before_load(function (ljs) {
         class_1.prototype.__call = function ($name, $args) {
             var _this = this;
             if ($args === void 0) { $args = []; }
+            var closable = this.target ? (this.target.dataset.closable ? true : false) : false;
             return get_1.default(window.jax, $name).apply(void 0, $args).then(function (params) {
-                _this.ins = "fancy::mess".exec(params[0], { touch: false });
+                _this.ins = "fancy::mess".exec(params[0], {
+                    touch: false,
+                    smallBtn: closable,
+                    toolbar: false,
+                    clickSlide: closable
+                });
                 return;
             });
         };

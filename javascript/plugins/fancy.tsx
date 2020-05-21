@@ -17,7 +17,7 @@ Helper.before_load((ljs: Ljs) => {
 
         __call ($name: string, $args: any = []) {
 
-            let closable = this.target ? (this.target.dataset.closable ? true : false) : false;
+            let closable = this.target ? (this.target.dataset.closable !== undefined ? true : false) : false;
 
             return get(window.jax, $name)(...$args).then((params: any) => {
 
@@ -25,7 +25,7 @@ Helper.before_load((ljs: Ljs) => {
                     touch: false,
                     smallBtn: closable,
                     toolbar: false,
-                    clickSlide: closable
+                    clickSlide: closable ? 'close' : false
                 });
 
                 return

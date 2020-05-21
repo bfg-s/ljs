@@ -38,11 +38,12 @@ export class Tpl extends ExecutorParent {
                 let scripts = cloned.querySelectorAll('script');
                 if (scripts.length) {
                     let pull = (func: () => {}) => {return typeof func === 'function' ? func() : () => "";};
-                    let call_pull = "";
+                    var call_pull = "";
                     Object.values(scripts).map((script: any) => {
                         let tpl_script = script.innerText.trim();
                         if (!/^pull.*/.test(tpl_script)) { tpl_script = "pull(function () {" + tpl_script + "});"; }
-                        eval("call_pull = "+tpl_script+";");
+                        tpl_script = "call_pull = "+tpl_script+";"
+                        eval(tpl_script);
                         if(call_pull) {
                             let temp_element: any = document.createElement('span');
                             temp_element.innerHTML = call_pull;

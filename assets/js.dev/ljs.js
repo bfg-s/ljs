@@ -1071,16 +1071,17 @@ var Tpl = /** @class */ (function (_super) {
                 var scripts = cloned.querySelectorAll('script');
                 if (scripts.length) {
                     var pull = function (func) { return typeof func === 'function' ? func() : function () { return ""; }; };
-                    var call_pull_1 = "";
+                    var call_pull = "";
                     Object.values(scripts).map(function (script) {
                         var tpl_script = script.innerText.trim();
                         if (!/^pull.*/.test(tpl_script)) {
                             tpl_script = "pull(function () {" + tpl_script + "});";
                         }
-                        eval("call_pull = " + tpl_script + ";");
-                        if (call_pull_1) {
+                        tpl_script = "call_pull = " + tpl_script + ";";
+                        eval(tpl_script);
+                        if (call_pull) {
                             var temp_element = document.createElement('span');
-                            temp_element.innerHTML = call_pull_1;
+                            temp_element.innerHTML = call_pull;
                             script.replaceWith.apply(script, temp_element.children);
                             temp_element = null;
                         }

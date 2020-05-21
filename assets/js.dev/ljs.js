@@ -1068,6 +1068,27 @@ var Tpl = /** @class */ (function (_super) {
             var area = document.querySelector("span[data-tpl=\"" + $to + "\"]");
             if (area) {
                 var cloned = template.content.cloneNode(true);
+                var scripts = cloned.querySelectorAll('script');
+                if (scripts.length) {
+                    var pull = function (func) { return typeof func === 'function' ? func() : function () { return ""; }; };
+                    var call_pull_1 = "";
+                    Object.values(scripts).map(function (script) {
+                        var tpl_script = script.innerText.trim();
+                        if (!/^pull.*/.test(tpl_script)) {
+                            tpl_script = "pull(function () {" + tpl_script + "});";
+                        }
+                        eval("call_pull = " + tpl_script + ";");
+                        if (call_pull_1) {
+                            var temp_element = document.createElement('span');
+                            temp_element.innerHTML = call_pull_1;
+                            script.replaceWith.apply(script, temp_element.children);
+                            temp_element = null;
+                        }
+                        else {
+                            script.remove();
+                        }
+                    });
+                }
                 if ($before) {
                     $before(area, cloned);
                 }

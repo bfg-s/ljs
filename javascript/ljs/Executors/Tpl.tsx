@@ -35,6 +35,24 @@ export class Tpl extends ExecutorParent {
             if (area) {
 
                 let cloned = template.content.cloneNode(true);
+                let scripts = cloned.querySelectorAll('script');
+                if (scripts.length) {
+                    let pull = (func: () => {}) => {return typeof func === 'function' ? func() : () => "";};
+                    let call_pull = "";
+                    Object.values(scripts).map((script: any) => {
+                        let tpl_script = script.innerText.trim();
+                        if (!/^pull.*/.test(tpl_script)) { tpl_script = "pull(function () {" + tpl_script + "});"; }
+                        eval("call_pull = "+tpl_script+";");
+                        if(call_pull) {
+                            let temp_element: any = document.createElement('span');
+                            temp_element.innerHTML = call_pull;
+                            script.replaceWith(...temp_element.children);
+                            temp_element = null;
+                        }else {
+                            script.remove();
+                        }
+                    });
+                }
 
                 if ($before) {
 

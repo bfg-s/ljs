@@ -1067,10 +1067,10 @@ var Tpl = /** @class */ (function (_super) {
         if (template) {
             var area = document.querySelector("span[data-tpl=\"" + $to + "\"]");
             if (area) {
-                var cloned = template.content.cloneNode(true);
-                var scripts = cloned.querySelectorAll('script');
+                var cloned_1 = template.content.cloneNode(true);
+                var scripts = cloned_1.querySelectorAll('script');
                 if (scripts.length) {
-                    var pull = function (func) { return typeof func === 'function' ? func() : function () { return ""; }; };
+                    var pull = function (func) { return typeof func === 'function' ? func(cloned_1) : function () { return ""; }; };
                     var call_pull = "";
                     Object.values(scripts).map(function (script) {
                         var tpl_script = script.innerText.trim();
@@ -1091,9 +1091,9 @@ var Tpl = /** @class */ (function (_super) {
                     });
                 }
                 if ($before) {
-                    $before(area, cloned);
+                    $before(area, cloned_1);
                 }
-                area.appendChild(cloned);
+                area.appendChild(cloned_1);
             }
             else {
                 "toast:error".exec("Template area [" + $to + "] undefined!");
@@ -1102,6 +1102,13 @@ var Tpl = /** @class */ (function (_super) {
         else {
             "toast:error".exec("Template [" + $tpl + "] undefined!");
         }
+    };
+    Tpl.prototype.get_tpl = function ($tpl) {
+        var template = document.querySelector("template[data-tpl=\"" + $tpl + "\"]");
+        if (template) {
+            return template.content.cloneNode(true);
+        }
+        return "";
     };
     Tpl.__name = function () {
         return "tpl";

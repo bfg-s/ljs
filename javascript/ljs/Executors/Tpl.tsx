@@ -37,7 +37,7 @@ export class Tpl extends ExecutorParent {
                 let cloned = template.content.cloneNode(true);
                 let scripts = cloned.querySelectorAll('script');
                 if (scripts.length) {
-                    let pull = (func: () => {}) => {return typeof func === 'function' ? func() : () => "";};
+                    let pull = (func: (node: any) => {}) => {return typeof func === 'function' ? func(cloned) : () => "";};
                     var call_pull = "";
                     Object.values(scripts).map((script: any) => {
                         let tpl_script = script.innerText.trim();
@@ -72,6 +72,18 @@ export class Tpl extends ExecutorParent {
 
             "toast:error".exec(`Template [${$tpl}] undefined!`);
         }
+    }
+
+    get_tpl ($tpl: any) {
+
+        let template: any = document.querySelector(`template[data-tpl="${$tpl}"]`);
+
+        if (template) {
+
+            return template.content.cloneNode(true);
+        }
+
+        return "";
     }
 
     static __name () {

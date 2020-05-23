@@ -1,3 +1,5 @@
+import camelCase from 'lodash/camelCase';
+
 export abstract class ExecutorParent implements ExecutorParentInterface{
 
     static ljs: any;
@@ -99,6 +101,32 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
         }
 
         return document;
+    }
+
+    data ($name: string, $default: any = null) {
+
+        if (this.currentTarget && this.currentTarget.dataset) {
+
+            let varName = camelCase($name);
+
+            if (varName in this.currentTarget.dataset) {
+
+                let data = this.currentTarget.dataset[varName];
+                if (data === 'true') { return true; }
+                else if (data === 'false' || data === undefined) { return false; }
+                else if (data === 'null') { return null; }
+                else if (data === 'undefined') { return undefined; }
+                else if (data === '') { return true; }
+                else { return data; }
+            }
+
+            else {
+
+                return $default;
+            }
+        }
+
+        return $default;
     }
 
     /**

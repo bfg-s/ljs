@@ -119,6 +119,7 @@ declare interface ExecutorParentInterface {
     now_method: any
     target: HTMLElement|any|null
     preventDefault (): boolean
+    data ($name: string, $default: any): any
 }
 
 declare interface StateInterface {

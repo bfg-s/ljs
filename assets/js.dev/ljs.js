@@ -805,12 +805,15 @@ var Script = /** @class */ (function (_super) {
         return this.call($name, $args);
     };
     Script.__call = function ($name, $args) {
-        return this.constructor.call($name, $args);
+        return this.prototype.call($name, $args);
     };
     Script.prototype.call = function ($name, $args) {
+        var _this = this;
         return document.querySelectorAll("script[for=\"" + $name + "\"]").forEach(function (a) {
             var exec_script = a.innerText.trim();
-            eval(exec_script);
+            (function () {
+                eval(exec_script);
+            }).call(_this);
             return exec_script;
         });
     };

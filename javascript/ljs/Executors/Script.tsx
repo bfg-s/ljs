@@ -9,7 +9,7 @@ export class Script extends ExecutorParent {
 
     static __call($name: string, $args: []) {
 
-        return this.constructor.call($name, $args);
+        return this.prototype.call($name, $args);
     }
 
     call ($name: string, $args: []) {
@@ -18,7 +18,9 @@ export class Script extends ExecutorParent {
 
             let exec_script = a.innerText.trim();
 
-            eval(exec_script);
+            (function(){
+                eval(exec_script);
+            }).call(this);
 
             return exec_script;
         });

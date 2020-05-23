@@ -808,13 +808,14 @@ var Script = /** @class */ (function (_super) {
         return this.call($name, $args);
     };
     Script.call = function ($name, $args) {
-        document.querySelectorAll('script[for="text-make"]').forEach(function (a) {
+        return document.querySelectorAll("script[for=\"" + $name + "\"]").forEach(function (a) {
             var exec_script = a.innerText.trim();
             eval(exec_script);
+            return exec_script;
         });
     };
     Script.__name = function () {
-        return "tpl";
+        return "script";
     };
     return Script;
 }(ExecutorParent_1.ExecutorParent));

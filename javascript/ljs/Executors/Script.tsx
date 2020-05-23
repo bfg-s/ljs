@@ -14,16 +14,18 @@ export class Script extends ExecutorParent {
 
     static call ($name: string, $args: []) {
 
-        document.querySelectorAll('script[for="text-make"]').forEach((a: any) => {
+        return document.querySelectorAll(`script[for="${$name}"]`).forEach((a: any) => {
 
             let exec_script = a.innerText.trim();
 
             eval(exec_script);
+
+            return exec_script;
         });
     }
 
     static __name () {
     
-        return "tpl";
+        return "script";
     }
 }

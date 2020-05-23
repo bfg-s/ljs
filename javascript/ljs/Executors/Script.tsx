@@ -4,15 +4,15 @@ export class Script extends ExecutorParent {
 
     __call ($name: string, $args: []) {
 
-        return Script.call($name, $args);
+        return this.call($name, $args);
     }
 
     static __call($name: string, $args: []) {
 
-        return this.call($name, $args);
+        return this.constructor.call($name, $args);
     }
 
-    static call ($name: string, $args: []) {
+    call ($name: string, $args: []) {
 
         return document.querySelectorAll(`script[for="${$name}"]`).forEach((a: any) => {
 

@@ -1,5 +1,6 @@
 import {LJS} from "./classes/LJS";
 import {StateExec} from "./Executors/StateExec"
+import {Script} from "./Executors/Script"
 import {Tpl} from "./Executors/Tpl";
 import {Timer} from "./Executors/Timer";
 import {Doc} from "./Executors/Doc";
@@ -86,7 +87,8 @@ export class Core extends Helper{
                 .regExec(StateExec)
                 .regExec(Timer)
                 .regExec(Doc)
-                .regExec(Tpl);
+                .regExec(Tpl)
+                .regExec(Script);
         }
 
         return this;

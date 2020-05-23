@@ -365,6 +365,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var LJS_1 = __webpack_require__(/*! ./classes/LJS */ "./javascript/ljs/classes/LJS.tsx");
 var StateExec_1 = __webpack_require__(/*! ./Executors/StateExec */ "./javascript/ljs/Executors/StateExec.tsx");
+var Script_1 = __webpack_require__(/*! ./Executors/Script */ "./javascript/ljs/Executors/Script.tsx");
 var Tpl_1 = __webpack_require__(/*! ./Executors/Tpl */ "./javascript/ljs/Executors/Tpl.tsx");
 var Timer_1 = __webpack_require__(/*! ./Executors/Timer */ "./javascript/ljs/Executors/Timer.tsx");
 var Doc_1 = __webpack_require__(/*! ./Executors/Doc */ "./javascript/ljs/Executors/Doc.tsx");
@@ -457,7 +458,8 @@ var Core = /** @class */ (function (_super) {
                 .regExec(StateExec_1.StateExec)
                 .regExec(Timer_1.Timer)
                 .regExec(Doc_1.Doc)
-                .regExec(Tpl_1.Tpl);
+                .regExec(Tpl_1.Tpl)
+                .regExec(Script_1.Script);
         }
         return this;
     };
@@ -766,6 +768,57 @@ var Doc = /** @class */ (function (_super) {
     return Doc;
 }(ExecutorParent_1.ExecutorParent));
 exports.Doc = Doc;
+
+
+/***/ }),
+
+/***/ "./javascript/ljs/Executors/Script.tsx":
+/*!*********************************************!*\
+  !*** ./javascript/ljs/Executors/Script.tsx ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ExecutorParent_1 = __webpack_require__(/*! ../Extends/ExecutorParent */ "./javascript/ljs/Extends/ExecutorParent.tsx");
+var Script = /** @class */ (function (_super) {
+    __extends(Script, _super);
+    function Script() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Script.prototype.__call = function ($name, $args) {
+        return Script.call($name, $args);
+    };
+    Script.__call = function ($name, $args) {
+        return this.call($name, $args);
+    };
+    Script.call = function ($name, $args) {
+        document.querySelectorAll('script[for="text-make"]').forEach(function (a) {
+            var exec_script = a.innerText.trim();
+            eval(exec_script);
+        });
+    };
+    Script.__name = function () {
+        return "tpl";
+    };
+    return Script;
+}(ExecutorParent_1.ExecutorParent));
+exports.Script = Script;
 
 
 /***/ }),

@@ -119,9 +119,7 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
                 else if (data === '') { return true; }
                 else { return data; }
             }
-
             else {
-
                 return $default;
             }
         }

@@ -4259,6 +4259,9 @@ var HTMLRegisterEvents = /** @class */ (function () {
     HTMLRegisterEvents.prototype.dataHref = function () {
         window.ljs.on('click', '[data-href]', function (event) {
             if (event.target.hasAttribute('href') || event.target.closest('a[href]')) {
+                if (event.target.nodeName === 'A' && event.target.getAttribute('href')) {
+                    "doc::location".exec(event.target.getAttribute('href'));
+                }
                 return false;
             }
             var href = event.target.dataset.href;

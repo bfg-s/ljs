@@ -48,7 +48,9 @@ export class HTMLRegisterEvents {
         window.ljs.on('click', '[data-href]', (event: any) => {
 
             if (event.target.hasAttribute('href') || event.target.closest('a[href]')) {
-
+                if (event.target.nodeName === 'A' && event.target.getAttribute('href')) {
+                    "doc::location".exec(event.target.getAttribute('href'));
+                }
                 return false;
             }
 

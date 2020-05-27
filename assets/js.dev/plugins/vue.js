@@ -699,6 +699,9 @@ Helper_1.Helper.before_load(function (ljs) {
                 if (!window.$state.has(global_var)) {
                     window.$state.set(global_var, get_1.default(_this, inner_var));
                 }
+                else {
+                    set_1.default(_this, inner_var, window.$state.get(global_var));
+                }
                 _this.ljs.$state.on("changed:" + global_var, function (val) {
                     set_1.default(_this, inner_var, val);
                 });

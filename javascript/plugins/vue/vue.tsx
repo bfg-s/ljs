@@ -125,6 +125,8 @@ Helper.before_load((ljs: Ljs) => {
                 let inner_var = this.$options.$sync[global_var];
                 if (!window.$state.has(global_var)) {
                     window.$state.set(global_var, get(this, inner_var));
+                } else {
+                    set(this, inner_var, window.$state.get(global_var));
                 }
                 this.ljs.$state.on(`changed:${global_var}`, (val: any) => {
                     set(this, inner_var, val);

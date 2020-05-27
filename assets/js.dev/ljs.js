@@ -3782,6 +3782,12 @@ var StateInstance = /** @class */ (function () {
         if (path === '__now_method') {
             return state;
         }
+        if (Helper_1.Helper.isObject(value)) {
+            Object.keys(value).map(function (key) {
+                state.set(path + "." + key, value[key]);
+            });
+            return state;
+        }
         path = state._correctPath(path);
         if (!(path in state)) {
             var old = get_1.default(StateInstance.state, path);

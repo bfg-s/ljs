@@ -80,6 +80,16 @@ export class StateInstance implements StateInterface{
             return state;
         }
 
+        if (Helper.isObject(value)) {
+
+            Object.keys(value).map((key: string) => {
+
+                state.set(`${path}.${key}`, value[key]);
+            });
+
+            return state;
+        }
+
         path = state._correctPath(path);
 
         if (!(path in state)) {

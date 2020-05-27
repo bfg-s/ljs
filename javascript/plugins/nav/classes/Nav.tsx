@@ -5,12 +5,15 @@ export class Nav {
 
     public ljs: Ljs
     public cancelContext: boolean
+    public tmpGroup: any
 
     constructor (ljs: Ljs) {
 
         this.ljs = ljs;
 
         this.cancelContext = false;
+
+        this.tmpGroup = null;
 
         if (ljs.cfg("pjax-container")) {
 
@@ -103,6 +106,8 @@ export class Nav {
 
         $(document).on('pjax:beforeSend', (event: any, xhr: any) => {
 
+            this.tmpGroup = this.ljs.$vue.group();
+
             xhr.setRequestHeader('X-CSRF-TOKEN', this.ljs.cfg('token'));
         });
 
@@ -139,9 +144,11 @@ export class Nav {
 
         $(document).on('pjax:beforeReplace', (a: any,b: any,c: any,d: any) => {
 
-            if (!this.cancelContext && this.ljs.$vue) {
+            if (!this.cancelContext && this.ljs.$vue && this.tmpGroup) {
 
-                this.ljs.$vue.destroyGroup(this.ljs.$vue.group());
+                //this.ljs.$vue.destroyGroup(this.ljs.$vue.group());
+                this.ljs.$vue.destroyGroup(this.tmpGroup);
+                this.tmpGroup = null;
             }
 
             d.cancelContext(this.cancelContext);
@@ -149,7 +156,7 @@ export class Nav {
 
         $(document).on('pjax:complete', (xhr: any, req: any, status: any) => {
 
-            this.ljs.exec('var::clear');
+            //this.ljs.exec('var::clear');
 
             document.body.style.cursor = "auto";
 

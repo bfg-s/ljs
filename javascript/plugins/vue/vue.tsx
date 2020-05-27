@@ -3,6 +3,8 @@ import {VueExecutor} from "./VueExecutor";
 import merge from 'lodash/merge';
 import filter from 'lodash/filter';
 import unset from 'lodash/unset';
+import get from 'lodash/get';
+import set from 'lodash/set';
 
 Helper.before_load((ljs: Ljs) => {
 
@@ -103,7 +105,59 @@ Helper.before_load((ljs: Ljs) => {
             };
         },
 
+        $ws: {},
+        $state: {},
+        $sync: {},
+
+        beforeMount () {
+
+            Object.keys(this.$options.$ws).map((event: string) => {
+                let closure_name = this.$options.$ws[event];
+                this.ljs.$ws.on(event, this[closure_name], this);
+            });
+
+            Object.keys(this.$options.$state).map((event: string) => {
+                let closure_name = this.$options.$state[event];
+                this.ljs.$state.on(event, this[closure_name], this);
+            });
+
+            Object.keys(this.$options.$sync).map((global_var: string) => {
+                let inner_var = this.$options.$sync[global_var];
+                if (!window.$state.has(global_var)) {
+                    window.$state.set(global_var, get(this, inner_var));
+                }
+                this.ljs.$state.on(`changed:${global_var}`, (val: any) => {
+                    set(this, inner_var, val);
+                });
+                this.$watch(inner_var, (val: any) => {
+                    window.$state.set(global_var, val);
+                })
+            });
+        },
+
+        beforeDestroy () {
+
+            Object.keys(this.$options.$ws).map((event: string) => {
+                let closure_name = this.$options.$ws[event];
+                this.ljs.$ws.off(event, this[closure_name]);
+            });
+
+            Object.keys(this.$options.$state).map((event: string) => {
+                let closure_name = this.$options.$state[event];
+                this.ljs.$state.off(event, this[closure_name]);
+            });
+
+            Object.keys(this.$options.$sync).map((global_var: string) => {
+                this.ljs.$state.off(`changed:${global_var}`);
+            });
+        },
+
         methods: {
+
+            test_sw () {
+
+
+            },
 
             exec (name: any, event: any = null) {
 

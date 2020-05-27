@@ -514,6 +514,7 @@ var Nav = /** @class */ (function () {
     function Nav(ljs) {
         this.ljs = ljs;
         this.cancelContext = false;
+        this.tmpGroup = null;
         if (ljs.cfg("pjax-container")) {
             this._configure()
                 ._set_events();
@@ -574,6 +575,7 @@ var Nav = /** @class */ (function () {
             $.pjax.submit(event, _this.ljs.cfg("pjax-container"));
         });
         $(document).on('pjax:beforeSend', function (event, xhr) {
+            _this.tmpGroup = _this.ljs.$vue.group();
             xhr.setRequestHeader('X-CSRF-TOKEN', _this.ljs.cfg('token'));
         });
         $(document).on('pjax:timeout', function (event) {
@@ -596,13 +598,15 @@ var Nav = /** @class */ (function () {
             _this.ljs._dispatch_event("ljs:nav:send", { nav: _this, xhr: xhr });
         });
         $(document).on('pjax:beforeReplace', function (a, b, c, d) {
-            if (!_this.cancelContext && _this.ljs.$vue) {
-                _this.ljs.$vue.destroyGroup(_this.ljs.$vue.group());
+            if (!_this.cancelContext && _this.ljs.$vue && _this.tmpGroup) {
+                //this.ljs.$vue.destroyGroup(this.ljs.$vue.group());
+                _this.ljs.$vue.destroyGroup(_this.tmpGroup);
+                _this.tmpGroup = null;
             }
             d.cancelContext(_this.cancelContext);
         });
         $(document).on('pjax:complete', function (xhr, req, status) {
-            _this.ljs.exec('var::clear');
+            //this.ljs.exec('var::clear');
             document.body.style.cursor = "auto";
             _this.ljs.switchProcess(false);
             _this.ljs._onload_header(req.getAllResponseHeaders());

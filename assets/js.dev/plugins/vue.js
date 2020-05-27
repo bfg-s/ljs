@@ -614,6 +614,8 @@ var VueExecutor_1 = __webpack_require__(/*! ./VueExecutor */ "./javascript/plugi
 var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
 var filter_1 = __importDefault(__webpack_require__(/*! lodash/filter */ "./node_modules/lodash/filter.js"));
 var unset_1 = __importDefault(__webpack_require__(/*! lodash/unset */ "./node_modules/lodash/unset.js"));
+var get_1 = __importDefault(__webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js"));
+var set_1 = __importDefault(__webpack_require__(/*! lodash/set */ "./node_modules/lodash/set.js"));
 Helper_1.Helper.before_load(function (ljs) {
     ljs.vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
     ljs.$vue = {
@@ -679,7 +681,49 @@ Helper_1.Helper.before_load(function (ljs) {
                 ljs: ljs
             };
         },
+        $ws: {},
+        $state: {},
+        $sync: {},
+        beforeMount: function () {
+            var _this = this;
+            Object.keys(this.$options.$ws).map(function (event) {
+                var closure_name = _this.$options.$ws[event];
+                _this.ljs.$ws.on(event, _this[closure_name], _this);
+            });
+            Object.keys(this.$options.$state).map(function (event) {
+                var closure_name = _this.$options.$state[event];
+                _this.ljs.$state.on(event, _this[closure_name], _this);
+            });
+            Object.keys(this.$options.$sync).map(function (global_var) {
+                var inner_var = _this.$options.$sync[global_var];
+                if (!window.$state.has(global_var)) {
+                    window.$state.set(global_var, get_1.default(_this, inner_var));
+                }
+                _this.ljs.$state.on("changed:" + global_var, function (val) {
+                    set_1.default(_this, inner_var, val);
+                });
+                _this.$watch(inner_var, function (val) {
+                    window.$state.set(global_var, val);
+                });
+            });
+        },
+        beforeDestroy: function () {
+            var _this = this;
+            Object.keys(this.$options.$ws).map(function (event) {
+                var closure_name = _this.$options.$ws[event];
+                _this.ljs.$ws.off(event, _this[closure_name]);
+            });
+            Object.keys(this.$options.$state).map(function (event) {
+                var closure_name = _this.$options.$state[event];
+                _this.ljs.$state.off(event, _this[closure_name]);
+            });
+            Object.keys(this.$options.$sync).map(function (global_var) {
+                _this.ljs.$state.off("changed:" + global_var);
+            });
+        },
         methods: {
+            test_sw: function () {
+            },
             exec: function (name, event) {
                 if (event === void 0) { event = null; }
                 ljs.exec(name, null, { object: this.$el, event: event });
@@ -2577,6 +2621,64 @@ function baseRest(func, start) {
 }
 
 module.exports = baseRest;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseSet.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/_baseSet.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var assignValue = __webpack_require__(/*! ./_assignValue */ "./node_modules/lodash/_assignValue.js"),
+    castPath = __webpack_require__(/*! ./_castPath */ "./node_modules/lodash/_castPath.js"),
+    isIndex = __webpack_require__(/*! ./_isIndex */ "./node_modules/lodash/_isIndex.js"),
+    isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js"),
+    toKey = __webpack_require__(/*! ./_toKey */ "./node_modules/lodash/_toKey.js");
+
+/**
+ * The base implementation of `_.set`.
+ *
+ * @private
+ * @param {Object} object The object to modify.
+ * @param {Array|string} path The path of the property to set.
+ * @param {*} value The value to set.
+ * @param {Function} [customizer] The function to customize path creation.
+ * @returns {Object} Returns `object`.
+ */
+function baseSet(object, path, value, customizer) {
+  if (!isObject(object)) {
+    return object;
+  }
+  path = castPath(path, object);
+
+  var index = -1,
+      length = path.length,
+      lastIndex = length - 1,
+      nested = object;
+
+  while (nested != null && ++index < length) {
+    var key = toKey(path[index]),
+        newValue = value;
+
+    if (index != lastIndex) {
+      var objValue = nested[key];
+      newValue = customizer ? customizer(objValue, key, nested) : undefined;
+      if (newValue === undefined) {
+        newValue = isObject(objValue)
+          ? objValue
+          : (isIndex(path[index + 1]) ? [] : {});
+      }
+    }
+    assignValue(nested, key, newValue);
+    nested = nested[key];
+  }
+  return object;
+}
+
+module.exports = baseSet;
 
 
 /***/ }),
@@ -7090,6 +7192,52 @@ function property(path) {
 }
 
 module.exports = property;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/set.js":
+/*!************************************!*\
+  !*** ./node_modules/lodash/set.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseSet = __webpack_require__(/*! ./_baseSet */ "./node_modules/lodash/_baseSet.js");
+
+/**
+ * Sets the value at `path` of `object`. If a portion of `path` doesn't exist,
+ * it's created. Arrays are created for missing index properties while objects
+ * are created for all other missing properties. Use `_.setWith` to customize
+ * `path` creation.
+ *
+ * **Note:** This method mutates `object`.
+ *
+ * @static
+ * @memberOf _
+ * @since 3.7.0
+ * @category Object
+ * @param {Object} object The object to modify.
+ * @param {Array|string} path The path of the property to set.
+ * @param {*} value The value to set.
+ * @returns {Object} Returns `object`.
+ * @example
+ *
+ * var object = { 'a': [{ 'b': { 'c': 3 } }] };
+ *
+ * _.set(object, 'a[0].b.c', 4);
+ * console.log(object.a[0].b.c);
+ * // => 4
+ *
+ * _.set(object, ['x', '0', 'y', 'z'], 5);
+ * console.log(object.x[0].y.z);
+ * // => 5
+ */
+function set(object, path, value) {
+  return object == null ? object : baseSet(object, path, value);
+}
+
+module.exports = set;
 
 
 /***/ }),

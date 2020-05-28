@@ -729,6 +729,9 @@ Helper_1.Helper.before_load(function (ljs) {
             });
             Object.keys(this.$options.$sync).map(function (global_var) {
                 var inner_var = _this.$options.$sync[global_var];
+                if (!isNaN(Number(global_var))) {
+                    global_var = inner_var;
+                }
                 if (!window.$state.has(global_var)) {
                     window.$state.set(global_var, get_1.default(_this, inner_var));
                 }

@@ -123,6 +123,7 @@ Helper.before_load((ljs: Ljs) => {
 
             Object.keys(this.$options.$sync).map((global_var: string) => {
                 let inner_var = this.$options.$sync[global_var];
+                if (!isNaN(Number(global_var))) { global_var = inner_var; }
                 if (!window.$state.has(global_var)) {
                     window.$state.set(global_var, get(this, inner_var));
                 } else {

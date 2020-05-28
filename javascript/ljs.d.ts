@@ -47,6 +47,7 @@ declare interface Ljs {
     swal: any
     toast: Toastr
     progress: NProgress
+    method: any
     exec (data: any, params?: any, storage_data?: any): any
     parse (str: string, storage?: any): any
     call (command: string, storage?: any): any

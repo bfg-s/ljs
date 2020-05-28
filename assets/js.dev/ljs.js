@@ -3108,6 +3108,15 @@ var LJS = /** @class */ (function (_super) {
         if (handler === void 0) { handler = undefined; }
         return $(document).on(events, selector, data, handler);
     };
+    /**
+     * OneTime execute action
+     * @param action
+     * @param ms
+     */
+    LJS.prototype.onetime = function (action, ms) {
+        if (ms === void 0) { ms = 100; }
+        return "timer::onetime".exec("ljs:" + ms + ":inner", action, ms);
+    };
     return LJS;
 }(LJSConstructor_1.LJSConstructor));
 exports.LJS = LJS;

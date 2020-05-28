@@ -65,6 +65,7 @@ declare interface Ljs {
     applyCleared (): boolean
     element ($selector: any): {on (events: string, selector: any, data?: any, handler?: any): any}
     on (events: string, selector: any, data?: any, handler?: any): any
+    onetime (action: any, ms?: number): any
     instance (): void
     _apply_instance (): Ljs
     _apply_events (): Ljs

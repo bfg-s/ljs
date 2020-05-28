@@ -208,4 +208,13 @@ export class LJS extends LJSConstructor implements Ljs {
 
         return $(document).on(events, selector, data, handler);
     }
+
+    /**
+     * OneTime execute action
+     * @param action
+     * @param ms
+     */
+    onetime (action: any, ms: number = 100) {
+        return "timer::onetime".exec(`ljs:${ms}:inner`, action, ms);
+    }
 }

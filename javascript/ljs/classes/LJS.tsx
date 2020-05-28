@@ -19,6 +19,7 @@ export class LJS extends LJSConstructor implements Ljs {
     public help: any
     public vue: any
     public swal: any
+    public method: any
 
 
     constructor () {

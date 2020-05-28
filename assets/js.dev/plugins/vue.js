@@ -711,9 +711,7 @@ Helper_1.Helper.before_load(function (ljs) {
     ljs.vue.mixin({
         data: function () {
             return {
-                ljs: ljs,
-                state: window.state,
-                jax: window.jax
+                ljs: ljs
             };
         },
         $ws: {},

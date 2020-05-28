@@ -101,9 +101,7 @@ Helper.before_load((ljs: Ljs) => {
         data: () => {
 
             return {
-                ljs: ljs,
-                state: window.state,
-                jax: window.jax
+                ljs: ljs
             };
         },
 

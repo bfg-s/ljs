@@ -566,10 +566,13 @@ var VueExecutor = /** @class */ (function (_super) {
     VueExecutor.prototype.init = function () {
         if (this.target) {
             var pjax_1 = window.ljs.config('pjax-container');
-            var parents_1 = pjax_1 ? $(this.target).parents(pjax_1).length : 0;
+            var parents_1 = pjax_1 ? this.target.closest(pjax_1) : 0;
             var group_1 = window.ljs.$vue.group();
             if (!pjax_1 && !parents_1) {
                 group_1 = 'components';
+            }
+            else if (pjax_1 && !parents_1) {
+                group_1 = 'outside';
             }
             var name_1 = this.target.tagName.toLowerCase() + (window.ljs.$vue[group_1] !== undefined ? Object.keys(window.ljs.$vue[group_1]).length : 0);
             if (this.target.hasAttribute('id')) {
@@ -654,11 +657,14 @@ Helper_1.Helper.before_load(function (ljs) {
     ljs.$vue = {
         components: {},
         group: function () {
-            return ljs.config('route_name', location.pathname.replace(/\//g, '_').replace(/^\_/, ''));
+            return ljs.config('name', location.pathname.replace(/\//g, '_').replace(/^\_/, ''));
         },
         component: function ($name) {
             var all = ljs.$vue.allComponents();
             return all[$name] !== undefined ? all[$name] : null;
+        },
+        getOutside: function () {
+            return ljs.$vue.outside;
         },
         getComponents: function () {
             return ljs.$vue.components;

@@ -7,12 +7,10 @@ export class VueExecutor extends ExecutorParent {
         if (this.target) {
 
             let pjax = window.ljs.config('pjax-container');
-
-            let parents = pjax ? $(this.target).parents(pjax).length : 0;
-
+            let parents = pjax ? this.target.closest(pjax) : 0;
             let group = window.ljs.$vue.group();
-
             if (!pjax && !parents) { group = 'components'; }
+            else if (pjax && !parents) { group = 'outside'; }
 
             let name = this.target.tagName.toLowerCase() + (window.ljs.$vue[group] !== undefined ? Object.keys(window.ljs.$vue[group]).length : 0);
 

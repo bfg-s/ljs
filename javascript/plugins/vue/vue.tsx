@@ -15,12 +15,16 @@ Helper.before_load((ljs: Ljs) => {
         components: {},
 
         group: () => {
-            return ljs.config('route_name', location.pathname.replace(/\//g, '_').replace(/^\_/, ''));
+            return ljs.config('name', location.pathname.replace(/\//g, '_').replace(/^\_/, ''));
         },
 
         component: ($name: string) => {
             let all = ljs.$vue.allComponents();
             return all[$name] !== undefined ? all[$name] : null;
+        },
+
+        getOutside: () => {
+            return ljs.$vue.outside;
         },
 
         getComponents: () => {

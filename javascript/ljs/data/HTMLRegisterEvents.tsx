@@ -30,11 +30,6 @@ export class HTMLRegisterEvents {
 
                 window.$state.merge(event.state);
             }
-
-            else {
-
-                window.$state.clear_all();
-            }
         };
 
         return this;

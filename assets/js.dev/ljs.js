@@ -4295,9 +4295,6 @@ var HTMLRegisterEvents = /** @class */ (function () {
             if (event.state !== null) {
                 window.$state.merge(event.state);
             }
-            else {
-                window.$state.clear_all();
-            }
         };
         return this;
     };

@@ -744,9 +744,7 @@ Helper_1.Helper.before_load(function (ljs) {
                 else {
                     set_1.default(_this, inner_var, window.$state.get(global_var));
                 }
-                _this.ljs.$state.on("changed:" + global_var, function (val) {
-                    set_1.default(_this, inner_var, val);
-                });
+                _this.ljs.$state.on("changed:" + global_var, _this.__inner_sync_state_method(inner_var));
                 _this.$watch(inner_var, function (val) {
                     window.$state.set(global_var, val);
                 });
@@ -763,15 +761,19 @@ Helper_1.Helper.before_load(function (ljs) {
                 _this.ljs.$state.off(event, _this[closure_name]);
             });
             Object.keys(this.$options.$sync).map(function (global_var) {
-                _this.ljs.$state.off("changed:" + global_var);
+                _this.ljs.$state.off("changed:" + global_var, _this.__inner_sync_state_method(global_var));
             });
         },
         methods: {
-            test_sw: function () {
-            },
             exec: function (name, event) {
                 if (event === void 0) { event = null; }
                 ljs.exec(name, null, { object: this.$el, event: event });
+            },
+            __inner_sync_state_method: function (inner_var) {
+                var _this = this;
+                return function (val) {
+                    set_1.default(_this, inner_var, val);
+                };
             }
         }
     });

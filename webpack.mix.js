@@ -23,6 +23,7 @@ mix
     .js('javascript/plugins/jquery.tsx', 'assets/js/plugins')
     .js('javascript/plugins/jq.tsx', 'assets/js/plugins')
     .js('javascript/plugins/fancy.tsx', 'assets/js/plugins')
+    .js('javascript/plugins/echo.tsx', 'assets/js/plugins')
 
     .sass('javascript/scss/plugins/select2.scss', 'assets/css/plugins')
     .sass('javascript/scss/plugins/fancy.scss', 'assets/css/plugins')

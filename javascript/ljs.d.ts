@@ -1,3 +1,4 @@
+
 declare interface Model {
     withoutGlobalScope ($scope: string): Model //Remove a registered global scope.
     withoutGlobalScopes ($scopes: string[]): Model //Remove all or passed registered global scopes.
@@ -47,6 +48,7 @@ declare interface Ljs {
     swal: any
     toast: Toastr
     progress: NProgress
+    echo: Echo|null
     method: any
     exec (data: any, params?: any, storage_data?: any): any
     parse (str: string, storage?: any): any
@@ -625,4 +627,138 @@ interface Toastr {
      * @param callback The function which will be passed the event details.
      */
     subscribe: (callback: (response: ToastrResponse) => void) => void;
+}
+
+interface Channel {
+
+    /**
+     * The Echo options.
+     */
+    options: any;
+
+    /**
+     * Listen for an event on the channel instance.
+     */
+    listen(event: string, callback: Function): Channel;
+
+    /**
+     * Listen for a whisper event on the channel instance.
+     */
+    listenForWhisper(event: string, callback: Function): Channel;
+
+    /**
+     * Listen for an event on the channel instance.
+     */
+    notification(callback: Function): Channel;
+
+    /**
+     * Stop listening to an event on the channel instance.
+     */
+    stopListening(event: string): Channel;
+
+    /**
+     * Stop listening for a whispser event on the channel instance.
+     */
+    stopListeningForWhisper(event: string): Channel;
+}
+
+interface PresenceChannel {
+    /**
+     * Register a callback to be called anytime the member list changes.
+     */
+    here(callback: Function): PresenceChannel;
+
+    /**
+     * Listen for someone joining the channel.
+     */
+    joining(callback: Function): PresenceChannel;
+
+    /**
+     * Listen for someone leaving the channel.
+     */
+    leaving(callback: Function): PresenceChannel;
+}
+
+interface Echo {
+
+    /**
+     * The broadcasting connector.
+     */
+    connector: any;
+
+    /**
+     * The Echo options.
+     */
+    options: any;
+
+    /**
+     * Get a channel instance by name.
+     */
+    channel(channel: string): Channel;
+
+    /**
+     * Create a new connection.
+     */
+    connect(): void;
+
+    /**
+     * Disconnect from the Echo server.
+     */
+    disconnect(): void;
+
+    /**
+     * Get a presence channel instance by name.
+     */
+    join(channel: string): PresenceChannel;
+
+    /**
+     * Leave the given channel, as well as its private and presence variants.
+     */
+    leave(channel: string): void;
+
+    /**
+     * Leave the given channel.
+     */
+    leaveChannel(channel: string): void;
+
+    /**
+     * Listen for an event on a channel instance.
+     */
+    listen(channel: string, event: string, callback: Function): Channel;
+
+    /**
+     * Get a private channel instance by name.
+     */
+    private(channel: string): Channel;
+
+    /**
+     * Get a private encrypted channel instance by name.
+     */
+    encryptedPrivate(channel: string): Channel;
+
+    /**
+     * Get the Socket ID for the connection.
+     */
+    socketId(): string;
+
+    /**
+     * Register 3rd party request interceptiors. These are used to automatically
+     * send a connections socket id to a Laravel app with a X-Socket-Id header.
+     */
+    registerInterceptors(): void;
+
+    /**
+     * Register a Vue HTTP interceptor to add the X-Socket-ID header.
+     */
+    registerVueRequestInterceptor(): void;
+
+    /**
+     * Register an Axios HTTP interceptor to add the X-Socket-ID header.
+     */
+    registerAxiosRequestInterceptor(): any;
+
+    /**
+     * Register jQuery AjaxPrefilter to add the X-Socket-ID header.
+     */
+    registerjQueryAjaxSetup(): void;
 }

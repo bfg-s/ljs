@@ -20,6 +20,7 @@ export class LJS extends LJSConstructor implements Ljs {
     public vue: any
     public swal: any
     public method: any
+    public echo: Echo|null
 
 
     constructor () {
@@ -39,6 +40,8 @@ export class LJS extends LJSConstructor implements Ljs {
         this.$jax = new JaxInstance(this);
 
         this.progress = require("nprogress");
+
+        this.echo = null;
 
         window.$state = this.$state;
 

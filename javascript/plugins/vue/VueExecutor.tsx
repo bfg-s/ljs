@@ -8,9 +8,11 @@ export class VueExecutor extends ExecutorParent {
 
             let pjax = window.ljs.config('pjax-container');
             let parents = pjax ? this.target.closest(pjax) : 0;
-            let group = window.ljs.$vue.group();
+            let default_group = window.ljs.$vue.group();
+            let group = default_group;
             if (!pjax && !parents) { group = 'components'; }
             else if (pjax && !parents) { group = 'outside'; }
+            if (this.target.closest('[data-live]')) { group = default_group; }
 
             let name = this.target.tagName.toLowerCase() + (window.ljs.$vue[group] !== undefined ? Object.keys(window.ljs.$vue[group]).length : 0);
 

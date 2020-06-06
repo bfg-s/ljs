@@ -7,19 +7,36 @@ export class Jax
     public withParams: any = {}
     public storage: any = {}
     public state: any = null
-    constructor() {
+    public namespace: any = null
+    constructor(namespace: any = null) {
 
         this.prox = new Proxy(this, this);
         this.withs = {};
         this.withParams = {};
         this.storage = {};
         this.state = null;
+        this.namespace = namespace;
         return this.prox;
     }
+
+    // namespace (namespace: any) {
+    //
+    //     return this.get(this, namespace)
+    // }
 
     get (target: Jax, prop: any) {
 
         let that = this;
+
+        if (prop === 'call') {
+
+            return function (namespace: string) {
+
+                if (that.namespace) { namespace = `${that.namespace}.${namespace}`; }
+
+                return that.get(that, window.ljs.help.camelize(namespace, true).replace(/\./g, '\\'));
+            };
+        }
 
         if (prop === 'with') {
 

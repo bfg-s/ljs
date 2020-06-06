@@ -31,7 +31,7 @@ export class LJS extends LJSConstructor implements Ljs {
 
         this.$storage = new LStorage(this);
 
-        this.$state = new StateInstance();
+        this.$state = new StateInstance(this.$storage);
 
         this.instance();
 
@@ -121,7 +121,7 @@ export class LJS extends LJSConstructor implements Ljs {
 
         if (value === null) {
 
-            return this._configs[name] !== undefined ? this._configs[name] : false
+            return this._configs[name] !== undefined ? this._configs[name] : undefined
 
         } else {
 
@@ -140,7 +140,7 @@ export class LJS extends LJSConstructor implements Ljs {
 
         let data = this.cfg(name);
 
-        data = data !== false ? data : default_data;
+        data = data !== undefined ? data : default_data;
 
         data = data === "true" ? true : data;
 

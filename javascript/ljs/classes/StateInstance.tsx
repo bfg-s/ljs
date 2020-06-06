@@ -13,13 +13,16 @@ export class StateInstance implements StateInterface{
     static storage: any = {}
     static watchers: any = []
 
-    constructor() {
+    constructor($storage: LStorageInterface) {
 
         StateInstance.state = {};
         StateInstance.binds = {};
         StateInstance.events = {};
         StateInstance.watchers = [];
         StateInstance.storage = {};
+        map($storage.getAll("state"), (val: any, path: string) => {
+            setWith(StateInstance.state, path, val);
+        });
     }
 
     /**
@@ -182,6 +185,28 @@ export class StateInstance implements StateInterface{
         path = state._correctPath(path);
 
         return has(StateInstance.state, path);
+    }
+
+    /**
+     * Save selected path
+     * @param path
+     */
+    save (path: string) {
+
+        let state: StateInstance;
+        if (!window.ljs.$state) return false;
+        else  state = window.ljs.$state as StateInstance;
+
+        if (path && this.has(path)) {
+
+            let data: any = get(StateInstance.state, path);
+
+            window.ljs.$storage.put(path, data, "state");
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

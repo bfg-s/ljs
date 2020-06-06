@@ -40,6 +40,17 @@ export class HTMLRegisterEvents {
      */
     dataHref () {
 
+        window.ljs.on('ljs:on_watch', () => {
+
+            document.querySelectorAll('[data-live] [data-load]').forEach((obj: any) => {
+
+                new HTMLDataEvent('load', {target: obj, currentTarget: obj}, () => {
+
+                    obj.removeAttribute(`data-load`);
+                });
+            });
+        });
+
         window.ljs.on('click', '[data-href]', (event: any) => {
 
             if (event.target.hasAttribute('href') || event.target.closest('a[href]')) {

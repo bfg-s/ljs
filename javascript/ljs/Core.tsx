@@ -21,7 +21,8 @@ export class Core extends Helper{
 
         window.Executor = require('./Extends/ExecutorParent')['ExecutorParent'];
         window.StateWatcher = require('./Extends/StateWatcher')['StateWatcher'];
-        window.jax = new (require('./classes/Jax')['Jax']);
+        window.JaxWrapper = require('./classes/Jax')['Jax'];
+        window.jax = new window.JaxWrapper;
         window.state = new (require('./classes/State')['State']);
 
         return this;

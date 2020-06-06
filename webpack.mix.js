@@ -17,13 +17,13 @@ mix
 
     .js('javascript/plugins/vue/vue.tsx', 'assets/js/plugins')
     .js('javascript/plugins/nav/nav.tsx', 'assets/js/plugins')
+    .js('javascript/plugins/echo/echo.tsx', 'assets/js/plugins')
     .js('javascript/plugins/alert/alert.tsx', 'assets/js/plugins')
     .js('javascript/plugins/mask.tsx', 'assets/js/plugins')
     .js('javascript/plugins/select2.tsx', 'assets/js/plugins')
     .js('javascript/plugins/jquery.tsx', 'assets/js/plugins')
     .js('javascript/plugins/jq.tsx', 'assets/js/plugins')
     .js('javascript/plugins/fancy.tsx', 'assets/js/plugins')
-    .js('javascript/plugins/echo.tsx', 'assets/js/plugins')
 
     .sass('javascript/scss/plugins/select2.scss', 'assets/css/plugins')
     .sass('javascript/scss/plugins/fancy.scss', 'assets/css/plugins')

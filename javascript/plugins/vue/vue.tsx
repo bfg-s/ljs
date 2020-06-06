@@ -102,7 +102,7 @@ Helper.before_load((ljs: Ljs) => {
 
     ljs.vue.mixin({
 
-        data: () => {
+        data () {
 
             return {
                 ljs: ljs
@@ -112,6 +112,7 @@ Helper.before_load((ljs: Ljs) => {
         $ws: {},
         $state: {},
         $sync: {},
+        namespace: null,
 
         beforeMount () {
 
@@ -138,9 +139,15 @@ Helper.before_load((ljs: Ljs) => {
                     window.$state.set(global_var, val);
                 })
             });
+
+            if (typeof this.echo_mount === 'function') {
+                this.echo_mount(this.echo);
+            }
         },
 
         beforeDestroy () {
+
+            this.echo.leaveRegistered();
 
             Object.keys(this.$options.$ws).map((event: string) => {
                 let closure_name = this.$options.$ws[event];
@@ -155,6 +162,17 @@ Helper.before_load((ljs: Ljs) => {
             Object.keys(this.$options.$sync).map((global_var: string) => {
                 this.ljs.$state.off(`changed:${global_var}`, this.__inner_sync_state_method(global_var));
             });
+        },
+
+        computed: {
+           echo (): LjsEcho {
+               // @ts-ignore
+               return new window.EchoWrapper({namespace: this.$options.namespace, bind: this});
+           },
+           jax (): any {
+               // @ts-ignore
+               return new window.JaxWrapper(this.$options.namespace);
+           }
         },
 
         methods: {

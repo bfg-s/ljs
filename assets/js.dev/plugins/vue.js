@@ -121,6 +121,13 @@ var Conditions = /** @class */ (function () {
         return Object.keys(val).length === 0;
     };
     /**
+     * Check is number
+     * @param num
+     */
+    Conditions.isNumber = function (num) {
+        return !isNaN(Number(num));
+    };
+    /**
      * Determine if a given string matches a given pattern.
      * @param pattern
      * @param text
@@ -329,6 +336,17 @@ var Helper = /** @class */ (function (_super) {
         kw = i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands_sep);
         kd = (decimals ? dec_point + Math.abs(num - parseInt(i)).toFixed(decimals).replace(/-/, '0').slice(2) : "");
         return km + kw + kd;
+    };
+    /**
+     * Transform to camel case
+     * @param str
+     * @param first
+     */
+    Helper.camelize = function (str, first) {
+        if (first === void 0) { first = false; }
+        return str.replace(/\-|\_/g, ' ').replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+            return first ? word.toUpperCase() : (index === 0 ? word.toLowerCase() : word.toUpperCase());
+        }).replace(/\s+/g, '');
     };
     return Helper;
 }(Conditions_1.Conditions));
@@ -567,12 +585,16 @@ var VueExecutor = /** @class */ (function (_super) {
         if (this.target) {
             var pjax_1 = window.ljs.config('pjax-container');
             var parents_1 = pjax_1 ? this.target.closest(pjax_1) : 0;
-            var group_1 = window.ljs.$vue.group();
+            var default_group = window.ljs.$vue.group();
+            var group_1 = default_group;
             if (!pjax_1 && !parents_1) {
                 group_1 = 'components';
             }
             else if (pjax_1 && !parents_1) {
                 group_1 = 'outside';
+            }
+            if (this.target.closest('[data-live]')) {
+                group_1 = default_group;
             }
             var name_1 = this.target.tagName.toLowerCase() + (window.ljs.$vue[group_1] !== undefined ? Object.keys(window.ljs.$vue[group_1]).length : 0);
             if (this.target.hasAttribute('id')) {
@@ -723,6 +745,7 @@ Helper_1.Helper.before_load(function (ljs) {
         $ws: {},
         $state: {},
         $sync: {},
+        namespace: null,
         beforeMount: function () {
             var _this = this;
             Object.keys(this.$options.$ws).map(function (event) {
@@ -749,9 +772,13 @@ Helper_1.Helper.before_load(function (ljs) {
                     window.$state.set(global_var, val);
                 });
             });
+            if (typeof this.echo_mount === 'function') {
+                this.echo_mount(this.echo);
+            }
         },
         beforeDestroy: function () {
             var _this = this;
+            this.echo.leaveRegistered();
             Object.keys(this.$options.$ws).map(function (event) {
                 var closure_name = _this.$options.$ws[event];
                 _this.ljs.$ws.off(event, _this[closure_name]);
@@ -763,6 +790,16 @@ Helper_1.Helper.before_load(function (ljs) {
             Object.keys(this.$options.$sync).map(function (global_var) {
                 _this.ljs.$state.off("changed:" + global_var, _this.__inner_sync_state_method(global_var));
             });
+        },
+        computed: {
+            echo: function () {
+                // @ts-ignore
+                return new window.EchoWrapper({ namespace: this.$options.namespace, bind: this });
+            },
+            jax: function () {
+                // @ts-ignore
+                return new window.JaxWrapper(this.$options.namespace);
+            }
         },
         methods: {
             exec: function (name, event) {

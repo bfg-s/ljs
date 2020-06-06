@@ -92,7 +92,7 @@ export class LStorage implements LStorageInterface
      */
     getAll (group: string|null = null) {
 
-        let return_data = undefined;
+        let return_data = {};
 
         if (group !== null) {
 

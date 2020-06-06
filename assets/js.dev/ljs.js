@@ -121,6 +121,13 @@ var Conditions = /** @class */ (function () {
         return Object.keys(val).length === 0;
     };
     /**
+     * Check is number
+     * @param num
+     */
+    Conditions.isNumber = function (num) {
+        return !isNaN(Number(num));
+    };
+    /**
      * Determine if a given string matches a given pattern.
      * @param pattern
      * @param text
@@ -330,6 +337,17 @@ var Helper = /** @class */ (function (_super) {
         kd = (decimals ? dec_point + Math.abs(num - parseInt(i)).toFixed(decimals).replace(/-/, '0').slice(2) : "");
         return km + kw + kd;
     };
+    /**
+     * Transform to camel case
+     * @param str
+     * @param first
+     */
+    Helper.camelize = function (str, first) {
+        if (first === void 0) { first = false; }
+        return str.replace(/\-|\_/g, ' ').replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+            return first ? word.toUpperCase() : (index === 0 ? word.toLowerCase() : word.toUpperCase());
+        }).replace(/\s+/g, '');
+    };
     return Helper;
 }(Conditions_1.Conditions));
 exports.Helper = Helper;
@@ -418,7 +436,8 @@ var Core = /** @class */ (function (_super) {
     Core.globalBootstrap = function () {
         window.Executor = __webpack_require__(/*! ./Extends/ExecutorParent */ "./javascript/ljs/Extends/ExecutorParent.tsx")['ExecutorParent'];
         window.StateWatcher = __webpack_require__(/*! ./Extends/StateWatcher */ "./javascript/ljs/Extends/StateWatcher.tsx")['StateWatcher'];
-        window.jax = new (__webpack_require__(/*! ./classes/Jax */ "./javascript/ljs/classes/Jax.tsx")['Jax']);
+        window.JaxWrapper = __webpack_require__(/*! ./classes/Jax */ "./javascript/ljs/classes/Jax.tsx")['Jax'];
+        window.jax = new window.JaxWrapper;
         window.state = new (__webpack_require__(/*! ./classes/State */ "./javascript/ljs/classes/State.tsx")['State']);
         return this;
     };
@@ -2342,20 +2361,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var isObject_1 = __importDefault(__webpack_require__(/*! lodash/isObject */ "./node_modules/lodash/isObject.js"));
 var Jax = /** @class */ (function () {
-    function Jax() {
+    function Jax(namespace) {
+        if (namespace === void 0) { namespace = null; }
         this.withs = {};
         this.withParams = {};
         this.storage = {};
         this.state = null;
+        this.namespace = null;
         this.prox = new Proxy(this, this);
         this.withs = {};
         this.withParams = {};
         this.storage = {};
         this.state = null;
+        this.namespace = namespace;
         return this.prox;
     }
+    // namespace (namespace: any) {
+    //
+    //     return this.get(this, namespace)
+    // }
     Jax.prototype.get = function (target, prop) {
         var that = this;
+        if (prop === 'call') {
+            return function (namespace) {
+                if (that.namespace) {
+                    namespace = that.namespace + "." + namespace;
+                }
+                return that.get(that, window.ljs.help.camelize(namespace, true).replace(/\./g, '\\'));
+            };
+        }
         if (prop === 'with') {
             return function (args) {
                 that.withs = Array.isArray(args) || isObject_1.default(args) ? args : arguments;
@@ -2908,9 +2942,9 @@ var JaxInstance = /** @class */ (function () {
         }
         var $methods = { "delete": "delete", "get": "get", "post": "post", "put": "put", "head": "head" };
         if ($methods[method] !== undefined) {
-            window.ljs.progress.start();
+            //window.ljs.progress.start();
             window.ljs.switchProcess(true);
-            document.body.style.cursor = "progress";
+            //document.body.style.cursor = "progress";
             if (true) {
                 window.ljs._detail("Method: [" + method + "] Jax");
             }
@@ -2944,7 +2978,7 @@ var JaxInstance = /** @class */ (function () {
                 data: params,
                 type: method,
                 complete: function (response, textStatus) {
-                    document.body.style.cursor = "auto";
+                    //document.body.style.cursor = "auto";
                     window.ljs._onload_header(response.getAllResponseHeaders());
                     if (isObject_1.default(response.responseJSON)) {
                         var data_1 = {};
@@ -2954,7 +2988,7 @@ var JaxInstance = /** @class */ (function () {
                         });
                         window.ljs.exec(data_1, null, merge_1.default({ response: response, status: textStatus, method: method, path: path, params: params }, storage));
                     }
-                    window.ljs.progress.done();
+                    //window.ljs.progress.done();
                     window.ljs.switchProcess(false);
                 }
             });
@@ -3004,11 +3038,12 @@ var LJS = /** @class */ (function (_super) {
         _this.process = false;
         _this.help = Helper_1.Helper;
         _this.$storage = new LStorage_1.LStorage(_this);
-        _this.$state = new StateInstance_1.StateInstance();
+        _this.$state = new StateInstance_1.StateInstance(_this.$storage);
         _this.instance();
         _this.$ws = new ProServer_1.ProServer(_this);
         _this.$jax = new JaxInstance_1.JaxInstance(_this);
         _this.progress = __webpack_require__(/*! nprogress */ "./node_modules/nprogress/nprogress.js");
+        _this.echo = null;
         window.$state = _this.$state;
         window.$ws = _this.$ws;
         window.$jax = _this.$jax;
@@ -3068,7 +3103,7 @@ var LJS = /** @class */ (function (_super) {
         if (value === void 0) { value = null; }
         name = "lar-" + name;
         if (value === null) {
-            return this._configs[name] !== undefined ? this._configs[name] : false;
+            return this._configs[name] !== undefined ? this._configs[name] : undefined;
         }
         else {
             this._configs[name] = value;
@@ -3083,7 +3118,7 @@ var LJS = /** @class */ (function (_super) {
     LJS.prototype.config = function (name, default_data) {
         if (default_data === void 0) { default_data = null; }
         var data = this.cfg(name);
-        data = data !== false ? data : default_data;
+        data = data !== undefined ? data : default_data;
         data = data === "true" ? true : data;
         data = data === "false" ? false : data;
         return data;
@@ -3240,7 +3275,7 @@ var LStorage = /** @class */ (function () {
      */
     LStorage.prototype.getAll = function (group) {
         if (group === void 0) { group = null; }
-        var return_data = undefined;
+        var return_data = {};
         if (group !== null) {
             var save_group = this._group;
             this._set_group(group);
@@ -3773,12 +3808,15 @@ var setWith_1 = __importDefault(__webpack_require__(/*! lodash/setWith */ "./nod
 var unset_1 = __importDefault(__webpack_require__(/*! lodash/unset */ "./node_modules/lodash/unset.js"));
 var has_1 = __importDefault(__webpack_require__(/*! lodash/has */ "./node_modules/lodash/has.js"));
 var StateInstance = /** @class */ (function () {
-    function StateInstance() {
+    function StateInstance($storage) {
         StateInstance.state = {};
         StateInstance.binds = {};
         StateInstance.events = {};
         StateInstance.watchers = [];
         StateInstance.storage = {};
+        map_1.default($storage.getAll("state"), function (val, path) {
+            setWith_1.default(StateInstance.state, path, val);
+        });
     }
     /**
      * Get state
@@ -3899,6 +3937,23 @@ var StateInstance = /** @class */ (function () {
             state = window.ljs.$state;
         path = state._correctPath(path);
         return has_1.default(StateInstance.state, path);
+    };
+    /**
+     * Save selected path
+     * @param path
+     */
+    StateInstance.prototype.save = function (path) {
+        var state;
+        if (!window.ljs.$state)
+            return false;
+        else
+            state = window.ljs.$state;
+        if (path && this.has(path)) {
+            var data = get_1.default(StateInstance.state, path);
+            window.ljs.$storage.put(path, data, "state");
+            return true;
+        }
+        return false;
     };
     /**
      * Make storage for event
@@ -4302,6 +4357,13 @@ var HTMLRegisterEvents = /** @class */ (function () {
      * Make data href click
      */
     HTMLRegisterEvents.prototype.dataHref = function () {
+        window.ljs.on('ljs:on_watch', function () {
+            document.querySelectorAll('[data-live] [data-load]').forEach(function (obj) {
+                new HTMLDataEvent_1.HTMLDataEvent('load', { target: obj, currentTarget: obj }, function () {
+                    obj.removeAttribute("data-load");
+                });
+            });
+        });
         window.ljs.on('click', '[data-href]', function (event) {
             if (event.target.hasAttribute('href') || event.target.closest('a[href]')) {
                 if (event.target.nodeName === 'A' && event.target.getAttribute('href')) {

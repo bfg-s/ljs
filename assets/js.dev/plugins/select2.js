@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -119,6 +119,13 @@ var Conditions = /** @class */ (function () {
      */
     Conditions.isEmptyObject = function (val) {
         return Object.keys(val).length === 0;
+    };
+    /**
+     * Check is number
+     * @param num
+     */
+    Conditions.isNumber = function (num) {
+        return !isNaN(Number(num));
     };
     /**
      * Determine if a given string matches a given pattern.
@@ -329,6 +336,17 @@ var Helper = /** @class */ (function (_super) {
         kw = i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands_sep);
         kd = (decimals ? dec_point + Math.abs(num - parseInt(i)).toFixed(decimals).replace(/-/, '0').slice(2) : "");
         return km + kw + kd;
+    };
+    /**
+     * Transform to camel case
+     * @param str
+     * @param first
+     */
+    Helper.camelize = function (str, first) {
+        if (first === void 0) { first = false; }
+        return str.replace(/\-|\_/g, ' ').replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+            return first ? word.toUpperCase() : (index === 0 ? word.toLowerCase() : word.toUpperCase());
+        }).replace(/\s+/g, '');
     };
     return Helper;
 }(Conditions_1.Conditions));
@@ -5550,7 +5568,7 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ 5:
+/***/ 6:
 /*!**********************************************!*\
   !*** multi ./javascript/plugins/select2.tsx ***!
   \**********************************************/

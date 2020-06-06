@@ -117,11 +117,11 @@ JaxInstance implements JaxInterface {
 
         if ($methods[method] !== undefined) {
 
-            window.ljs.progress.start();
+            //window.ljs.progress.start();
 
             window.ljs.switchProcess(true);
 
-            document.body.style.cursor = "progress";
+            //document.body.style.cursor = "progress";
 
             if (process.env.NODE_ENV === 'development') {
                 window.ljs._detail(`Method: [${method}] Jax`);
@@ -156,7 +156,7 @@ JaxInstance implements JaxInterface {
                 type: method,
                 complete: (response, textStatus) => {
 
-                    document.body.style.cursor = "auto";
+                    //document.body.style.cursor = "auto";
 
                     window.ljs._onload_header(response.getAllResponseHeaders());
 
@@ -171,7 +171,7 @@ JaxInstance implements JaxInterface {
                         window.ljs.exec(data, null, merge({response, status: textStatus, method, path, params}, storage));
                     }
 
-                    window.ljs.progress.done();
+                    //window.ljs.progress.done();
 
                     window.ljs.switchProcess(false);
                 }

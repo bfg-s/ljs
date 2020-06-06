@@ -28,6 +28,8 @@ declare interface Window {
     $ws: ProServerInterface
     $jax: JaxInterface
     $nav: any
+    EchoWrapper: LjsEcho|any
+    JaxWrapper: any
 }
 
 declare interface Ljs {
@@ -135,6 +137,7 @@ declare interface StateInterface {
     has (path: string): boolean
     make_storage (path: string, storage: any): any|StateInterface
     merge (set_state: object): any|StateInterface
+    save (path: string): boolean
     delete_all (): any|StateInterface
     clear_all (defaults?: any): any|StateInterface
     watcher (watchClass: StateWatcherInterface): any|StateInterface
@@ -629,6 +632,153 @@ interface Toastr {
     subscribe: (callback: (response: ToastrResponse) => void) => void;
 }
 
+interface LjsChannel {
+    
+    /**
+     * The Echo options.
+     */
+    options: any;
+
+    /**
+     * The echo connector.
+     */
+    connector: any;
+    
+    /**
+     * Listen for an event on the channel instance.
+     */
+    listen(event: string, callback: Function|string|null): LjsChannel|any;
+    
+    /**
+     * Listen for a whisper event on the channel instance.
+     */
+    listenForWhisper(event: string, callback: Function|string|null): LjsChannel|any;
+    
+    /**
+     * Listen for an event on the channel instance.
+     */
+    notification(callback: Function|string|null): LjsChannel|any;
+    
+    /**
+     * Stop listening to an event on the channel instance.
+     */
+    stopListening(event: string): LjsChannel|any;
+    
+    /**
+     * Stop listening for a whispser event on the channel instance.
+     */
+    stopListeningForWhisper(event: string): LjsChannel|any;
+
+    /**
+     * To broadcast client events
+     */
+    whisper(event: string, data: any): LjsChannel|any;
+}
+
+interface LjsPresenceChannel {
+
+    /**
+     * The Echo options.
+     */
+    options: any;
+
+    /**
+     * The echo connector.
+     */
+    connector: any;
+
+    /**
+     * Register a callback to be called anytime the member list changes.
+     */
+    here(callback: Function|string|null): LjsPresenceChannel|any;
+
+    /**
+     * Listen for someone joining the channel.
+     */
+    joining(callback: Function|string|null): LjsPresenceChannel|any;
+
+    /**
+     * Listen for someone leaving the channel.
+     */
+    leaving(callback: Function|string|null): LjsPresenceChannel|any;
+
+    /**
+     * Compo presence
+     * @param here
+     * @param joining
+     * @param leaving
+     */
+    presence(here: Function|string|null, joining: Function|string|null, leaving: Function|string|null): LjsPresenceChannel|any;
+}
+
+interface LjsEcho {
+    
+    /**
+     * The echo connector.
+     */
+    connector: any;
+    
+    /**
+     * The Wrapper options.
+     */
+    options: any;
+
+    /**
+     * All created chanels
+     */
+    channels: any;
+    
+    /**
+     * Get a channel instance by name.
+     */
+    channel(channel: string): LjsChannel|any;
+    
+    /**
+     * Disconnect from the Echo server.
+     */
+    disconnect(): void;
+    
+    /**
+     * Get a presence channel instance by name.
+     */
+    join(channel: string): LjsPresenceChannel|any;
+    
+    /**
+     * Leave the given channel, as well as its private and presence variants.
+     */
+    leave(channel: string): LjsEcho|any;
+    
+    /**
+     * Leave the given channel.
+     */
+    leaveChannel(channel: string): LjsEcho|any;
+
+    /**
+     * Leave tall registered channels.
+     */
+    leaveRegistered(): LjsEcho|any;
+    
+    /**
+     * Listen for an event on a channel instance.
+     */
+    listen(channel: string, event: string, callback?: Function|string|null): LjsChannel|any;
+    
+    /**
+     * Get a private channel instance by name.
+     */
+    private(channel: string): LjsChannel|any;
+    
+    /**
+     * Get a private encrypted channel instance by name.
+     */
+    encryptedPrivate(channel: string): LjsChannel|any;
+    
+    /**
+     * Get the Socket ID for the connection.
+     */
+    socketId(): string;
+}
+
 interface Channel {
 
     /**
@@ -682,12 +832,12 @@ interface PresenceChannel {
 interface Echo {
 
     /**
-     * The broadcasting connector.
+     * The echo connector.
      */
     connector: any;
 
     /**
-     * The Echo options.
+     * The Wrapper options.
      */
     options: any;
 

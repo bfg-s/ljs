@@ -25,6 +25,14 @@ export class Conditions {
     }
 
     /**
+     * Check is number
+     * @param num
+     */
+    static isNumber (num: any) {
+        return !isNaN(Number(num))
+    }
+
+    /**
      * Determine if a given string matches a given pattern.
      * @param pattern
      * @param text

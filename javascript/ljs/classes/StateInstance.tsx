@@ -365,7 +365,10 @@ export class StateInstance implements StateInterface{
 
         StateInstance.watchers.map((watcher: StateWatcherInterface) => watcher.call(event_name, state_name, inner_params).setStorage(storage));
 
-        let doc_data = {value: attrs[0], old_value: attrs[1] !== undefined ? attrs[1] : undefined, info: attrs, state_name, event_name, storage};
+        let doc_data = {
+            value: attrs[0],
+            old_value: attrs[1] !== undefined ? attrs[1] : undefined,
+            state_name, event_name, storage};
 
         window.ljs._dispatch_event(`state:${event_name}:${state_name}`, doc_data)
             ._dispatch_event(`state:${event_name}`, doc_data)

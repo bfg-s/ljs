@@ -728,7 +728,7 @@ Helper_1.Helper.before_load(function (ljs) {
         client: __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js").default,
         key: ljs.config('ws_app_key', null),
         cluster: ljs.config('ws_app_cluster', null),
-        wsHost: ljs.config('ws_host', null),
+        wsHost: ljs.config('ws_host', window.location.host),
         wsPort: ljs.config('ws_port', 6001),
         wssPort: ljs.config('ws_port', 6001),
         forceTLS: ssl,

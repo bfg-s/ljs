@@ -745,7 +745,7 @@ Helper_1.Helper.before_load(function (ljs) {
         $ws: {},
         $state: {},
         $sync: {},
-        namespace: null,
+        namespace: 'app',
         beforeMount: function () {
             var _this = this;
             Object.keys(this.$options.$ws).map(function (event) {

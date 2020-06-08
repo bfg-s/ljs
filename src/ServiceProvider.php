@@ -3,6 +3,8 @@
 namespace Lar\LJS;
 
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
+use Lar\Layout\Core\LConfigs;
+use Lar\LJS\Commands\MakeJaxExecutor;
 use Lar\LJS\Components\ajaxForm;
 use Lar\Tagable\Tag;
 
@@ -17,7 +19,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @var array
      */
     protected $commands = [
-
+        MakeJaxExecutor::class
     ];
 
     /**
@@ -68,6 +70,12 @@ class ServiceProvider extends ServiceProviderIlluminate
     {
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
+
+        $jax_route = md5(config('app.url'));
+        \Route::post($jax_route, '\Lar\LJS\JaxController@index')
+            ->middleware(['web'])->name('jax.executor');
+
+        JaxController::$list = array_merge(JaxController::$list, \Arr::dot(config('executors')));
     }
 
     /**

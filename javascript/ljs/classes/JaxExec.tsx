@@ -41,14 +41,14 @@ export class JaxExec implements JaxExecInterface{
      */
     cmd (name: string) {
 
-        let cmd_name = Object.keys(this.collect).length+":"+name;
+        let cmd_name = name;
 
         let that = this;
 
-        if (this.collect[cmd_name] === undefined) {
-
-            this.collect[cmd_name] = null;
-        }
+        // if (this.collect[cmd_name] === undefined) {
+        //
+        //     this.collect[cmd_name] = null;
+        // }
 
         return new class JaxController implements JaxExecControllerInterface{
 
@@ -93,11 +93,13 @@ export class JaxExec implements JaxExecInterface{
              */
             call (name: string, params: any = null) {
 
+                cmd_name = `${cmd_name}@${name}`;
+
                 if (that.collect[cmd_name] === null) { that.collect[cmd_name] = {}; }
 
                 if (params instanceof HTMLFormElement) { params = [$(params).serializeArray()]; }
 
-                that.collect[cmd_name][name] = [...params];
+                that.collect[cmd_name] = params;
 
                 return this;
             }

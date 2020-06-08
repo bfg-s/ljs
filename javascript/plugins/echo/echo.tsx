@@ -16,7 +16,7 @@ Helper.before_load((ljs: Ljs) => {
         client: require('pusher-js').default,
         key: ljs.config('ws_app_key', null),
         cluster: ljs.config('ws_app_cluster', null),
-        wsHost: ljs.config('ws_host', null),
+        wsHost: ljs.config('ws_host', window.location.host),
         wsPort: ljs.config('ws_port', 6001),
         wssPort: ljs.config('ws_port', 6001),
         forceTLS: ssl,

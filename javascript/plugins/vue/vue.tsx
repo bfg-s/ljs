@@ -112,7 +112,7 @@ Helper.before_load((ljs: Ljs) => {
         $ws: {},
         $state: {},
         $sync: {},
-        namespace: null,
+        namespace: 'app',
 
         beforeMount () {
 

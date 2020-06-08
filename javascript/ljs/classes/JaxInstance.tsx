@@ -89,6 +89,21 @@ JaxInstance implements JaxInterface {
             return new Promise(() => false);
         }
 
+        let route = this.ljs.cfg('jax-route');
+        let route_param = this.ljs.cfg('jax-param');
+
+        if (route && route_param) {
+            let exec = data.render();
+
+            let call = Object.keys(exec)[0];
+
+            if (!call) {
+                return (new Promise(() => false));
+            }
+
+            return this.post(route, merge({[`${route_param}[${call}]`]: exec[call]}, data.getParams(), Helper.query_get()), data.getStorage());
+        }
+
         return this.get(window.location.href, merge({_exec: data.render()}, data.getParams()), data.getStorage());
     }
 
@@ -133,10 +148,16 @@ JaxInstance implements JaxInterface {
 
             if (method !== 'get') {
 
+
                 let isForm = params instanceof HTMLFormElement,
                     form = isForm ? new FormData(params) : new FormData();
 
-                if (!isForm) map(params, (item, key) => form.append(key, item));
+                if (!isForm) map(params, (item, key) => {
+                    form.append(
+                        key,
+                        (typeof item === 'object' ? JSON.stringify(item) : item)
+                    )
+                });
 
                 params = form;
             }

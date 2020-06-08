@@ -2462,13 +2462,6 @@ exports.Jax = Jax;
 
 "use strict";
 
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -2499,11 +2492,12 @@ var JaxExec = /** @class */ (function () {
      * @param name
      */
     JaxExec.prototype.cmd = function (name) {
-        var cmd_name = Object.keys(this.collect).length + ":" + name;
+        var cmd_name = name;
         var that = this;
-        if (this.collect[cmd_name] === undefined) {
-            this.collect[cmd_name] = null;
-        }
+        // if (this.collect[cmd_name] === undefined) {
+        //
+        //     this.collect[cmd_name] = null;
+        // }
         return new /** @class */ (function () {
             function JaxController() {
             }
@@ -2534,13 +2528,14 @@ var JaxExec = /** @class */ (function () {
              */
             JaxController.prototype.call = function (name, params) {
                 if (params === void 0) { params = null; }
+                cmd_name = cmd_name + "@" + name;
                 if (that.collect[cmd_name] === null) {
                     that.collect[cmd_name] = {};
                 }
                 if (params instanceof HTMLFormElement) {
                     params = [$(params).serializeArray()];
                 }
-                that.collect[cmd_name][name] = __spreadArrays(params);
+                that.collect[cmd_name] = params;
                 return this;
             };
             /**
@@ -2908,11 +2903,22 @@ var JaxInstance = /** @class */ (function () {
      * @returns {*}
      */
     JaxInstance.prototype.exec = function (data) {
+        var _a;
         if (data.render === undefined || data.getParams === undefined || data.getStorage === undefined) {
             if (true) {
                 window.ljs._error("Data must be subject to \"jaxExec\"");
             }
             return new Promise(function () { return false; });
+        }
+        var route = this.ljs.cfg('jax-route');
+        var route_param = this.ljs.cfg('jax-param');
+        if (route && route_param) {
+            var exec = data.render();
+            var call = Object.keys(exec)[0];
+            if (!call) {
+                return (new Promise(function () { return false; }));
+            }
+            return this.post(route, merge_1.default((_a = {}, _a[route_param + "[" + call + "]"] = exec[call], _a), data.getParams(), Helper_1.Helper.query_get()), data.getStorage());
         }
         return this.get(window.location.href, merge_1.default({ _exec: data.render() }, data.getParams()), data.getStorage());
     };
@@ -2963,7 +2969,9 @@ var JaxInstance = /** @class */ (function () {
             if (method !== 'get') {
                 var isForm = params instanceof HTMLFormElement, form_1 = isForm ? new FormData(params) : new FormData();
                 if (!isForm)
-                    map_1.default(params, function (item, key) { return form_1.append(key, item); });
+                    map_1.default(params, function (item, key) {
+                        form_1.append(key, (typeof item === 'object' ? JSON.stringify(item) : item));
+                    });
                 params = form_1;
             }
             else {
@@ -4081,7 +4089,11 @@ var StateInstance = /** @class */ (function () {
     StateInstance.prototype._onceCallEvent = function (event_name, state_name, attrs) {
         var storage = StateInstance.storage[state_name] !== undefined ? StateInstance.storage[state_name] : {}, inner_params = __spreadArrays(attrs, [state_name, event_name, storage]);
         StateInstance.watchers.map(function (watcher) { return watcher.call(event_name, state_name, inner_params).setStorage(storage); });
-        var doc_data = { value: attrs[0], old_value: attrs[1] !== undefined ? attrs[1] : undefined, info: attrs, state_name: state_name, event_name: event_name, storage: storage };
+        var doc_data = {
+            value: attrs[0],
+            old_value: attrs[1] !== undefined ? attrs[1] : undefined,
+            state_name: state_name, event_name: event_name, storage: storage
+        };
         window.ljs._dispatch_event("state:" + event_name + ":" + state_name, doc_data)
             ._dispatch_event("state:" + event_name, doc_data)
             ._dispatch_event("state:", doc_data);

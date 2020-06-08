@@ -86,30 +86,6 @@ class LJS implements Renderable
     }
 
     /**
-     * Create event on load ljs
-     *
-     * @param $data
-     * @return $this
-     */
-    public function onLjsLoad($data)
-    {
-        if ($data instanceof \Closure) {
-
-            $ns = new static($this->tmp_group . ":ljs:load");
-
-            $data($ns);
-
-            $data = $ns->render();
-
-            $ns->clear();
-        }
-
-        $this->row("document.addEventListener(\"ljs:load\",function(e){" . $data . "});");
-
-        return $this;
-    }
-
-    /**
      * Insert row
      *
      * @param $data

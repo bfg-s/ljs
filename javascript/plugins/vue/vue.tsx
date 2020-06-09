@@ -147,7 +147,9 @@ Helper.before_load((ljs: Ljs) => {
 
         beforeDestroy () {
 
-            this.echo.leaveRegistered();
+            if (this.echo) {
+                this.echo.leaveRegistered();
+            }
 
             Object.keys(this.$options.$ws).map((event: string) => {
                 let closure_name = this.$options.$ws[event];

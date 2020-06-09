@@ -778,7 +778,9 @@ Helper_1.Helper.before_load(function (ljs) {
         },
         beforeDestroy: function () {
             var _this = this;
-            this.echo.leaveRegistered();
+            if (this.echo) {
+                this.echo.leaveRegistered();
+            }
             Object.keys(this.$options.$ws).map(function (event) {
                 var closure_name = _this.$options.$ws[event];
                 _this.ljs.$ws.off(event, _this[closure_name]);

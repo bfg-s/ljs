@@ -111,6 +111,17 @@ abstract class JaxExecutor
     }
 
     /**
+     * Close Request
+     * @return null
+     */
+    public function stop()
+    {
+        $this->httpStatus(499);
+
+        return null;
+    }
+
+    /**
      * @param  \Throwable  $throwable
      * @return string|\Throwable
      */

@@ -139,4 +139,15 @@ abstract class JaxExecutor
             JaxController::$list[$name] = $class;
         }
     }
+
+    /**
+     * @param $collection
+     */
+    public static function registerCollection($collection)
+    {
+        if (is_array($collection) || $collection instanceof Collection) {
+
+            JaxController::$list = array_merge(JaxController::$list, $collection);
+        }
+    }
 }

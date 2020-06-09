@@ -103,7 +103,7 @@ abstract class JaxExecutor
      * @param  int  $status
      * @return $this
      */
-    public function status(int $status)
+    public function httpStatus(int $status)
     {
         $this->controller->status($status);
 

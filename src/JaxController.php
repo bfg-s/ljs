@@ -170,25 +170,26 @@ class JaxController
      */
     protected function find_executor(string $executor)
     {
-        if (class_exists($executor)) {
-
-            return $executor;
-
-        } else if (isset(static::$list[$executor])) {
+        if (isset(static::$list[$executor])) {
 
             return static::$list[$executor];
+
         }
 
-        $executor = ucfirst(\Str::camel($executor));
+        $executor_camel = ucfirst(\Str::camel($executor));
 
-        if (class_exists("App\\JaxExecutors\\{$executor}")) {
+        if (class_exists("App\\JaxExecutors\\{$executor_camel}")) {
 
-            return "App\\JaxExecutors\\{$executor}";
+            return "App\\JaxExecutors\\{$executor_camel}";
         }
 
-        else if (class_exists("App\\Http\\JaxExecutors\\{$executor}")) {
+        else if (class_exists("App\\Http\\JaxExecutors\\{$executor_camel}")) {
 
-            return "App\\Http\\JaxExecutors\\{$executor}";
+            return "App\\Http\\JaxExecutors\\{$executor_camel}";
+
+        } else if (class_exists($executor)) {
+
+            return $executor;
         }
 
         return false;

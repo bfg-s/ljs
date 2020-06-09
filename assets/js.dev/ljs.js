@@ -2970,7 +2970,7 @@ var JaxInstance = /** @class */ (function () {
                 var isForm = params instanceof HTMLFormElement, form_1 = isForm ? new FormData(params) : new FormData();
                 if (!isForm)
                     map_1.default(params, function (item, key) {
-                        form_1.append(key, (typeof item === 'object' ? JSON.stringify(item) : item));
+                        form_1.append(key, typeof item === 'object' && !(item instanceof File) ? JSON.stringify(item) : item);
                     });
                 params = form_1;
             }

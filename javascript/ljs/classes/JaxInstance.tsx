@@ -148,14 +148,13 @@ JaxInstance implements JaxInterface {
 
             if (method !== 'get') {
 
-
                 let isForm = params instanceof HTMLFormElement,
                     form = isForm ? new FormData(params) : new FormData();
 
                 if (!isForm) map(params, (item, key) => {
                     form.append(
                         key,
-                        (typeof item === 'object' ? JSON.stringify(item) : item)
+                        typeof item === 'object' && !(item instanceof File) ? JSON.stringify(item) : item
                     )
                 });
 

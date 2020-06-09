@@ -108,12 +108,30 @@ class JaxController
     {
         if (!$executor->access()) {
 
+            if (method_exists($executor, 'default')) {
+
+                try {
+                    return $executor->default($arguments);
+                } catch (\Throwable $throwable) {
+                    return method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
+                }
+            }
+
             $this->status(403);
 
             return ['Access is denied!'];
         }
 
         if (method_exists($executor, "{$method}_access") && !$executor->{"{$method}_access"}()) {
+
+            if (method_exists($executor, "{$method}_default")) {
+
+                try {
+                    return $executor->{"{$method}_default"}($arguments);
+                } catch (\Throwable $throwable) {
+                    return method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
+                }
+            }
 
             $this->status(405);
 

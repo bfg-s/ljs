@@ -74,12 +74,14 @@ class JaxController
 
         $executor_class_name = $executor;
 
-        $executor = new $executor_class_name($this);
+        $executor = new $executor_class_name();
 
         if (!($executor instanceof JaxExecutor)) {
             
             return response(['Invalid call object.'], 403);
         }
+
+        $executor->setParent($this);
 
         $method = $event[1];
 

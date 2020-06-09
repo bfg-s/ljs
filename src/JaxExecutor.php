@@ -28,10 +28,9 @@ abstract class JaxExecutor
     private $controller;
 
     /**
-     * JaxExecutor constructor.
      * @param  JaxController  $controller
      */
-    public function __construct(JaxController $controller)
+    public function setParent(JaxController $controller)
     {
         $this->controller = $controller;
     }
@@ -105,7 +104,9 @@ abstract class JaxExecutor
      */
     public function httpStatus(int $status)
     {
-        $this->controller->status($status);
+        if ($this->controller) {
+            $this->controller->status($status);
+        }
 
         return $this;
     }
@@ -127,7 +128,11 @@ abstract class JaxExecutor
      */
     public function controllerFailed(\Throwable $throwable)
     {
-        return $this->controller->failed($throwable);
+        if ($this->controller) {
+            return $this->controller->failed($throwable);
+        }
+
+        return null;
     }
 
     /**

@@ -794,7 +794,7 @@ Helper_1.Helper.before_load(function (ljs) {
         computed: {
             echo: function () {
                 // @ts-ignore
-                return new window.EchoWrapper({ namespace: this.$options.namespace, bind: this });
+                return window.EchoWrapper ? new window.EchoWrapper({ namespace: this.$options.namespace, bind: this }) : null;
             },
             jax: function () {
                 // @ts-ignore

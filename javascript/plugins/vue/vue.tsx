@@ -167,7 +167,7 @@ Helper.before_load((ljs: Ljs) => {
         computed: {
            echo (): LjsEcho {
                // @ts-ignore
-               return new window.EchoWrapper({namespace: this.$options.namespace, bind: this});
+               return window.EchoWrapper ? new window.EchoWrapper({namespace: this.$options.namespace, bind: this}) : null;
            },
            jax (): any {
                // @ts-ignore

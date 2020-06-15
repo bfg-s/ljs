@@ -89,22 +89,33 @@ JaxInstance implements JaxInterface {
             return new Promise(() => false);
         }
 
-        let route = this.ljs.cfg('jax-route');
-        let route_param = this.ljs.cfg('jax-param');
+        let route = this.ljs.cfg('jax');
 
-        if (route && route_param) {
+        let route_param = route ? Helper.md5(route) : undefined;
+
+        let executed = this.ljs.cfg('executed');
+
+        if ((route && route_param) || executed) {
+
             let exec = data.render();
 
             let call = Object.keys(exec)[0];
 
             if (!call) {
+
                 return (new Promise(() => false));
             }
 
-            return this.post(route, merge({[`${route_param}[${call}]`]: exec[call]}, data.getParams(), Helper.query_get()), data.getStorage());
+            if (executed) {
+
+                return this.get(window.location.href, merge({[`${route_param}[${call}]`]: exec[call]}, data.getParams()), data.getStorage());
+            }
+
+            return this.post(`${window.location.origin}/${route}`, merge({[`${route_param}[${call}]`]: exec[call]}, data.getParams(), Helper.query_get()), data.getStorage());
         }
 
-        return this.get(window.location.href, merge({_exec: data.render()}, data.getParams()), data.getStorage());
+        //return this.get(window.location.href, merge({_exec: data.render()}, data.getParams()), data.getStorage());
+        return new Promise(() => false);
     }
 
     /**

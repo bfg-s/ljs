@@ -220,4 +220,13 @@ export class Helper extends Conditions {
             return first ? word.toUpperCase() : (index === 0 ? word.toLowerCase() : word.toUpperCase());
         }).replace(/\s+/g, '');
     }
+
+    /**
+     * MD5 Hash sum
+     * @param data
+     */
+    static md5 (data: any) {
+
+        return require('md5')(data);
+    }
 }

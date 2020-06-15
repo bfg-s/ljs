@@ -28,7 +28,7 @@ class JaxController
      */
     public function index(Request $request)
     {
-        $param = md5(route('jax.executor'));
+        $param = md5(md5(config('app.url')));
 
         if (!$request->ajax() || !$request->has($param)) {
             
@@ -58,7 +58,7 @@ class JaxController
             return response(['Invalid call event parameters.'], 406);
         }
 
-        $event = explode('@', $event);
+        $event = \Str::parseCallback($event, '__invoke');
 
         if (!isset($event[0]) || !isset($event[1]) || count($event) !== 2) {
 

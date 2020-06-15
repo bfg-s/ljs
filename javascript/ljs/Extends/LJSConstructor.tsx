@@ -53,7 +53,10 @@ export class LJSConstructor extends ExecutorMethods {
         document.querySelectorAll("meta[name^=lar-]").forEach((item) => {
 
             let name = item.getAttribute('name');
-            let content = item.getAttribute('content')
+            let content: any = item.getAttribute('content');
+            if (content === 'true') { content = true; }
+            else if (content === 'false') { content = false; }
+            else if (content === 'null') { content = null; }
 
             if (name) { this._configs[name] = content; }
         });

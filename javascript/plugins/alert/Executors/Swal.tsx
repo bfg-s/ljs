@@ -34,12 +34,20 @@ export class Swal extends ExecutorParent {
 
             if (result.value) {
 
-                window.ljs.exec(success, null, this.storage);
+                if (typeof success === 'string') {
+                    window.ljs.exec(success, null, this.storage);
+                } else if (typeof success === 'function') {
+                    success();
+                }
             }
 
             else {
 
-                window.ljs.exec(cancel, null, this.storage);
+                if (typeof cancel === 'string') {
+                    window.ljs.exec(cancel, null, this.storage);
+                } else if (typeof cancel === 'function') {
+                    cancel();
+                }
             }
 
             return result;

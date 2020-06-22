@@ -127,6 +127,7 @@ export class HTMLRegisterEvents {
                 let paramsName = `${event_name}Params`,
                     paramName = `${event_name}Param`,
                     propsName = `${event_name}Props`,
+                    propsJaxName = `${event_name}JaxProps`,
                     propName = `${event_name}Prop`,
                     jaxName = `${event_name}Jax`,
                     obj = event.currentTarget,
@@ -135,6 +136,10 @@ export class HTMLRegisterEvents {
                     params = data[paramsName]? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : null))),
                     props = data[propsName]? data[propsName] : (data[propName] ? data[propName] : data.props ? data.props : (data.prop ? data.prop : [])),
                     withs = data.with ? data.with : {};
+
+                if (data[propsJaxName]) {
+                    props = data[propsJaxName];
+                }
 
                 try { params = JSON.parse(params); }catch (e) { if (typeof params === "string") { params = params.split('&&').map(i => i.trim().call(storage)); } }
                 try { withs = JSON.parse(withs); }catch (e) { if (typeof withs === "string") { withs = withs.split('&&').map(i => i.trim()); } }
@@ -150,7 +155,7 @@ export class HTMLRegisterEvents {
                 );
 
                 if (!Array.isArray(props)) props = [props];
-
+                
                 ja(...props).then();
             });
 
@@ -176,11 +181,16 @@ export class HTMLRegisterEvents {
 
             let paramsName = `${event_name}Params`,
                 paramName = `${event_name}Param`,
+                paramsMethodName = `${event_name}${m}Params`,
                 obj = event.currentTarget,
                 data = obj.dataset,
                 jaxUrl = data[`${event_name}${m}`],
                 storage = {object: obj, target: event.target, event, eventName: event_name, request_method: method, request_url: jaxUrl},
                 params = data[paramsName]? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : {})));
+
+            if (data[paramsMethodName]) {
+                params = data[paramsMethodName];
+            }
 
             try { params = JSON.parse(params); }catch (e) { if (typeof params === "string") { params = {data: params}; } }
 
@@ -192,34 +202,6 @@ export class HTMLRegisterEvents {
      * Register data events state change
      */
     stateChanged () {
-
-        this.ljs.on('state:changed', ({detail: {value, state_name}}: any) => {
-
-            document.querySelectorAll(`[data-value]`).forEach((obj: any) => {
-
-                let val = obj.dataset.value ? eval(obj.dataset.value) : null;
-
-                val = isNaN(val) ? '' : val;
-
-                obj.value = val;
-
-                if (obj.type === 'checkbox' || obj.type === 'radio') {
-
-                    obj.checked = !!val;
-                }
-
-                obj.dispatchEvent(new Event("change"));
-            });
-
-            document.querySelectorAll(`[data-htmml]`).forEach((obj: any) => {
-
-                let val = obj.dataset.value ? eval(obj.dataset.value) : null;
-
-                val = isNaN(val) ? '' : val;
-
-                obj.innerText = val;
-            });
-        });
 
         this.ljs.on('state:changed', ({detail: {value, state_name}}: any) => {
 

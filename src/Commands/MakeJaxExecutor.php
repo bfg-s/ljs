@@ -138,7 +138,7 @@ class MakeJaxExecutor extends Command
      */
     protected function jax_segments()
     {
-        return array_map("Str::snake", explode("/", $this->input->getArgument('jax_name')));
+        return array_map("Str::snake", explode("/", $this->input->getArgument('name')));
     }
 
     /**
@@ -152,7 +152,7 @@ class MakeJaxExecutor extends Command
                     explode("/", $this->option('dir'))
                 )
             )
-        ) : "App\\JaxExecutors";
+        ) : "App\\Jax";
     }
 
     /**
@@ -163,7 +163,7 @@ class MakeJaxExecutor extends Command
     protected function getArguments()
     {
         return [
-            ['jax_name', InputArgument::OPTIONAL, 'The jax name of the Executor'],
+            ['name', InputArgument::OPTIONAL, 'The jax name of the Executor'],
         ];
     }
 
@@ -190,6 +190,6 @@ class MakeJaxExecutor extends Command
 
             return "/". trim(base_path($this->option('dir') . '/' . trim($path, '/')), '/');
         }
-        return "/". trim(app_path('JaxExecutors/' . trim($path, '/')), '/');
+        return "/". trim(app_path('Jax/' . trim($path, '/')), '/');
     }
 }

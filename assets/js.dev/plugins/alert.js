@@ -719,10 +719,20 @@ var Swal = /** @class */ (function (_super) {
         if (options === void 0) { options = {}; }
         return window.ljs.swal.fire(__assign({ text: title, showCancelButton: true, confirmButtonText: 'Yes' }, options)).then(function (result) {
             if (result.value) {
-                window.ljs.exec(success, null, _this.storage);
+                if (typeof success === 'string') {
+                    window.ljs.exec(success, null, _this.storage);
+                }
+                else if (typeof success === 'function') {
+                    success();
+                }
             }
             else {
-                window.ljs.exec(cancel, null, _this.storage);
+                if (typeof cancel === 'string') {
+                    window.ljs.exec(cancel, null, _this.storage);
+                }
+                else if (typeof cancel === 'function') {
+                    cancel();
+                }
             }
             return result;
         });

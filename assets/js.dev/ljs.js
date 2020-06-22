@@ -4246,16 +4246,11 @@ exports.StateInstance = StateInstance;
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var get_1 = __importDefault(__webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js"));
-var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
 var HTMLDataEvent = /** @class */ (function () {
     function HTMLDataEvent(event_name, event, after) {
         if (after === void 0) { after = null; }
-        var paramsName = event_name + "Params", paramName = event_name + "Param", propsName = event_name + "Props", propName = event_name + "Prop", obj = event.currentTarget, data = Object.assign({}, obj.dataset), storage = { object: obj, target: event.target, event: event, eventName: event_name }, params = data[paramsName] ? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : null))), exec = data[event_name];
+        var paramsName = event_name + "Params", paramName = event_name + "Param", obj = event.currentTarget, data = Object.assign({}, obj.dataset), storage = { object: obj, target: event.target, event: event, eventName: event_name }, params = data[paramsName] ? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : null))), exec = data[event_name];
         if (obj.executors === undefined) {
             obj.executors = {};
         }
@@ -4271,45 +4266,10 @@ var HTMLDataEvent = /** @class */ (function () {
                 params = params.split('&&').map(function (i) { return i.trim().parse(storage); });
             }
         }
-        if (data.jax) {
-            var withs = data.with ? data.with : {}, props = data[propsName] ? data[propsName] : (data[propName] ? data[propName] : data.props ? data.props : (data.prop ? data.prop : []));
-            if (typeof after === 'function') {
-                after();
-            }
-            try {
-                withs = JSON.parse(withs);
-            }
-            catch (e) {
-                if (typeof withs === "string") {
-                    withs = withs.split('&&').map(function (i) { return i.trim(); });
-                }
-            }
-            try {
-                props = JSON.parse(props);
-            }
-            catch (e) {
-                if (typeof props === "string") {
-                    props = props.split('&&').map(function (i) { return i.trim().exec(storage); });
-                }
-            }
-            var ja = get_1.default(window.jax.with(withs)
-                .params(params ? params : {})
-                .storage(storage), data.jax);
-            ja(props).then(function (datum) {
-                var par = [];
-                map_1.default(datum, function (i, k) {
-                    if (!/^([0-9\:]+)\:/.test(k))
-                        par.push(i);
-                });
-                window.ljs.exec(exec, par, storage);
-            });
+        if (typeof after === 'function') {
+            after();
         }
-        else {
-            if (typeof after === 'function') {
-                after();
-            }
-            window.ljs.exec(exec, params ? params : [], storage);
-        }
+        window.ljs.exec(exec, params ? params : [], storage);
     }
     return HTMLDataEvent;
 }());
@@ -4364,7 +4324,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var HTMLReady_1 = __webpack_require__(/*! ./HTMLReady */ "./javascript/ljs/data/HTMLReady.tsx");
 var HTMLDataEvent_1 = __webpack_require__(/*! ./HTMLDataEvent */ "./javascript/ljs/data/HTMLDataEvent.tsx");
 var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
-var isNaN_1 = __importDefault(__webpack_require__(/*! lodash/isNaN */ "./node_modules/lodash/isNaN.js"));
 var get_1 = __importDefault(__webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js"));
 var HTMLRegisterEvents = /** @class */ (function () {
     function HTMLRegisterEvents(ljs) {
@@ -4449,7 +4408,10 @@ var HTMLRegisterEvents = /** @class */ (function () {
                 new HTMLDataEvent_1.HTMLDataEvent(event_name, event);
             });
             window.ljs.on(eve, "[data-" + event_name + "-jax]", function (event) {
-                var paramsName = event_name + "Params", paramName = event_name + "Param", propsName = event_name + "Props", propName = event_name + "Prop", jaxName = event_name + "Jax", obj = event.currentTarget, data = obj.dataset, storage = { object: obj, target: event.target, event: event, eventName: event_name }, params = data[paramsName] ? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : null))), props = data[propsName] ? data[propsName] : (data[propName] ? data[propName] : data.props ? data.props : (data.prop ? data.prop : [])), withs = data.with ? data.with : {};
+                var paramsName = event_name + "Params", paramName = event_name + "Param", propsName = event_name + "Props", propsJaxName = event_name + "JaxProps", propName = event_name + "Prop", jaxName = event_name + "Jax", obj = event.currentTarget, data = obj.dataset, storage = { object: obj, target: event.target, event: event, eventName: event_name }, params = data[paramsName] ? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : null))), props = data[propsName] ? data[propsName] : (data[propName] ? data[propName] : data.props ? data.props : (data.prop ? data.prop : [])), withs = data.with ? data.with : {};
+                if (data[propsJaxName]) {
+                    props = data[propsJaxName];
+                }
                 try {
                     params = JSON.parse(params);
                 }
@@ -4497,7 +4459,10 @@ var HTMLRegisterEvents = /** @class */ (function () {
     HTMLRegisterEvents.prototype.makeJaxMethods = function (on_eve, event_name, method) {
         window.ljs.on(on_eve, "[data-" + event_name + "-" + method + "]", function (event) {
             var m = method[0].toUpperCase() + method.slice(1);
-            var paramsName = event_name + "Params", paramName = event_name + "Param", obj = event.currentTarget, data = obj.dataset, jaxUrl = data["" + event_name + m], storage = { object: obj, target: event.target, event: event, eventName: event_name, request_method: method, request_url: jaxUrl }, params = data[paramsName] ? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : {})));
+            var paramsName = event_name + "Params", paramName = event_name + "Param", paramsMethodName = "" + event_name + m + "Params", obj = event.currentTarget, data = obj.dataset, jaxUrl = data["" + event_name + m], storage = { object: obj, target: event.target, event: event, eventName: event_name, request_method: method, request_url: jaxUrl }, params = data[paramsName] ? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : {})));
+            if (data[paramsMethodName]) {
+                params = data[paramsMethodName];
+            }
             try {
                 params = JSON.parse(params);
             }
@@ -4513,23 +4478,6 @@ var HTMLRegisterEvents = /** @class */ (function () {
      * Register data events state change
      */
     HTMLRegisterEvents.prototype.stateChanged = function () {
-        this.ljs.on('state:changed', function (_a) {
-            var _b = _a.detail, value = _b.value, state_name = _b.state_name;
-            document.querySelectorAll("[data-value]").forEach(function (obj) {
-                var val = obj.dataset.value ? eval(obj.dataset.value) : null;
-                val = isNaN_1.default(val) ? '' : val;
-                obj.value = val;
-                if (obj.type === 'checkbox' || obj.type === 'radio') {
-                    obj.checked = !!val;
-                }
-                obj.dispatchEvent(new Event("change"));
-            });
-            document.querySelectorAll("[data-htmml]").forEach(function (obj) {
-                var val = obj.dataset.value ? eval(obj.dataset.value) : null;
-                val = isNaN_1.default(val) ? '' : val;
-                obj.innerText = val;
-            });
-        });
         this.ljs.on('state:changed', function (_a) {
             var _b = _a.detail, value = _b.value, state_name = _b.state_name;
             if (window.state.has(state_name) || value) {

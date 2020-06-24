@@ -20,6 +20,8 @@ declare interface Model {
 declare interface Window {
     Executor: ExecutorParentInterface,
     StateWatcher: StateWatcherInterface,
+    Model: any,
+    User: any,
     jax: any,
     state: any|StateMagic,
     ljs: Ljs,

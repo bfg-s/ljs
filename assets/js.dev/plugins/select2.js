@@ -626,6 +626,26 @@ Helper_1.Helper.before_load(function (ljs) {
             }
             return undefined;
         };
+        Select2.prototype.ajax = function (name) {
+            var target = this.target;
+            return this.init(merge_1.default({
+                ajax: {
+                    transport: function (params, success, failure) {
+                        var _a;
+                        console.log(params.data);
+                        var new_params = (_a = {},
+                            _a[name] = true,
+                            _a[name + "_q"] = params.data.q ? params.data.q : '',
+                            _a[name + "_page"] = params.data.page ? params.data.page : 1,
+                            _a);
+                        window.$jax.get(window.location.href, new_params)
+                            .then(function (data) {
+                            success(data);
+                        }).catch(function () { return failure(); });
+                    }
+                }
+            }));
+        };
         /**
          * Create jaxible select
          * @param jax_path
@@ -643,8 +663,12 @@ Helper_1.Helper.before_load(function (ljs) {
                             var withs = target_1.dataset.with !== undefined ? target_1.dataset.with.split(',') : [];
                             var ljs_params = Object.assign({}, params.data);
                             if (params.data.page) {
-                                ljs_params['select2_page'] = params.data.page;
+                                ljs_params['_page'] = params.data.page;
                                 delete ljs_params.page;
+                            }
+                            if (params.data.q) {
+                                ljs_params['_q'] = params.data.q;
+                                delete ljs_params.q;
                             }
                             var ja = window.jax.with(withs).params(ljs_params);
                             ja = get_1.default(ja, jax_path);

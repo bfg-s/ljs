@@ -43,6 +43,31 @@ Helper.before_load((ljs: Ljs) => {
             return undefined;
         }
 
+        ajax (name: string) {
+
+            let target = this.target;
+
+            return this.init(merge({
+                ajax: {
+                    transport: (params: any, success: any, failure: any) => {
+
+                        console.log(params.data);
+
+                        let new_params = {
+                            [name]: true,
+                            [`${name}_q`]: params.data.q ? params.data.q : '',
+                            [`${name}_page`]: params.data.page ? params.data.page : 1
+                        };
+
+                        window.$jax.get(window.location.href, new_params)
+                            .then((data: any) => {
+                                success(data);
+                            }).catch(() => failure());
+                    }
+                }
+            }));
+        }
+
         /**
          * Create jaxible select
          * @param jax_path
@@ -64,8 +89,13 @@ Helper.before_load((ljs: Ljs) => {
                             let ljs_params = Object.assign({}, params.data);
 
                             if (params.data.page) {
-                                ljs_params['select2_page'] = params.data.page;
+                                ljs_params['_page'] = params.data.page;
                                 delete ljs_params.page;
+                            }
+
+                            if (params.data.q) {
+                                ljs_params['_q'] = params.data.q;
+                                delete ljs_params.q;
                             }
 
                             let ja = window.jax.with(withs).params(ljs_params);

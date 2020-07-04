@@ -632,7 +632,6 @@ Helper_1.Helper.before_load(function (ljs) {
                 ajax: {
                     transport: function (params, success, failure) {
                         var _a;
-                        console.log(params.data);
                         var new_params = (_a = {},
                             _a[name] = true,
                             _a[name + "_q"] = params.data.q ? params.data.q : '',

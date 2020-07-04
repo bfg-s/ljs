@@ -51,8 +51,6 @@ Helper.before_load((ljs: Ljs) => {
                 ajax: {
                     transport: (params: any, success: any, failure: any) => {
 
-                        console.log(params.data);
-
                         let new_params = {
                             [name]: true,
                             [`${name}_q`]: params.data.q ? params.data.q : '',

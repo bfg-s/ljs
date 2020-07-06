@@ -626,12 +626,13 @@ Helper_1.Helper.before_load(function (ljs) {
             }
             return undefined;
         };
-        Select2.prototype.ajax = function (name) {
+        Select2.prototype.ajax = function () {
             var target = this.target;
             return this.init(merge_1.default({
                 ajax: {
                     transport: function (params, success, failure) {
                         var _a;
+                        var name = target.dataset.selectName;
                         var new_params = (_a = {},
                             _a[name] = true,
                             _a[name + "_q"] = params.data.q ? params.data.q : '',

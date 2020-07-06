@@ -43,13 +43,15 @@ Helper.before_load((ljs: Ljs) => {
             return undefined;
         }
 
-        ajax (name: string) {
+        ajax () {
 
             let target = this.target;
 
             return this.init(merge({
                 ajax: {
                     transport: (params: any, success: any, failure: any) => {
+
+                        let name = target.dataset.selectName;
 
                         let new_params = {
                             [name]: true,

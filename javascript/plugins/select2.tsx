@@ -52,12 +52,23 @@ Helper.before_load((ljs: Ljs) => {
                     transport: (params: any, success: any, failure: any) => {
 
                         let name = target.dataset.selectName;
+                        let whereHas = target.dataset.withWhere;
 
                         let new_params = {
                             [name]: true,
                             [`${name}_q`]: params.data.q ? params.data.q : '',
                             [`${name}_page`]: params.data.page ? params.data.page : 1
                         };
+
+                        if (whereHas) {
+
+                            let form: any = {};
+                            let d = $(target).parents('form').serializeArray();
+                            if (Array.isArray(d)) {
+                                d.map((i: any) => { form[i.name] = i.value; })
+                            }
+                            new_params[`${name}_form`] = form;
+                        }
 
                         window.$jax.get(window.location.href, new_params)
                             .then((data: any) => {

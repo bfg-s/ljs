@@ -633,11 +633,20 @@ Helper_1.Helper.before_load(function (ljs) {
                     transport: function (params, success, failure) {
                         var _a;
                         var name = target.dataset.selectName;
+                        var whereHas = target.dataset.withWhere;
                         var new_params = (_a = {},
                             _a[name] = true,
                             _a[name + "_q"] = params.data.q ? params.data.q : '',
                             _a[name + "_page"] = params.data.page ? params.data.page : 1,
                             _a);
+                        if (whereHas) {
+                            var form_1 = {};
+                            var d = $(target).parents('form').serializeArray();
+                            if (Array.isArray(d)) {
+                                d.map(function (i) { form_1[i.name] = i.value; });
+                            }
+                            new_params[name + "_form"] = form_1;
+                        }
                         window.$jax.get(window.location.href, new_params)
                             .then(function (data) {
                             success(data);

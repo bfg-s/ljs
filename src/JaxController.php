@@ -108,7 +108,7 @@ class JaxController
      */
     protected function call(JaxExecutor $executor, string $method, array $arguments, string $executor_class_name)
     {
-        if (!$executor->access()) {
+        if (!custom_closure_call([$this, 'access'])) {
 
             if (method_exists($executor, 'default')) {
 

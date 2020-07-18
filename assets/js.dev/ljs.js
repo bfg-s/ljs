@@ -429,6 +429,7 @@ var Timer_1 = __webpack_require__(/*! ./Executors/Timer */ "./javascript/ljs/Exe
 var Doc_1 = __webpack_require__(/*! ./Executors/Doc */ "./javascript/ljs/Executors/Doc.tsx");
 var Helper_1 = __webpack_require__(/*! ../Helper */ "./javascript/Helper.tsx");
 var isString_1 = __importDefault(__webpack_require__(/*! lodash/isString */ "./node_modules/lodash/isString.js"));
+var get_1 = __importDefault(__webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js"));
 /**
  * Build core
  */
@@ -446,7 +447,23 @@ var Core = /** @class */ (function (_super) {
         window.JaxWrapper = __webpack_require__(/*! ./classes/Jax */ "./javascript/ljs/classes/Jax.tsx")['Jax'];
         window.jax = new window.JaxWrapper;
         window.state = new (__webpack_require__(/*! ./classes/State */ "./javascript/ljs/classes/State.tsx")['State']);
+        window.__ = Core.lang;
         return this;
+    };
+    /**
+     * Lag getter
+     * @param $path
+     * @param $params
+     */
+    Core.lang = function ($path, $params) {
+        if ($params === void 0) { $params = {}; }
+        var result = get_1.default(window.locales, $path);
+        if (result && typeof result === 'string') {
+            Object.keys($params).map(function (key) {
+                result = result.replace(new RegExp(":" + key, 'g'), $params[key]);
+            });
+        }
+        return result === undefined ? $path : result;
     };
     /**
      * Make JavaScript prototypes
@@ -3053,6 +3070,9 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var LJSConstructor_1 = __webpack_require__(/*! ../Extends/LJSConstructor */ "./javascript/ljs/Extends/LJSConstructor.tsx");
 var LStorage_1 = __webpack_require__(/*! ./LStorage */ "./javascript/ljs/classes/LStorage.tsx");
@@ -3060,6 +3080,7 @@ var StateInstance_1 = __webpack_require__(/*! ./StateInstance */ "./javascript/l
 var ProServer_1 = __webpack_require__(/*! ./ProServer */ "./javascript/ljs/classes/ProServer.tsx");
 var JaxInstance_1 = __webpack_require__(/*! ./JaxInstance */ "./javascript/ljs/classes/JaxInstance.tsx");
 var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
+var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
 var LJS = /** @class */ (function (_super) {
     __extends(LJS, _super);
     function LJS() {
@@ -3214,6 +3235,63 @@ var LJS = /** @class */ (function (_super) {
         if (ms === void 0) { ms = 100; }
         return "timer::onetime".exec("ljs:" + ms + ":inner", action, ms);
     };
+    /**
+     * Replenish route collection
+     * @param $collection
+     */
+    LJS.prototype.routeCollection = function ($collection) {
+        var host = window.location.host;
+        if (host in $collection) {
+            LJS.$route_collection = merge_1.default(LJS.$route_collection, $collection);
+        }
+        else {
+            LJS.$route_collection[host] = merge_1.default((host in LJS.$route_collection ? LJS.$route_collection[host] : {}), $collection);
+        }
+    };
+    /**
+     * Get route methods
+     * @param $name
+     */
+    LJS.prototype.routeMethods = function ($name) {
+        var host = window.location.host, protocol = window.location.protocol, collect = host in LJS.$route_collection ? LJS.$route_collection[host] : {};
+        if (!($name in collect)) {
+            return ['GET'];
+        }
+        return collect[$name].methods;
+    };
+    /**
+     * Build and get route
+     * @param $name
+     * @param $params
+     */
+    LJS.prototype.route = function ($name, $params) {
+        if ($params === void 0) { $params = {}; }
+        var host = window.location.host, protocol = window.location.protocol, collect = host in LJS.$route_collection ? LJS.$route_collection[host] : {}, re = /\{([a-zA-Z0-9\.\_\-]+)([\?]?)\}/g;
+        if (!($name in collect)) {
+            throw new Error("Undefined route name [" + $name + "]");
+        }
+        var route = collect[$name], result = {}, results = [], uri = route.uri;
+        while ((result = re.exec(uri)) !== null) {
+            results.push(result);
+        }
+        results.map(function (result) {
+            if (!(result[1] in $params)) {
+                if (result[2] !== '?') {
+                    throw new Error("Don't find required route param [" + result[1] + "]");
+                }
+                else {
+                    uri = uri.replace(result[0], '');
+                }
+            }
+            else {
+                uri = uri.replace(result[0], $params[result[1]]);
+                delete $params[result[1]];
+            }
+        });
+        var queries = this.help.http_build_query($params);
+        return protocol + "//" + host + "/" + uri.replace(/\/\//g, '/').replace(/\/$/, '') + (queries ? "?" + queries : '');
+    };
+    LJS.$route_collection = {};
     return LJS;
 }(LJSConstructor_1.LJSConstructor));
 exports.LJS = LJS;

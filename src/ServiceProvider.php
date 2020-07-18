@@ -3,8 +3,11 @@
 namespace Lar\LJS;
 
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
+use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Core\LConfigs;
 use Lar\LJS\Commands\MakeJaxExecutor;
+use Lar\LJS\Core\JsLangGenerator;
+use Lar\LJS\Core\JsRouteGenerator;
 use Lar\LJS\Middleware\ExecutorMiddleware;
 
 /**
@@ -53,6 +56,12 @@ class ServiceProvider extends ServiceProviderIlluminate
                     __DIR__ . "/../assets", public_path('ljs')
                 );
             }
+        }
+
+        if (app()->runningInConsole()){
+
+            DumpAutoload::addToExecute(JsRouteGenerator::class);
+            DumpAutoload::addToExecute(JsLangGenerator::class);
         }
 
         $this->publishes([__DIR__.'/../assets' => public_path('ljs')], 'ljs-assets');

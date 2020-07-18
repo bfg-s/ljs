@@ -32,6 +32,8 @@ declare interface Window {
     $nav: any
     EchoWrapper: LjsEcho|any
     JaxWrapper: any
+    locales: any
+    __($path: string, $params?: any): any
 }
 
 declare interface Ljs {
@@ -74,6 +76,9 @@ declare interface Ljs {
     on (events: string, selector: any, data?: any, handler?: any): any
     onetime (action: any, ms?: number): any
     instance (): void
+    routeCollection ($collection: any): void
+    route ($name: string, $params?: any): string
+    routeMethods ($name: string): any
     _apply_instance (): Ljs
     _apply_events (): Ljs
     _get_save_configs (): void

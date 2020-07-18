@@ -6,6 +6,7 @@ import {Timer} from "./Executors/Timer";
 import {Doc} from "./Executors/Doc";
 import {Helper} from "../Helper";
 import isString from 'lodash/isString';
+import get from 'lodash/get';
 
 /**
  * Build core
@@ -25,7 +26,27 @@ export class Core extends Helper{
         window.jax = new window.JaxWrapper;
         window.state = new (require('./classes/State')['State']);
 
+        window.__ = Core.lang;
+
         return this;
+    }
+
+    /**
+     * Lag getter
+     * @param $path
+     * @param $params
+     */
+    static lang ($path: string, $params: any = {}) {
+
+        let result = get(window.locales, $path);
+
+        if (result && typeof result === 'string') {
+            Object.keys($params).map((key) => {
+                result = result.replace(new RegExp(`\:${key}`, 'g'), $params[key])
+            });
+        }
+
+        return result === undefined ? $path : result;
     }
 
     /**

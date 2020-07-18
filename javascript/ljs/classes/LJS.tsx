@@ -4,6 +4,7 @@ import {StateInstance} from "./StateInstance";
 import {ProServer} from "./ProServer";
 import {JaxInstance} from "./JaxInstance";
 import {Helper} from "../../Helper";
+import merge from "lodash/merge";
 
 export class LJS extends LJSConstructor implements Ljs {
 
@@ -21,6 +22,8 @@ export class LJS extends LJSConstructor implements Ljs {
     public swal: any
     public method: any
     public echo: Echo|null
+
+    static $route_collection: any = {};
 
 
     constructor () {
@@ -217,5 +220,89 @@ export class LJS extends LJSConstructor implements Ljs {
      */
     onetime (action: any, ms: number = 100) {
         return "timer::onetime".exec(`ljs:${ms}:inner`, action, ms);
+    }
+
+    /**
+     * Replenish route collection
+     * @param $collection
+     */
+    routeCollection ($collection: any) {
+
+        let host = window.location.host;
+
+        if (host in $collection) {
+
+            LJS.$route_collection = merge(LJS.$route_collection, $collection);
+        }
+
+        else {
+
+            LJS.$route_collection[host] = merge(
+                (host in LJS.$route_collection ? LJS.$route_collection[host] : {}),
+                $collection
+            );
+        }
+    }
+
+    /**
+     * Get route methods
+     * @param $name
+     */
+    routeMethods ($name: string) {
+
+        let host = window.location.host,
+            protocol = window.location.protocol,
+            collect = host in LJS.$route_collection ? LJS.$route_collection[host] : {};
+
+        if (!($name in collect)) {
+
+            return ['GET'];
+        }
+
+        return collect[$name].methods;
+    }
+
+    /**
+     * Build and get route
+     * @param $name
+     * @param $params
+     */
+    route ($name: string, $params: any = {}) {
+
+        let host = window.location.host,
+            protocol = window.location.protocol,
+            collect = host in LJS.$route_collection ? LJS.$route_collection[host] : {},
+            re = /\{([a-zA-Z0-9\.\_\-]+)([\?]?)\}/g;
+
+        if (!($name in collect)) {
+
+            throw new Error(`Undefined route name [${$name}]`);
+        }
+
+        let route = collect[$name],
+            result: any = {},
+            results: any = [],
+            uri: string = route.uri;
+
+        while ((result = re.exec(uri)) !== null) {
+            results.push(result);
+        }
+
+        results.map((result: any) => {
+            if (!(result[1] in $params)) {
+                if (result[2] !== '?') {
+                    throw new Error(`Don't find required route param [${result[1]}]`);
+                } else {
+                    uri = uri.replace(result[0], '');
+                }
+            } else {
+                uri = uri.replace(result[0], $params[result[1]]);
+                delete $params[result[1]];
+            }
+        });
+
+        let queries = this.help.http_build_query($params);
+
+        return `${protocol}//${host}/${uri.replace(/\/\//g, '/').replace(/\/$/, '')}${queries ? `?${queries}`:''}`;
     }
 }

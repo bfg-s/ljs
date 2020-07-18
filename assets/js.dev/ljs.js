@@ -448,6 +448,7 @@ var Core = /** @class */ (function (_super) {
         window.jax = new window.JaxWrapper;
         window.state = new (__webpack_require__(/*! ./classes/State */ "./javascript/ljs/classes/State.tsx")['State']);
         window.__ = Core.lang;
+        window.switchLocale = Core.switchLocale;
         return this;
     };
     /**
@@ -464,6 +465,12 @@ var Core = /** @class */ (function (_super) {
             });
         }
         return result === undefined ? $path : result;
+    };
+    Core.switchLocale = function (locale) {
+        var locales = window.locales ? Object.keys(window.locales) : [];
+        locales.map(function (group) {
+            $.getScript("/locales/" + locale + "/" + group + ".js");
+        });
     };
     /**
      * Make JavaScript prototypes

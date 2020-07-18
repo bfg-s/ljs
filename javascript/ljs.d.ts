@@ -33,6 +33,7 @@ declare interface Window {
     EchoWrapper: LjsEcho|any
     JaxWrapper: any
     locales: any
+    switchLocale(locale: string): void
     __($path: string, $params?: any): any
 }
 

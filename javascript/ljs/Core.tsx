@@ -27,6 +27,7 @@ export class Core extends Helper{
         window.state = new (require('./classes/State')['State']);
 
         window.__ = Core.lang;
+        window.switchLocale = Core.switchLocale;
 
         return this;
     }
@@ -47,6 +48,15 @@ export class Core extends Helper{
         }
 
         return result === undefined ? $path : result;
+    }
+
+    static switchLocale (locale: string) {
+
+        let locales = window.locales ? Object.keys(window.locales) : []
+
+        locales.map((group) => {
+            $.getScript( `/locales/${locale}/${group}.js`);
+        });
     }
 
     /**

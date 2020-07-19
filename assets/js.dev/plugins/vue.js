@@ -746,7 +746,7 @@ Helper_1.Helper.before_load(function (ljs) {
     ljs.vue.mixin({
         data: function () {
             return {
-                _id: this.$vnode.key ? this.$vnode.key : this.$options._componentTag,
+                _id: this.$vnode && this.$vnode.key ? this.$vnode.key : this.$options._componentTag,
                 ljs: ljs
             };
         },

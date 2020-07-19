@@ -105,7 +105,7 @@ Helper.before_load((ljs: Ljs) => {
         data () {
 
             return {
-                _id: this.$vnode.key ? this.$vnode.key : this.$options._componentTag,
+                _id: this.$vnode && this.$vnode.key ? this.$vnode.key : this.$options._componentTag,
                 ljs: ljs
             };
         },

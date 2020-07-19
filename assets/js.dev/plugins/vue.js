@@ -753,12 +753,12 @@ Helper_1.Helper.before_load(function (ljs) {
         $ws: [],
         $state: {},
         $sync: {},
-        $exec: {},
+        $exec: [],
         namespace: 'app',
         beforeMount: function () {
             var _this = this;
-            Object.keys(this.$options.$exec).map(function (name) {
-                ljs.toExec(_this._id + ":" + name, function () { return _this[name](); });
+            Object.values(this.$options.$exec).map(function (name) {
+                ljs.toExec((_this.$vnode && _this.$vnode.key ? _this.$vnode.key : _this.$options.name) + ":" + name, function () { return _this[name](); });
             });
             Object.keys(this.$options.$ws).map(function (event) {
                 var closure_name = _this.$options.$ws[event];
@@ -793,8 +793,8 @@ Helper_1.Helper.before_load(function (ljs) {
             if (this.echo) {
                 this.echo.leaveRegistered();
             }
-            Object.keys(this.$options.$exec).map(function (name) {
-                ljs.removeExec(_this._id + ":" + name);
+            Object.values(this.$options.$exec).map(function (name) {
+                ljs.removeExec((_this.$vnode && _this.$vnode.key ? _this.$vnode.key : _this.$options.name) + ":" + name);
             });
             Object.keys(this.$options.$ws).map(function (event) {
                 var closure_name = _this.$options.$ws[event];

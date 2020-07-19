@@ -113,13 +113,13 @@ Helper.before_load((ljs: Ljs) => {
         $ws: [],
         $state: {},
         $sync: {},
-        $exec: {},
+        $exec: [],
         namespace: 'app',
 
         beforeMount () {
 
-            Object.keys(this.$options.$exec).map((name: any) => {
-                ljs.toExec(`${this._id}:${name}`, () => (this as any)[name]());
+            Object.values(this.$options.$exec).map((name: any) => {
+                ljs.toExec(`${this.$vnode && this.$vnode.key ? this.$vnode.key : this.$options.name}:${name}`, () => (this as any)[name]());
             });
 
             Object.keys(this.$options.$ws).map((event: string) => {
@@ -157,8 +157,8 @@ Helper.before_load((ljs: Ljs) => {
                 this.echo.leaveRegistered();
             }
 
-            Object.keys(this.$options.$exec).map((name: any) => {
-                ljs.removeExec(`${this._id}:${name}`);
+            Object.values(this.$options.$exec).map((name: any) => {
+                ljs.removeExec(`${this.$vnode && this.$vnode.key ? this.$vnode.key : this.$options.name}:${name}`);
             });
 
             Object.keys(this.$options.$ws).map((event: string) => {

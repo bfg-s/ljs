@@ -175,13 +175,29 @@ abstract class JaxExecutor
      */
     public function validate(array $subject, array $rules, array $messages = [])
     {
+        $translation = null;
+
+        if (isset($rules['>>']) && is_string($rules['>>'])) {
+
+            $translation = $rules['>>'];
+            unset($rules['>>']);
+        }
+
         if ($result = quick_validate($subject, $rules, $messages)) {
 
             foreach ($result->errors()->messages() as $key => $message) {
 
                 foreach ($message as $item) {
 
-                    $this->toast_error($item);
+                    if ($translation) {
+
+                        $this->put($translation, [$key, $item]);
+                    }
+
+                    else {
+
+                        $this->toast_error($item);
+                    }
                 }
             }
 

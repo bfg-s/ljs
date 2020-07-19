@@ -105,16 +105,22 @@ Helper.before_load((ljs: Ljs) => {
         data () {
 
             return {
+                _id: this.$vnode.key ? this.$vnode.key : this.$options._componentTag,
                 ljs: ljs
             };
         },
 
-        $ws: {},
+        $ws: [],
         $state: {},
         $sync: {},
+        $exec: {},
         namespace: 'app',
 
         beforeMount () {
+
+            Object.keys(this.$options.$exec).map((name: any) => {
+                ljs.toExec(`${this._id}:${name}`, () => (this as any)[name]());
+            });
 
             Object.keys(this.$options.$ws).map((event: string) => {
                 let closure_name = this.$options.$ws[event];
@@ -150,6 +156,10 @@ Helper.before_load((ljs: Ljs) => {
             if (this.echo) {
                 this.echo.leaveRegistered();
             }
+
+            Object.keys(this.$options.$exec).map((name: any) => {
+                ljs.removeExec(`${this._id}:${name}`);
+            });
 
             Object.keys(this.$options.$ws).map((event: string) => {
                 let closure_name = this.$options.$ws[event];

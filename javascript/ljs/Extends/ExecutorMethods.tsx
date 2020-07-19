@@ -165,17 +165,6 @@ export class ExecutorMethods {
     }
 
     /**
-     * Remove lite executor
-     * @param event_name
-     */
-    removeExec (event_name: string) {
-
-        delete (this as any).executor_lite[event_name];
-
-        return this;
-    }
-
-    /**
      * Create lite executor
      * @param name
      * @param closure
@@ -192,6 +181,20 @@ export class ExecutorMethods {
         } else {
 
             (this as any).executor_lite[name] = closure
+        }
+
+        return this;
+    }
+
+    /**
+     * Remove executor
+     * @param name
+     */
+    removeExec(name: string) {
+
+        if ((this as any).executor_lite[name]) {
+
+            delete (this as any).executor_lite[name];
         }
 
         return this;

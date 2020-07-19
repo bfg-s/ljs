@@ -1416,14 +1416,6 @@ var ExecutorMethods = /** @class */ (function () {
         return command;
     };
     /**
-     * Remove lite executor
-     * @param event_name
-     */
-    ExecutorMethods.prototype.removeExec = function (event_name) {
-        delete this.executor_lite[event_name];
-        return this;
-    };
-    /**
      * Create lite executor
      * @param name
      * @param closure
@@ -1437,6 +1429,16 @@ var ExecutorMethods = /** @class */ (function () {
         }
         else {
             this.executor_lite[name] = closure;
+        }
+        return this;
+    };
+    /**
+     * Remove executor
+     * @param name
+     */
+    ExecutorMethods.prototype.removeExec = function (name) {
+        if (this.executor_lite[name]) {
+            delete this.executor_lite[name];
         }
         return this;
     };

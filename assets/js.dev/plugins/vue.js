@@ -746,15 +746,20 @@ Helper_1.Helper.before_load(function (ljs) {
     ljs.vue.mixin({
         data: function () {
             return {
+                _id: this.$vnode.key ? this.$vnode.key : this.$options._componentTag,
                 ljs: ljs
             };
         },
-        $ws: {},
+        $ws: [],
         $state: {},
         $sync: {},
+        $exec: {},
         namespace: 'app',
         beforeMount: function () {
             var _this = this;
+            Object.keys(this.$options.$exec).map(function (name) {
+                ljs.toExec(_this._id + ":" + name, function () { return _this[name](); });
+            });
             Object.keys(this.$options.$ws).map(function (event) {
                 var closure_name = _this.$options.$ws[event];
                 _this.ljs.$ws.on(event, _this[closure_name], _this);
@@ -788,6 +793,9 @@ Helper_1.Helper.before_load(function (ljs) {
             if (this.echo) {
                 this.echo.leaveRegistered();
             }
+            Object.keys(this.$options.$exec).map(function (name) {
+                ljs.removeExec(_this._id + ":" + name);
+            });
             Object.keys(this.$options.$ws).map(function (event) {
                 var closure_name = _this.$options.$ws[event];
                 _this.ljs.$ws.off(event, _this[closure_name]);

@@ -166,4 +166,28 @@ abstract class JaxExecutor
             JaxController::$list = array_merge(JaxController::$list, $collection);
         }
     }
+
+    /**
+     * @param  array  $subject
+     * @param  array  $rules
+     * @param  array  $messages
+     * @return array|bool
+     */
+    public function validate(array $subject, array $rules, array $messages = [])
+    {
+        if ($result = quick_validate($subject, $rules, $messages)) {
+
+            foreach ($result->errors()->messages() as $key => $message) {
+
+                foreach ($message as $item) {
+
+                    $this->toast_error($item);
+                }
+            }
+
+            return false;
+        }
+        
+        return $subject;
+    }
 }

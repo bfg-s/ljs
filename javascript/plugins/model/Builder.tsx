@@ -24,7 +24,7 @@ export class Builder {
 
     get (fields: any = null) {
 
-        return this.makeRequest(this.buildQuery(fields));
+        return this.setMany().makeRequest(this.buildQuery(fields));
     }
 
     paginate (limit: number = 10, page: number = 1, fields: any = null) {
@@ -44,6 +44,11 @@ export class Builder {
 
     setSingular () {
         (this as any).constructor.singular = true;
+        return this;
+    }
+
+    setMany () {
+        (this as any).constructor.singular = false;
         return this;
     }
 

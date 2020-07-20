@@ -227,7 +227,7 @@ var Builder = /** @class */ (function () {
     };
     Builder.prototype.get = function (fields) {
         if (fields === void 0) { fields = null; }
-        return this.makeRequest(this.buildQuery(fields));
+        return this.setMany().makeRequest(this.buildQuery(fields));
     };
     Builder.prototype.paginate = function (limit, page, fields) {
         if (limit === void 0) { limit = 10; }
@@ -245,6 +245,10 @@ var Builder = /** @class */ (function () {
     };
     Builder.prototype.setSingular = function () {
         this.constructor.singular = true;
+        return this;
+    };
+    Builder.prototype.setMany = function () {
+        this.constructor.singular = false;
         return this;
     };
     Object.defineProperty(Builder.prototype, "buildQuery", {
@@ -322,9 +326,9 @@ exports.Builder = Builder;
 
 /***/ }),
 
-/***/ "./javascript/plugins/model/Model.tsx":
+/***/ "./javascript/plugins/model/model.tsx":
 /*!********************************************!*\
-  !*** ./javascript/plugins/model/Model.tsx ***!
+  !*** ./javascript/plugins/model/model.tsx ***!
   \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -26140,12 +26144,12 @@ module.exports = function(module) {
 
 /***/ 5:
 /*!**************************************************!*\
-  !*** multi ./javascript/plugins/model/Model.tsx ***!
+  !*** multi ./javascript/plugins/model/model.tsx ***!
   \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/model/Model.tsx */"./javascript/plugins/model/Model.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/model/model.tsx */"./javascript/plugins/model/model.tsx");
 
 
 /***/ })

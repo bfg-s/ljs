@@ -1864,6 +1864,8 @@ var LJSConstructor = /** @class */ (function (_super) {
                         _this._configs[items[0]] = items[1];
                     }
                 }
+                _this.token = _this._configs["lar-token"];
+                $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': _this.token } });
             }
         });
     };

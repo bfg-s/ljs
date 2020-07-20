@@ -185,6 +185,9 @@ export class LJSConstructor extends ExecutorMethods {
                         this._configs[items[0]] = items[1];
                     }
                 }
+
+                this.token = this._configs["lar-token"];
+                $.ajaxSetup({headers: {'X-CSRF-TOKEN': this.token}});
             }
         });
     }

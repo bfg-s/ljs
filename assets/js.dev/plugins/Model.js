@@ -264,6 +264,7 @@ var Builder = /** @class */ (function () {
             var xhr = new XMLHttpRequest();
             xhr.open(_this.constructor.method, _this.endpoint(), true);
             xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.token);
             xhr.send(JSON.stringify(query));
             xhr.onload = function (e) {
                 var target = e.target;

@@ -36,31 +36,6 @@ abstract class JaxExecutor
     }
 
     /**
-     * Public method access
-     *
-     * @return bool
-     */
-    public function access() {
-
-        return true;
-    }
-
-    /**
-     * Magic method if not exists
-     *
-     * @return mixed|void
-     */
-    //public function call() {}
-
-    /**
-     * Method on throw exception in execute
-     *
-     * @param  \Throwable  $throwable
-     * @return mixed|void
-     */
-    //public function failed(\Throwable $throwable) {}
-
-    /**
      * Put rule
      *
      * @param $key

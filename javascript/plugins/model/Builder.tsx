@@ -61,6 +61,7 @@ export class Builder {
             let xhr = new XMLHttpRequest();
             xhr.open((this as any).constructor.method, this.endpoint(), true);
             xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.token);
             xhr.send(JSON.stringify(query));
             xhr.onload = (e: any) => {
                 let target = e.target;

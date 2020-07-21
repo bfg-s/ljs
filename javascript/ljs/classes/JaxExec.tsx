@@ -363,7 +363,12 @@ export class JaxExec implements JaxExecInterface{
 
                     let json = data[0].responseJSON;
 
-                    if (typeof json === 'object' && !Array.isArray(json) && 'errors' in json && 'message' in json) {
+                    if ('trace' in json && 'message' in json) {
+
+                        "toast::error".exec(json.message);
+                    }
+
+                    else if (typeof json === 'object' && !Array.isArray(json) && 'errors' in json && 'message' in json) {
                         let errs = Object.keys(json.errors);
                         errs.map((key) => {
                             if (!window.ljs.help.isNumber(key)) {

@@ -2782,7 +2782,10 @@ var JaxExec = /** @class */ (function () {
                 _this._callEvent("ondone", data);
                 if (0 in data && 'responseJSON' in data[0]) {
                     var json_1 = data[0].responseJSON;
-                    if (typeof json_1 === 'object' && !Array.isArray(json_1) && 'errors' in json_1 && 'message' in json_1) {
+                    if ('trace' in json_1 && 'message' in json_1) {
+                        "toast::error".exec(json_1.message);
+                    }
+                    else if (typeof json_1 === 'object' && !Array.isArray(json_1) && 'errors' in json_1 && 'message' in json_1) {
                         var errs = Object.keys(json_1.errors);
                         errs.map(function (key) {
                             if (!window.ljs.help.isNumber(key)) {

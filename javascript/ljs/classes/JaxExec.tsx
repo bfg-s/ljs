@@ -45,11 +45,6 @@ export class JaxExec implements JaxExecInterface{
 
         let that = this;
 
-        // if (this.collect[cmd_name] === undefined) {
-        //
-        //     this.collect[cmd_name] = null;
-        // }
-
         return new class JaxController implements JaxExecControllerInterface{
 
             /**
@@ -98,6 +93,13 @@ export class JaxExec implements JaxExecInterface{
                 if (that.collect[cmd_name] === null) { that.collect[cmd_name] = {}; }
 
                 if (params instanceof HTMLFormElement) { params = [$(params).serializeArray()]; }
+
+                map(params, (item, key) => {
+                    if (key === 'request' && typeof item === 'object') {
+                        this.mergeParams(item);
+                        delete params[key];
+                    }
+                });
 
                 that.collect[cmd_name] = params;
 

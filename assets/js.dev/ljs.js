@@ -2420,10 +2420,6 @@ var Jax = /** @class */ (function () {
         this.namespace = namespace;
         return this.prox;
     }
-    // namespace (namespace: any) {
-    //
-    //     return this.get(this, namespace)
-    // }
     Jax.prototype.get = function (target, prop) {
         var that = this;
         if (prop === 'call') {
@@ -2538,10 +2534,6 @@ var JaxExec = /** @class */ (function () {
     JaxExec.prototype.cmd = function (name) {
         var cmd_name = name;
         var that = this;
-        // if (this.collect[cmd_name] === undefined) {
-        //
-        //     this.collect[cmd_name] = null;
-        // }
         return new /** @class */ (function () {
             function JaxController() {
             }
@@ -2571,6 +2563,7 @@ var JaxExec = /** @class */ (function () {
              * @param params
              */
             JaxController.prototype.call = function (name, params) {
+                var _this = this;
                 if (params === void 0) { params = null; }
                 cmd_name = cmd_name + "@" + name;
                 if (that.collect[cmd_name] === null) {
@@ -2579,6 +2572,12 @@ var JaxExec = /** @class */ (function () {
                 if (params instanceof HTMLFormElement) {
                     params = [$(params).serializeArray()];
                 }
+                map_1.default(params, function (item, key) {
+                    if (key === 'request' && typeof item === 'object') {
+                        _this.mergeParams(item);
+                        delete params[key];
+                    }
+                });
                 that.collect[cmd_name] = params;
                 return this;
             };

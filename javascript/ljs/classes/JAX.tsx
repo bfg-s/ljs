@@ -19,11 +19,6 @@ export class Jax
         return this.prox;
     }
 
-    // namespace (namespace: any) {
-    //
-    //     return this.get(this, namespace)
-    // }
-
     get (target: Jax, prop: any) {
 
         let that = this;

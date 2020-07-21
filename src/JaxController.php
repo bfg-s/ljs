@@ -108,22 +108,6 @@ class JaxController
      */
     protected function call(JaxExecutor $executor, string $method, array $arguments, string $executor_class_name)
     {
-        if (method_exists($executor, 'access') && !ccc([$executor, 'access'])) {
-
-            if (method_exists($executor, 'default')) {
-
-                try {
-                    return ccc([$executor, 'default'], $arguments); //$executor->default($arguments);
-                } catch (\Throwable $throwable) {
-                    return method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
-                }
-            }
-
-            $this->status(403);
-
-            return ['Access is denied!'];
-        }
-
         if (method_exists($executor, "{$method}_access") && !ccc([$executor, "{$method}_access"], $arguments)) {
 
             if (method_exists($executor, "{$method}_default")) {
@@ -138,6 +122,25 @@ class JaxController
             $this->status(405);
 
             return ['Method not allowed.'];
+        }
+
+        else if (
+            method_exists($executor, 'access') &&
+            !ccc([$executor, 'access'])
+        ) {
+
+            if (method_exists($executor, 'default')) {
+
+                try {
+                    return ccc([$executor, 'default'], $arguments); //$executor->default($arguments);
+                } catch (\Throwable $throwable) {
+                    return method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
+                }
+            }
+
+            $this->status(403);
+
+            return ['Access is denied!'];
         }
 
         if (!method_exists($executor, $method)) {

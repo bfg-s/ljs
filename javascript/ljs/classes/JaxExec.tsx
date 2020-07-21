@@ -359,6 +359,27 @@ export class JaxExec implements JaxExecInterface{
                 this._callEvent("onerror", data);
                 this._callEvent("ondone", data);
 
+                if (0 in data && 'responseJSON' in data[0]) {
+
+                    let json = data[0].responseJSON;
+
+                    if (typeof json === 'object' && !Array.isArray(json) && 'errors' in json && 'message' in json) {
+                        let errs = Object.keys(json.errors);
+                        errs.map((key) => {
+                            if (!window.ljs.help.isNumber(key)) {
+                                if (Array.isArray(json.errors[key])) {
+                                    json.errors[key].map((mess: any) => "toast::error".exec(mess, window.ljs.help.camelize(key, true)));
+                                } else if (typeof json.errors[key] === 'string') {
+                                    "toast::error".exec(json.errors[key], window.ljs.help.camelize(key, true));
+                                }
+                            }
+                        });
+                        if (!errs.length) {
+                            "toast::error".exec(json.message);
+                        }
+                    }
+                }
+
                 return data[0];
             });
 

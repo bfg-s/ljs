@@ -1,4 +1,5 @@
 import map from 'lodash/map';
+import filter from 'lodash/filter';
 import isNumber from 'lodash/isNumber';
 import isString from 'lodash/isString';
 import merge from 'lodash/merge';
@@ -98,13 +99,18 @@ export class JaxExec implements JaxExecInterface{
 
                     if (typeof item === 'object' && !Array.isArray(item)) {
 
-                        map(item, (data, segment) => {
+                        params[key] = filter(item, (data, segment) => {
 
                             if (segment === 'request') {
                                 this.mergeParams(data);
-                                delete params[key][segment];
+                                return false;
                             }
                         });
+
+                        if (!Object.keys(params[key]).length) {
+
+                            delete params[key];
+                        }
                     }
                 });
 

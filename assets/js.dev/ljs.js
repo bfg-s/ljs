@@ -2573,9 +2573,13 @@ var JaxExec = /** @class */ (function () {
                     params = [$(params).serializeArray()];
                 }
                 map_1.default(params, function (item, key) {
-                    if (key === 'request' && typeof item === 'object') {
-                        _this.mergeParams(item);
-                        delete params[key];
+                    if (typeof item === 'object' && !Array.isArray(item)) {
+                        map_1.default(item, function (data, segment) {
+                            if (segment === 'request') {
+                                _this.mergeParams(data);
+                                delete params[key][segment];
+                            }
+                        });
                     }
                 });
                 that.collect[cmd_name] = params;

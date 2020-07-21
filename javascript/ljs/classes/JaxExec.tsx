@@ -95,9 +95,16 @@ export class JaxExec implements JaxExecInterface{
                 if (params instanceof HTMLFormElement) { params = [$(params).serializeArray()]; }
 
                 map(params, (item, key) => {
-                    if (key === 'request' && typeof item === 'object') {
-                        this.mergeParams(item);
-                        delete params[key];
+
+                    if (typeof item === 'object' && !Array.isArray(item)) {
+
+                        map(item, (data, segment) => {
+
+                            if (segment === 'request') {
+                                this.mergeParams(data);
+                                delete params[key][segment];
+                            }
+                        });
                     }
                 });
 

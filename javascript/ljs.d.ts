@@ -23,6 +23,7 @@ declare interface Window {
     Model: any,
     User: any,
     jax: any,
+    jx: any,
     state: any|StateMagic,
     ljs: Ljs,
     on_apply: any|object

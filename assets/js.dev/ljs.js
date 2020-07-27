@@ -445,6 +445,7 @@ var Core = /** @class */ (function (_super) {
         window.Executor = __webpack_require__(/*! ./Extends/ExecutorParent */ "./javascript/ljs/Extends/ExecutorParent.tsx")['ExecutorParent'];
         window.StateWatcher = __webpack_require__(/*! ./Extends/StateWatcher */ "./javascript/ljs/Extends/StateWatcher.tsx")['StateWatcher'];
         window.JaxWrapper = __webpack_require__(/*! ./classes/Jax */ "./javascript/ljs/classes/Jax.tsx")['Jax'];
+        window.jx = new (__webpack_require__(/*! ./classes/Jax2 */ "./javascript/ljs/classes/Jax2.tsx")['Jax2']);
         window.jax = new window.JaxWrapper;
         window.state = new (__webpack_require__(/*! ./classes/State */ "./javascript/ljs/classes/State.tsx")['State']);
         window.__ = Core.lang;
@@ -1358,7 +1359,8 @@ var ExecutorMethods = /** @class */ (function () {
                 }
             });
         });
-        return returns.length > 0 ? (returns.length === 1 ? returns[0] : returns) : undefined;
+        //return returns.length > 0 ? (returns.length === 1 ? returns[0] : returns) : undefined;
+        return returns[returns.length - 1];
     };
     /**
      * String parse
@@ -2489,6 +2491,89 @@ var Jax = /** @class */ (function () {
     return Jax;
 }());
 exports.Jax = Jax;
+
+
+/***/ }),
+
+/***/ "./javascript/ljs/classes/Jax2.tsx":
+/*!*****************************************!*\
+  !*** ./javascript/ljs/classes/Jax2.tsx ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
+var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
+var Jax2 = /** @class */ (function () {
+    function Jax2(path) {
+        if (path === void 0) { path = ""; }
+        this._prox = new Proxy(this, this);
+        this._path = path + "";
+        this._last = "";
+        this._props = {};
+        this._with = [];
+        return this._prox;
+    }
+    Jax2.prototype.props = function (props) {
+        this._props = merge_1.default(this._props, props);
+        return this;
+    };
+    Jax2.prototype.with = function () {
+        var _this = this;
+        var withs = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            withs[_i] = arguments[_i];
+        }
+        withs.map(function (i) { return _this._with.push(i); });
+        return this;
+    };
+    Jax2.prototype.get = function (target, prop) {
+        var _a;
+        var that = this;
+        var is_method = false;
+        if (prop in this) {
+            return this[prop];
+        }
+        else {
+            this._last = prop;
+        }
+        return (_a = (new Jax2((this._path ? this._path + '.' : this._path) + prop))
+            .props(this._props)).with.apply(_a, this._with)._setLast(this._last);
+    };
+    Jax2.prototype._make = function (params) {
+        if (params === void 0) { params = {}; }
+        var props = Helper_1.Helper.query_get();
+        props = merge_1.default(props, this._props, params);
+        var route = window.ljs.cfg('jax');
+        var route_param = route ? Helper_1.Helper.md5(route) : undefined;
+        this._path = this._path.replace(new RegExp("." + this._last + "$"), '');
+        props[route_param + "[" + this._path + "@" + this._last + "]"] = this._with.map(function (w) {
+            if (typeof w === 'object')
+                return w._make();
+            return w;
+        });
+        return props;
+        //return (new Promise(() => false));
+    };
+    Jax2.prototype.send = function () {
+        return this._make();
+    };
+    Jax2.prototype._setLast = function (last) {
+        this._last = last;
+        return this;
+    };
+    Jax2.prototype._getPath = function () {
+        return this._path;
+    };
+    return Jax2;
+}());
+exports.Jax2 = Jax2;
 
 
 /***/ }),

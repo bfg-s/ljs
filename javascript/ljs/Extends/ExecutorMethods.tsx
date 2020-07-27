@@ -86,7 +86,8 @@ export class ExecutorMethods {
             });
         });
 
-        return returns.length > 0 ? (returns.length === 1 ? returns[0] : returns) : undefined;
+        //return returns.length > 0 ? (returns.length === 1 ? returns[0] : returns) : undefined;
+        return returns[returns.length-1];
     }
 
     /**

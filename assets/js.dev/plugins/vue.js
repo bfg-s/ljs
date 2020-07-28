@@ -754,11 +754,24 @@ Helper_1.Helper.before_load(function (ljs) {
         $state: {},
         $sync: {},
         $exec: [],
+        $remember: [],
         namespace: 'app',
         beforeMount: function () {
             var _this = this;
+            var obj_name = this.$options.name + (this.$vnode && this.$vnode.key ? '_' + this.$vnode.key : '');
+            this.$options.$remember.map(function (v) {
+                if (ljs.$storage.has(v, "vue-" + obj_name)) {
+                    _this.$set(_this, v, ljs.$storage.get(v, "vue-" + obj_name));
+                }
+                else {
+                    ljs.$storage.put(v, _this[v], "vue-" + obj_name);
+                }
+                _this.$watch(v, function (val) {
+                    ljs.$storage.put(v, _this[v], "vue-" + obj_name);
+                });
+            });
             Object.values(this.$options.$exec).map(function (name) {
-                ljs.toExec((_this.$vnode && _this.$vnode.key ? _this.$vnode.key : _this.$options.name) + ":" + name, function () { return _this[name](); });
+                ljs.toExec(obj_name + ":" + name, function () { return _this[name](); });
             });
             Object.keys(this.$options.$ws).map(function (event) {
                 var closure_name = _this.$options.$ws[event];

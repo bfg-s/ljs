@@ -114,12 +114,27 @@ Helper.before_load((ljs: Ljs) => {
         $state: {},
         $sync: {},
         $exec: [],
+        $remember: [],
         namespace: 'app',
 
         beforeMount () {
 
+            let obj_name = this.$options.name + (this.$vnode && this.$vnode.key ? '_' + this.$vnode.key : '');
+
+            this.$options.$remember.map((v: string) => {
+                if (ljs.$storage.has(v, `vue-${obj_name}`)) {
+                    this.$set(this, v, ljs.$storage.get(v, `vue-${obj_name}`));
+                } else {
+                    ljs.$storage.put(v, this[v], `vue-${obj_name}`);
+                }
+
+                this.$watch(v, (val: any) => {
+                    ljs.$storage.put(v, this[v], `vue-${obj_name}`);
+                });
+            });
+
             Object.values(this.$options.$exec).map((name: any) => {
-                ljs.toExec(`${this.$vnode && this.$vnode.key ? this.$vnode.key : this.$options.name}:${name}`, () => (this as any)[name]());
+                ljs.toExec(`${obj_name}:${name}`, () => (this as any)[name]());
             });
 
             Object.keys(this.$options.$ws).map((event: string) => {

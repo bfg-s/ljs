@@ -2,6 +2,7 @@
 
 namespace Lar\LJS;
 
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Renderable;
 use Lar\Layout\Respond;
 
@@ -140,6 +141,38 @@ class LJS implements Renderable
 
             static::$_events[$this->tmp_group][$var] = $data;
         }
+
+        return $this;
+    }
+
+    /**
+     * Declare default state
+     * @param  string  $name
+     * @param $value
+     * @return $this
+     */
+    public function state(string $name, $value)
+    {
+        $quotes = true;
+
+        if ($value instanceof Jsonable) {
+            
+            $value = $value->toJson(JSON_UNESCAPED_UNICODE);
+            $quotes = false;
+        }
+
+        if (is_array($value)) {
+
+            $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+            $quotes = false;
+        }
+
+        if ($quotes) {
+
+            $value = "\"{$value}\"";
+        }
+
+        $this->line("window.state.{$name}={$value};");
 
         return $this;
     }

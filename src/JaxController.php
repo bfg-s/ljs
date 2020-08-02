@@ -5,8 +5,8 @@ namespace Lar\LJS;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class JaxController
@@ -93,9 +93,9 @@ class JaxController
 
         $result = $this->call($executor, $method, $params, $executor_class_name);
 
-        if ($result instanceof Response) {
+        if ($result instanceof JsonResource) {
 
-            return $result;
+            return $result->additional(respond()->toArray());
         }
 
         return response(
@@ -183,7 +183,7 @@ class JaxController
             }
         }
 
-        if ($result instanceof Response) {
+        if ($result instanceof JsonResource) {
 
             return $result;
         }

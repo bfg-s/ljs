@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class JaxController
@@ -90,9 +91,16 @@ class JaxController
             return response(['The specified method is not acceptable.'], 405);
         }
 
+        $result = $this->call($executor, $method, $params, $executor_class_name);
+
+        if ($result instanceof Response) {
+
+            return $result;
+        }
+
         return response(
             respond()->justMerge(
-                $this->call($executor, $method, $params, $executor_class_name)
+                $result
             ),
             $this->status
         );
@@ -162,7 +170,7 @@ class JaxController
 
         } else if (!$executor->simple_call) {
 
-            $result = ccc([$executor, $method], $arguments, [], function (\Throwable $throwable) use ($executor) {
+            $result = ccc([$executor, $method], $arguments, function (\Throwable $throwable) use ($executor) {
                 return method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
             });
 
@@ -173,6 +181,11 @@ class JaxController
             } catch (\Throwable $throwable) {
                 $result = method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
             }
+        }
+
+        if ($result instanceof Response) {
+
+            return $result;
         }
 
         if ($result instanceof Htmlable) {

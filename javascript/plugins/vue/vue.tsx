@@ -134,7 +134,7 @@ Helper.before_load((ljs: Ljs) => {
             });
 
             Object.values(this.$options.$exec).map((name: any) => {
-                ljs.toExec(`${obj_name}:${name}`, () => (this as any)[name]());
+                ljs.toExec(`${obj_name}:${name}`, (...args: any) => (this as any)[name](...args));
             });
 
             Object.keys(this.$options.$ws).map((event: string) => {
@@ -172,8 +172,10 @@ Helper.before_load((ljs: Ljs) => {
                 this.echo.leaveRegistered();
             }
 
+            let obj_name = this.$options.name + (this.$vnode && this.$vnode.key ? '_' + this.$vnode.key : '');
+
             Object.values(this.$options.$exec).map((name: any) => {
-                ljs.removeExec(`${this.$vnode && this.$vnode.key ? this.$vnode.key : this.$options.name}:${name}`);
+                ljs.removeExec(`${obj_name}:${name}`);
             });
 
             Object.keys(this.$options.$ws).map((event: string) => {

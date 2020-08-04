@@ -771,7 +771,14 @@ Helper_1.Helper.before_load(function (ljs) {
                 });
             });
             Object.values(this.$options.$exec).map(function (name) {
-                ljs.toExec(obj_name + ":" + name, function () { return _this[name](); });
+                ljs.toExec(obj_name + ":" + name, function () {
+                    var _a;
+                    var args = [];
+                    for (var _i = 0; _i < arguments.length; _i++) {
+                        args[_i] = arguments[_i];
+                    }
+                    return (_a = _this)[name].apply(_a, args);
+                });
             });
             Object.keys(this.$options.$ws).map(function (event) {
                 var closure_name = _this.$options.$ws[event];
@@ -806,8 +813,9 @@ Helper_1.Helper.before_load(function (ljs) {
             if (this.echo) {
                 this.echo.leaveRegistered();
             }
+            var obj_name = this.$options.name + (this.$vnode && this.$vnode.key ? '_' + this.$vnode.key : '');
             Object.values(this.$options.$exec).map(function (name) {
-                ljs.removeExec((_this.$vnode && _this.$vnode.key ? _this.$vnode.key : _this.$options.name) + ":" + name);
+                ljs.removeExec(obj_name + ":" + name);
             });
             Object.keys(this.$options.$ws).map(function (event) {
                 var closure_name = _this.$options.$ws[event];

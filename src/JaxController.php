@@ -7,6 +7,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class JaxController
@@ -96,6 +97,10 @@ class JaxController
         if ($result instanceof JsonResource) {
 
             return $result->additional(respond()->toArray());
+
+        }  else if ($result instanceof Response) {
+
+            return $result;
         }
 
         return response(
@@ -183,9 +188,13 @@ class JaxController
             }
         }
 
-        if ($result instanceof JsonResource) {
+        if (
+            $result instanceof JsonResource ||
+            $result instanceof Response
+        ) {
 
             return $result;
+
         }
 
         if ($result instanceof Htmlable) {

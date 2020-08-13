@@ -22,9 +22,8 @@ export class Core extends Helper{
 
         window.Executor = require('./Extends/ExecutorParent')['ExecutorParent'];
         window.StateWatcher = require('./Extends/StateWatcher')['StateWatcher'];
-        window.JaxWrapper = require('./classes/Jax')['Jax'];
-        window.jx = new (require('./classes/Jax2')['Jax2'] as any);
-        window.jax = new window.JaxWrapper;
+        window.JaxModel = require('./classes/Model')['Model'];
+        window.jax = new (window.JaxModel as any);
         window.state = new (require('./classes/State')['State']);
 
         window.__ = Core.lang;
@@ -58,6 +57,8 @@ export class Core extends Helper{
         locales.map((group) => {
             $.getScript( `/locales/${locale}/${group}.js`);
         });
+
+        window.ljs._dispatch_event('locale:switched', locale);
     }
 
     /**

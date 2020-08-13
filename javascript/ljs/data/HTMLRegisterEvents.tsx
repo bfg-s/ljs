@@ -12,10 +12,10 @@ export class HTMLRegisterEvents {
 
         this.ljs = ljs;
 
-        this.stateChanged()
-            .makeEvents()
+        this.makeEvents()
             .dynamicElements()
             .dataHref()
+            .watcher()
             .makePopState();
     }
 
@@ -36,10 +36,9 @@ export class HTMLRegisterEvents {
     }
 
     /**
-     * Make data href click
+     * Watcher on load event
      */
-    dataHref () {
-
+    watcher () {
         window.ljs.on('ljs:on_watch', () => {
 
             document.querySelectorAll('[data-live] [data-load]').forEach((obj: any) => {
@@ -50,6 +49,14 @@ export class HTMLRegisterEvents {
                 });
             });
         });
+
+        return this;
+    }
+
+    /**
+     * Make data href click
+     */
+    dataHref () {
 
         window.ljs.on('click', '[data-href]', (event: any) => {
 
@@ -196,39 +203,5 @@ export class HTMLRegisterEvents {
 
             (window.$jax as any)[method](jaxUrl, params, storage);
         });
-    }
-
-    /**
-     * Register data events state change
-     */
-    stateChanged () {
-
-        this.ljs.on('state:changed', ({detail: {value, state_name}}: any) => {
-
-            if (window.state.has(state_name) || value) {
-
-                document.querySelectorAll(`[data-stated='${state_name}']`).forEach((obj: any) => {
-
-                    if (obj.value !== undefined) {
-
-                        obj.value = value;
-
-                        if (obj.type === 'checkbox' || obj.type === 'radio') {
-
-                            obj.checked = !!value;
-                        }
-
-                        obj.dispatchEvent(new Event("change"));
-                    }
-
-                    else {
-
-                        obj.innerText = value;
-                    }
-                });
-            }
-        });
-
-        return this;
     }
 }

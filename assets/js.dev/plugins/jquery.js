@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -160,7 +160,7 @@ __webpack_require__(/*! !./node_modules/script-loader/addScript.js */ "./node_mo
 
 /***/ }),
 
-/***/ 8:
+/***/ 7:
 /*!*********************************************!*\
   !*** multi ./javascript/plugins/jquery.tsx ***!
   \*********************************************/

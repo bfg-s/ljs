@@ -1,7 +1,8 @@
 import {BaseModel} from "./BaseModel";
 import {Builder} from "./Builder";
 
-window.Model = class Model extends BaseModel {
+//window.Model =
+    class Model extends BaseModel {
 
     toJson () {
         let result: any = {};
@@ -42,9 +43,9 @@ window.Model = class Model extends BaseModel {
     }
 }
 
-window.User = class User extends window.Model {
+//window.User = class User extends window.Model {
 
-    static table = "user";
+    /*static table = "user";
 
     static fillable: any = [
         'id', 'name', 'email', 'created_at', 'updated_at'
@@ -52,7 +53,7 @@ window.User = class User extends window.Model {
 
     static casts = {
         id: 'int'
-    };
+    };*/
 
     // static appends = [
     //     'test'
@@ -70,4 +71,4 @@ window.User = class User extends window.Model {
     //
     //     return this.created_at.format('DD.MM.YYYY');
     // }
-}
+//}

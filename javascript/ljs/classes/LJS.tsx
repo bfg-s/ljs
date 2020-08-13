@@ -1,7 +1,6 @@
 import {LJSConstructor} from "../Extends/LJSConstructor";
 import {LStorage} from "./LStorage";
 import {StateInstance} from "./StateInstance";
-import {ProServer} from "./ProServer";
 import {JaxInstance} from "./JaxInstance";
 import {Helper} from "../../Helper";
 import merge from "lodash/merge";
@@ -11,7 +10,6 @@ export class LJS extends LJSConstructor implements Ljs {
     public process: boolean = false;
     public $state: StateInterface
     public $jax: JaxInterface
-    public $ws: ProServerInterface
     public $storage: LStorageInterface
     public progress: NProgress
     public toast: Toastr|any
@@ -38,8 +36,6 @@ export class LJS extends LJSConstructor implements Ljs {
 
         this.instance();
 
-        this.$ws = new ProServer(this);
-
         this.$jax = new JaxInstance(this);
 
         this.progress = require("nprogress");
@@ -47,8 +43,6 @@ export class LJS extends LJSConstructor implements Ljs {
         this.echo = null;
 
         window.$state = this.$state;
-
-        window.$ws = this.$ws;
 
         window.$jax = this.$jax;
     }
@@ -70,15 +64,6 @@ export class LJS extends LJSConstructor implements Ljs {
     isProcess () {
 
         return this.process;
-    }
-
-    /**
-     * jax alias
-     * @param name
-     */
-    jax (name: string) {
-
-        return (this as any).$jax.cmd(name);
     }
 
     /**
@@ -210,6 +195,7 @@ export class LJS extends LJSConstructor implements Ljs {
      */
     on (events: string, selector: any, data: any = undefined, handler: any = undefined) {
 
+        //return require('jquery/src/event')(document).on(events, selector, data, handler);
         return $(document).on(events, selector, data, handler);
     }
 

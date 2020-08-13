@@ -15,11 +15,6 @@ abstract class JaxExecutor
     /**
      * @var bool
      */
-    static $name = false;
-
-    /**
-     * @var bool
-     */
     public $simple_call = false;
 
     /**
@@ -180,5 +175,16 @@ abstract class JaxExecutor
         }
         
         return $subject;
+    }
+
+    /**
+     * @param  string  $dir
+     * @param  string  $namespace
+     */
+    public static function addNamespace(string $dir, string $namespace)
+    {
+        $dir = realpath($dir);
+        $dir = str_replace(base_path(), '', $dir);
+        JaxController::$namespaces[$dir] = $namespace;
     }
 }

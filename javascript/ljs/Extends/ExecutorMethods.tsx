@@ -75,18 +75,15 @@ export class ExecutorMethods {
                         break;
                     default:
                         if (key.trim() !== "") {
-                            let sn = send_now; //(this as any)._checkSend(send_now, storage_data);
                             if (process.env.NODE_ENV === 'development') {
-                                (this as any)._detail("Execute data:", key.trim(), "Params:", sn, "Storage:", storage_data);
+                                (this as any)._detail("Execute data:", key.trim(), "Params:", send_now, "Storage:", storage_data);
                             }
-                            returns.push((this as any)._find_and_execute_command(key.trim(), sn, merge(storage_data, {trace: returns, last: returns[i]})));
+                            returns.push((this as any)._find_and_execute_command(key.trim(), send_now, merge(storage_data, {trace: returns, last: returns[i]})));
                             i++;
                         }
                 }
             });
         });
-
-        //return returns.length > 0 ? (returns.length === 1 ? returns[0] : returns) : undefined;
         return returns[returns.length-1];
     }
 

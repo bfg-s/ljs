@@ -74,51 +74,10 @@ export class LJSConstructor extends ExecutorMethods {
             throw new Error("For security reasons, the application cannot run the token bet.");
         }
 
-        this._apply_instance();
-    }
-
-    /**
-     * Application starter
-     * @returns {LJS}
-     */
-    _apply_instance () {
-
-        this._apply_events();
-
-        return this;
-    }
-
-    /**
-     * Apply all construct events
-     *
-     * @returns {LJS}
-     */
-    _apply_events () {
-
-        if (window.on_apply !== undefined) {
-
-            if (typeof window.on_apply === "function") {
-
-                window.on_apply(this);
-
-            } else if (typeof window.on_apply === "object") {
-
-                map(window.on_apply, (item) => {
-
-                    if (typeof item === "function") {
-
-                        item(this);
-                    }
-                });
-            }
-        }
-
         if (this.isLocal && (this as any).cfg("console_clear")) {
 
             console.clear();
         }
-
-        return this;
     }
 
     /**
@@ -283,112 +242,12 @@ export class LJSConstructor extends ExecutorMethods {
     }
 
     /**
-     * Make Special object
-     * @param name
-     * @param data
-     * @private
-     */
-    _special_object (name: string, data: any) {
-
-        let selector = `[data-ljs*="${name}"]`;
-
-        let object = document.querySelector(selector);
-
-        if (object) {
-
-            data = atob(data);
-
-            if (process.env.NODE_ENV === 'development') {
-                this._detail("Special object:", object, data);
-            }
-
-            let call_exec = (object: any, exec: any, event_obj = {}) => {
-
-                let params = {};
-
-                let storage = {object, event: event_obj};
-
-                try {
-
-                    exec = JSON.parse(exec)
-
-                } catch (e) {
-
-                }
-
-                if (process.env.NODE_ENV === 'development') {
-                    this._detail("Call special:", exec, object);
-                }
-
-                this.exec(exec, null, storage);
-            };
-
-            let create_event = (object: any, event: any, exec: any) => {
-
-                object.addEventListener(event, (event_obj: Event) => {
-
-                    call_exec(object, exec, event_obj);
-                });
-            };
-
-            if (data !== null && data !== "") {
-
-                let cmd = data.split(/\s{0,}\|\|\s{0,}/g);
-
-                cmd.map((item: string) => {
-
-                    let parse = /^([a-zA-Z\-\_]+)\:(.*)/g.exec(item);
-
-                    if (!parse) {
-
-                        if (/^[\[|\{].*[\}|\]]$/.test(item)) {
-
-                            call_exec(object, item);
-                        }
-
-                        else {
-
-                            if (process.env.NODE_ENV === 'development') {
-                                this._error("LJS Attribute Part error", parse, item, object);
-                            }
-                        }
-                    }
-
-                    else {
-
-                        if (parse[1] !== undefined && parse[2] !== undefined) {
-
-                            create_event(object, parse[1], parse[2]);
-                        }
-                    }
-                });
-
-            }
-
-            let ljs_dataset = (object as HTMLElement).dataset.ljs;
-
-            if (ljs_dataset && !/\|\|/g.test(ljs_dataset)) {
-
-                object.removeAttribute("data-ljs");
-            }
-
-        }
-
-        else {
-
-            if (process.env.NODE_ENV === 'development') {
-                this._error(`Object ${selector} not found!`, data);
-            }
-        }
-    }
-
-    /**
      * [For Executor] Find and execute command in the javascript entity
      *
      * @param key
      * @param item
      * @param storage_data
-     * @returns {string|*|string|*}
+     * @returns
      * @private
      */
     _find_and_execute_command (key: any, item: any, storage_data: any = {}) {
@@ -653,7 +512,7 @@ export class LJSConstructor extends ExecutorMethods {
      * @param name
      * @param return_static
      * @param storage
-     * @returns {boolean|*}
+     * @returns
      * @private
      */
     _get_force_object (name: any, return_static: any, storage: any = {}) {
@@ -678,35 +537,6 @@ export class LJSConstructor extends ExecutorMethods {
         }
 
         return this.executor[name];
-    }
-
-    /**
-     * inner checker
-     * @param data
-     * @param storage_data
-     * @returns {{}}
-     * @private
-     */
-    _checkSend(data: any, storage_data: any) {
-
-        if (isString(data)) {
-
-            data = data.parse(storage_data);
-
-            try { data = JSON.parse(data); } catch (e) {}
-        }
-
-        else if (Array.isArray(data)) {
-
-            data = data.parse(storage_data);
-        }
-
-        else if (isObject(data)) {
-
-            data = mapValues(data, item => this.parse(item, storage_data));
-        }
-
-        return data;
     }
 
     /**

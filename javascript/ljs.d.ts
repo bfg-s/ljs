@@ -1,38 +1,17 @@
 
-declare interface Model {
-    withoutGlobalScope ($scope: string): Model //Remove a registered global scope.
-    withoutGlobalScopes ($scopes: string[]): Model //Remove all or passed registered global scopes.
-
-    whereKey ($id: string): Model //Add a where clause on the primary key to the query.
-    whereKeyNot ($id: string): Model //Add a where clause on the primary key to the query.
-    where ($column: string, $operator?: string, $value?: any, $boolean?: string): Model //Add a basic where clause to the query.
-    firstWhere ($column: string, $operator?: string, $value?: any, $boolean?: string): Model //Add a basic where clause to the query, and return the first result.
-    orWhere ($column: string, $operator?: string, $value?: any): Model //Add an "or where" clause to the query.
-    latest ($column?: string): Model //Add an "order by" clause for a timestamp to the query.
-    oldest ($column?: string): Model //Add an "order by" clause for a timestamp to the query.
-    find($id?: number|string, $columns?: string[]): Model //Find a model by its primary key.
-    findMany($ids?: number|string, $columns?: string[]): Model //Find multiple models by their primary keys.
-    findOrFail($id?: number|string, $columns?: string[]): Model //Find a model by its primary key or throw an exception.
-    findOrNew($id?: number|string, $columns?: string[]): Model //Find a model by its primary key or return fresh model instance.
-
-}
-
 declare interface Window {
     Executor: ExecutorParentInterface,
     StateWatcher: StateWatcherInterface,
-    Model: any,
     User: any,
     jax: any,
-    jx: any,
     state: any|StateMagic,
     ljs: Ljs,
     on_apply: any|object
     $state: StateInterface
-    $ws: ProServerInterface
     $jax: JaxInterface
     $nav: any
     EchoWrapper: LjsEcho|any
-    JaxWrapper: any
+    JaxModel: any
     locales: any
     switchLocale(locale: string): void
     __($path: string, $params?: any): any
@@ -47,7 +26,6 @@ declare interface Ljs {
     token: string
     $state: StateInterface
     $jax: JaxInterface
-    $ws: ProServerInterface
     $storage: LStorageInterface
     $nav: any
     $vue: any
@@ -66,7 +44,6 @@ declare interface Ljs {
     regExec (object: any): Ljs
     switchProcess (data?: any): Ljs
     isProcess (): boolean
-    jax (name: string): any
     extend (name: string, extendClass: any): Ljs
     stateWatcher (watchClass: any): Ljs
     cfg (name: string, value?: any): any
@@ -81,8 +58,6 @@ declare interface Ljs {
     routeCollection ($collection: any): void
     route ($name: string, $params?: any): string
     routeMethods ($name: string): any
-    _apply_instance (): Ljs
-    _apply_events (): Ljs
     _get_save_configs (): void
     _onload_header (headers: string): void
     _local (): string
@@ -92,11 +67,9 @@ declare interface Ljs {
     _info (...args: any[]): void
     _detail (...args: any[]): void
     _warn (...args: any[]): void
-    _special_object (name: string, data: any): void
     _find_and_execute_command (key: any, item: any, storage_data: any): any
     _force_object (obj: any, fool_method: any, params: any, call: boolean, storage: any): any
     _get_force_object (name: any, return_static: any, storage: any): any
-    _checkSend(data: any, storage_data: any): any
     _jqueryed (obj: any, name: string): any
     _query (name: string): any
 }
@@ -180,42 +153,12 @@ declare interface Array<T> {
 
 declare interface JaxInterface {
     ljs: Ljs
-    jax_executor: JaxExecInterface
     post (path: string, params?: any, storage?: any): any|Promise<JaxInterface>
     get (path: string, params?: any, storage?: any): any|Promise<JaxInterface>
     head (path: string, params?: any, storage?: any): any|Promise<JaxInterface>
     put (path: string, params?: any, storage?: any): any|Promise<JaxInterface>
     del (path: string, params?: any, storage?: any): any|Promise<JaxInterface>
-    exec (data: JaxExecInterface): any|Promise<JaxExecControllerInterface>
-    cmd (name: string): JaxExecControllerInterface
     _sendAjax(method: string, path: string, params: any, storage: any): any|Promise<JaxInterface>
-}
-
-declare interface JaxExecInterface {
-    collect: any
-    params: any
-    storage: any
-    onsuccess: any
-    onerror: any
-    ondone: any
-    state: any
-    get_emit: boolean
-    cmd (name: string): JaxExecControllerInterface
-    onSuccess (data: any, val?:any): JaxExecInterface
-    onError (data: any, val?:any): JaxExecInterface
-    onDone (data: any, val?: any): JaxExecInterface
-    merge (object: object): JaxExecInterface
-    toState (path: string): JaxExecInterface
-    exclude (name: string): JaxExecInterface
-    send (name?: any): any|Promise<JaxExecInterface>
-    emitGet (): JaxExecInterface
-    toStorage (storage: any): JaxExecInterface
-    render (): any
-    getParams (): any
-    getStorage (): any
-    mergeParams (data: any): JaxExecInterface
-    setWith (name: string, val: any): JaxExecInterface
-    _callEvent (name: string, params: any): JaxExecInterface
 }
 
 declare interface JaxExecControllerInterface {
@@ -231,23 +174,6 @@ declare interface JaxExecControllerInterface {
     storage (storage: any): JaxExecControllerInterface
     state (path: string): JaxExecControllerInterface
     emitGet (): JaxExecControllerInterface
-}
-
-declare interface ProServerInterface {
-    ljs: Ljs
-    link: string
-    disconnect_count: number
-    error_count: number
-    ws: WebSocket|null
-    id: string
-    connect (): ProServerInterface
-    disconnect (): ProServerInterface
-    onMessage (): ProServerInterface
-    reConnect(): ProServerInterface
-    resetConnect(): ProServerInterface
-    send (execute: any, data: any): ProServerInterface
-    on (event: any, closure?: any, bind?: any): ProServerInterface
-    off (event?: any, closure?: any): ProServerInterface
 }
 
 declare interface LStorageInterface {

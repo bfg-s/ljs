@@ -1,6 +1,3 @@
-import get from 'lodash/get';
-import map from 'lodash/map';
-
 export class HTMLDataEvent {
 
     constructor(event_name: any, event: any, after: any = null) {

@@ -444,9 +444,8 @@ var Core = /** @class */ (function (_super) {
     Core.globalBootstrap = function () {
         window.Executor = __webpack_require__(/*! ./Extends/ExecutorParent */ "./javascript/ljs/Extends/ExecutorParent.tsx")['ExecutorParent'];
         window.StateWatcher = __webpack_require__(/*! ./Extends/StateWatcher */ "./javascript/ljs/Extends/StateWatcher.tsx")['StateWatcher'];
-        window.JaxWrapper = __webpack_require__(/*! ./classes/Jax */ "./javascript/ljs/classes/Jax.tsx")['Jax'];
-        window.jx = new (__webpack_require__(/*! ./classes/Jax2 */ "./javascript/ljs/classes/Jax2.tsx")['Jax2']);
-        window.jax = new window.JaxWrapper;
+        window.JaxModel = __webpack_require__(/*! ./classes/Model */ "./javascript/ljs/classes/Model.tsx")['Model'];
+        window.jax = new window.JaxModel;
         window.state = new (__webpack_require__(/*! ./classes/State */ "./javascript/ljs/classes/State.tsx")['State']);
         window.__ = Core.lang;
         window.switchLocale = Core.switchLocale;
@@ -472,6 +471,7 @@ var Core = /** @class */ (function (_super) {
         locales.map(function (group) {
             $.getScript("/locales/" + locale + "/" + group + ".js");
         });
+        window.ljs._dispatch_event('locale:switched', locale);
     };
     /**
      * Make JavaScript prototypes
@@ -756,95 +756,10 @@ var Doc = /** @class */ (function (_super) {
      * @param $data
      */
     Doc.prototype.informed_pbcopy = function ($data) {
-        if ($data === this.pbcopy($data)) {
+        if (this.pbcopy($data)) {
             "toast::success".exec("Copied to clipboard");
         }
         return $data;
-    };
-    /**
-     * Jax request
-     * @param data
-     */
-    Doc.prototype.jax = function (data) {
-        var _this = this;
-        if (typeof data === 'object') {
-            map_1.default(data, function (actions, executor) {
-                var onSuccess = null;
-                var onError = null;
-                var onDone = null;
-                var params = null;
-                var withParams = {};
-                var jax = window.ljs.$jax.cmd(executor);
-                if (typeof actions === 'string') {
-                    jax.call(actions);
-                }
-                else if (typeof actions === 'object') {
-                    if (actions.onSuccessData !== undefined && typeof actions.onSuccessData === 'object') {
-                        onSuccess = actions.onSuccessData;
-                        delete actions.onSuccessData;
-                    }
-                    if (actions.onErrorData !== undefined && typeof actions.onErrorData === 'object') {
-                        onError = actions.onErrorData;
-                        delete actions.onErrorData;
-                    }
-                    if (actions.onDoneData !== undefined && typeof actions.onDoneData === 'object') {
-                        onDone = actions.onDoneData;
-                        delete actions.onDoneData;
-                    }
-                    if (actions.params !== undefined && typeof actions.params === 'object') {
-                        params = actions.params;
-                        delete actions.params;
-                    }
-                    if (actions.with !== undefined && typeof actions.with === 'object') {
-                        if (true) {
-                            window.ljs._detail("Jax with JS params from object:", _this.storage);
-                        }
-                        jax.with(actions.with);
-                        delete actions.with;
-                    }
-                    if (actions.counter !== undefined && typeof actions.counter === 'object') {
-                        if (_this.counters[executor] === undefined) {
-                            _this.counters[executor] = {};
-                        }
-                        map_1.default(actions.counter, function (i, name) {
-                            if (_this.counters[executor][name] === undefined) {
-                                _this.counters[executor][name] = i;
-                            }
-                            else {
-                                _this.counters[executor][name] += 1;
-                            }
-                        });
-                        delete actions.counter;
-                    }
-                    if (actions.withGet !== undefined) {
-                        if (actions.withGet) {
-                            jax.emitGet();
-                        }
-                        delete actions.withGet;
-                    }
-                    map_1.default(actions, function (params, action) {
-                        jax.call(action, params);
-                    });
-                }
-                if (_this.counters[executor] !== undefined) {
-                    jax.mergeParams(_this.counters[executor]);
-                }
-                if (params) {
-                    jax.mergeParams(params);
-                }
-                jax.mergeParams(withParams);
-                if (onSuccess) {
-                    jax.onSuccess(onSuccess);
-                }
-                if (onError) {
-                    jax.onError(onError);
-                }
-                if (onDone) {
-                    jax.onDone(onDone);
-                }
-                jax.send();
-            });
-        }
     };
     Doc.__name = function () {
         return "doc";
@@ -1349,17 +1264,15 @@ var ExecutorMethods = /** @class */ (function () {
                         break;
                     default:
                         if (key.trim() !== "") {
-                            var sn = send_now; //(this as any)._checkSend(send_now, storage_data);
                             if (true) {
-                                _this._detail("Execute data:", key.trim(), "Params:", sn, "Storage:", storage_data);
+                                _this._detail("Execute data:", key.trim(), "Params:", send_now, "Storage:", storage_data);
                             }
-                            returns.push(_this._find_and_execute_command(key.trim(), sn, merge_1.default(storage_data, { trace: returns, last: returns[i] })));
+                            returns.push(_this._find_and_execute_command(key.trim(), send_now, merge_1.default(storage_data, { trace: returns, last: returns[i] })));
                             i++;
                         }
                 }
             });
         });
-        //return returns.length > 0 ? (returns.length === 1 ? returns[0] : returns) : undefined;
         return returns[returns.length - 1];
     };
     /**
@@ -1711,10 +1624,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
 var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
-var isString_1 = __importDefault(__webpack_require__(/*! lodash/isString */ "./node_modules/lodash/isString.js"));
 var isNaN_1 = __importDefault(__webpack_require__(/*! lodash/isNaN */ "./node_modules/lodash/isNaN.js"));
-var isObject_1 = __importDefault(__webpack_require__(/*! lodash/isObject */ "./node_modules/lodash/isObject.js"));
-var mapValues_1 = __importDefault(__webpack_require__(/*! lodash/mapValues */ "./node_modules/lodash/mapValues.js"));
 var ExecutorMethods_1 = __webpack_require__(/*! ./ExecutorMethods */ "./javascript/ljs/Extends/ExecutorMethods.tsx");
 var LJSConstructor = /** @class */ (function (_super) {
     __extends(LJSConstructor, _super);
@@ -1773,39 +1683,9 @@ var LJSConstructor = /** @class */ (function (_super) {
         if (!this.token) {
             throw new Error("For security reasons, the application cannot run the token bet.");
         }
-        this._apply_instance();
-    };
-    /**
-     * Application starter
-     * @returns {LJS}
-     */
-    LJSConstructor.prototype._apply_instance = function () {
-        this._apply_events();
-        return this;
-    };
-    /**
-     * Apply all construct events
-     *
-     * @returns {LJS}
-     */
-    LJSConstructor.prototype._apply_events = function () {
-        var _this = this;
-        if (window.on_apply !== undefined) {
-            if (typeof window.on_apply === "function") {
-                window.on_apply(this);
-            }
-            else if (typeof window.on_apply === "object") {
-                map_1.default(window.on_apply, function (item) {
-                    if (typeof item === "function") {
-                        item(_this);
-                    }
-                });
-            }
-        }
         if (this.isLocal && this.cfg("console_clear")) {
             console.clear();
         }
-        return this;
     };
     /**
      * Getter save configs
@@ -1964,78 +1844,12 @@ var LJSConstructor = /** @class */ (function (_super) {
         __spreadArrays(args).map(function (item) { return _this._log(item, "warn"); });
     };
     /**
-     * Make Special object
-     * @param name
-     * @param data
-     * @private
-     */
-    LJSConstructor.prototype._special_object = function (name, data) {
-        var _this = this;
-        var selector = "[data-ljs*=\"" + name + "\"]";
-        var object = document.querySelector(selector);
-        if (object) {
-            data = atob(data);
-            if (true) {
-                this._detail("Special object:", object, data);
-            }
-            var call_exec_1 = function (object, exec, event_obj) {
-                if (event_obj === void 0) { event_obj = {}; }
-                var params = {};
-                var storage = { object: object, event: event_obj };
-                try {
-                    exec = JSON.parse(exec);
-                }
-                catch (e) {
-                }
-                if (true) {
-                    _this._detail("Call special:", exec, object);
-                }
-                _this.exec(exec, null, storage);
-            };
-            var create_event_1 = function (object, event, exec) {
-                object.addEventListener(event, function (event_obj) {
-                    call_exec_1(object, exec, event_obj);
-                });
-            };
-            if (data !== null && data !== "") {
-                var cmd = data.split(/\s{0,}\|\|\s{0,}/g);
-                cmd.map(function (item) {
-                    var parse = /^([a-zA-Z\-\_]+)\:(.*)/g.exec(item);
-                    if (!parse) {
-                        if (/^[\[|\{].*[\}|\]]$/.test(item)) {
-                            call_exec_1(object, item);
-                        }
-                        else {
-                            if (true) {
-                                _this._error("LJS Attribute Part error", parse, item, object);
-                            }
-                        }
-                    }
-                    else {
-                        if (parse[1] !== undefined && parse[2] !== undefined) {
-                            create_event_1(object, parse[1], parse[2]);
-                        }
-                    }
-                });
-            }
-            var ljs_dataset = object.dataset.ljs;
-            if (ljs_dataset && !/\|\|/g.test(ljs_dataset)) {
-                object.removeAttribute("data-ljs");
-            }
-        }
-        else {
-            if (true) {
-                this._error("Object " + selector + " not found!", data);
-            }
-        }
-    };
-    /**
      * [For Executor] Find and execute command in the javascript entity
      *
      * @param key
      * @param item
      * @param storage_data
-     * @returns {string|*|string|*}
+     * @returns
      * @private
      */
     LJSConstructor.prototype._find_and_execute_command = function (key, item, storage_data) {
@@ -2213,7 +2027,7 @@ var LJSConstructor = /** @class */ (function (_super) {
      * @param name
      * @param return_static
      * @param storage
-     * @returns {boolean|*}
+     * @returns
      * @private
      */
     LJSConstructor.prototype._get_force_object = function (name, return_static, storage) {
@@ -2230,30 +2044,6 @@ var LJSConstructor = /** @class */ (function (_super) {
             return obj;
         }
         return this.executor[name];
-    };
-    /**
-     * inner checker
-     * @param data
-     * @param storage_data
-     * @returns {{}}
-     * @private
-     */
-    LJSConstructor.prototype._checkSend = function (data, storage_data) {
-        var _this = this;
-        if (isString_1.default(data)) {
-            data = data.parse(storage_data);
-            try {
-                data = JSON.parse(data);
-            }
-            catch (e) { }
-        }
-        else if (Array.isArray(data)) {
-            data = data.parse(storage_data);
-        }
-        else if (isObject_1.default(data)) {
-            data = mapValues_1.default(data, function (item) { return _this.parse(item, storage_data); });
-        }
-        return data;
     };
     /**
      * JQuery executor extender
@@ -2392,583 +2182,6 @@ exports.StateWatcher = StateWatcher;
 
 /***/ }),
 
-/***/ "./javascript/ljs/classes/Jax.tsx":
-/*!****************************************!*\
-  !*** ./javascript/ljs/classes/Jax.tsx ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var isObject_1 = __importDefault(__webpack_require__(/*! lodash/isObject */ "./node_modules/lodash/isObject.js"));
-var Jax = /** @class */ (function () {
-    function Jax(namespace) {
-        if (namespace === void 0) { namespace = null; }
-        this.withs = {};
-        this.withParams = {};
-        this.storage = {};
-        this.state = null;
-        this.namespace = null;
-        this.prox = new Proxy(this, this);
-        this.withs = {};
-        this.withParams = {};
-        this.storage = {};
-        this.state = null;
-        this.namespace = namespace;
-        return this.prox;
-    }
-    Jax.prototype.get = function (target, prop) {
-        var that = this;
-        if (prop === 'call') {
-            return function (namespace) {
-                if (that.namespace) {
-                    namespace = that.namespace + "." + namespace;
-                }
-                return that.get(that, window.ljs.help.camelize(namespace, true).replace(/\./g, '\\'));
-            };
-        }
-        if (prop === 'with') {
-            return function (args) {
-                that.withs = Array.isArray(args) || isObject_1.default(args) ? args : arguments;
-                return that.prox;
-            };
-        }
-        if (prop === 'params') {
-            return function (object) {
-                that.withParams = object;
-                return that.prox;
-            };
-        }
-        if (prop === 'storage') {
-            return function (object) {
-                that.storage = object;
-                return that.prox;
-            };
-        }
-        if (prop === 'state') {
-            return function (path) {
-                if (path === void 0) { path = true; }
-                that.state = path;
-                return that.prox;
-            };
-        }
-        if (prop === 'toState') {
-            return function (path) {
-                if (path === void 0) { path = true; }
-                that.state = path;
-                return that.prox;
-            };
-        }
-        return new Proxy(window.ljs.jax(prop), {
-            get: function (tar, method) {
-                if (method === 'call') {
-                    method = '__invoke';
-                }
-                tar.with(that.withs);
-                tar.storage(that.storage);
-                tar.mergeParams(that.withParams);
-                tar.state(that.state === true ? prop : that.state);
-                return function () {
-                    var props = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        props[_i] = arguments[_i];
-                    }
-                    return tar.call(method, props).onDone(function () {
-                        that.withs = {};
-                        that.storage = {};
-                        that.withParams = {};
-                        that.state = null;
-                    }).send();
-                };
-            }
-        });
-    };
-    return Jax;
-}());
-exports.Jax = Jax;
-
-
-/***/ }),
-
-/***/ "./javascript/ljs/classes/Jax2.tsx":
-/*!*****************************************!*\
-  !*** ./javascript/ljs/classes/Jax2.tsx ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
-var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
-var Jax2 = /** @class */ (function () {
-    function Jax2(path) {
-        if (path === void 0) { path = ""; }
-        this._prox = new Proxy(this, this);
-        this._path = path + "";
-        this._last = "";
-        this._props = {};
-        this._with = [];
-        return this._prox;
-    }
-    Jax2.prototype.props = function (props) {
-        this._props = merge_1.default(this._props, props);
-        return this;
-    };
-    Jax2.prototype.with = function () {
-        var _this = this;
-        var withs = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            withs[_i] = arguments[_i];
-        }
-        withs.map(function (i) { return _this._with.push(i); });
-        return this;
-    };
-    Jax2.prototype.get = function (target, prop) {
-        var _a;
-        var that = this;
-        var is_method = false;
-        if (prop in this) {
-            return this[prop];
-        }
-        else {
-            this._last = prop;
-        }
-        return (_a = (new Jax2((this._path ? this._path + '.' : this._path) + prop))
-            .props(this._props)).with.apply(_a, this._with)._setLast(this._last);
-    };
-    Jax2.prototype._make = function (params) {
-        if (params === void 0) { params = {}; }
-        var props = Helper_1.Helper.query_get();
-        props = merge_1.default(props, this._props, params);
-        var route = window.ljs.cfg('jax');
-        var route_param = route ? Helper_1.Helper.md5(route) : undefined;
-        this._path = this._path.replace(new RegExp("." + this._last + "$"), '');
-        props[route_param + "[" + this._path + "@" + this._last + "]"] = this._with.map(function (w) {
-            if (typeof w === 'object')
-                return w._make();
-            return w;
-        });
-        return props;
-        //return (new Promise(() => false));
-    };
-    Jax2.prototype.send = function () {
-        return this._make();
-    };
-    Jax2.prototype._setLast = function (last) {
-        this._last = last;
-        return this;
-    };
-    Jax2.prototype._getPath = function () {
-        return this._path;
-    };
-    return Jax2;
-}());
-exports.Jax2 = Jax2;
-
-
-/***/ }),
-
-/***/ "./javascript/ljs/classes/JaxExec.tsx":
-/*!********************************************!*\
-  !*** ./javascript/ljs/classes/JaxExec.tsx ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
-var filter_1 = __importDefault(__webpack_require__(/*! lodash/filter */ "./node_modules/lodash/filter.js"));
-var isNumber_1 = __importDefault(__webpack_require__(/*! lodash/isNumber */ "./node_modules/lodash/isNumber.js"));
-var isString_1 = __importDefault(__webpack_require__(/*! lodash/isString */ "./node_modules/lodash/isString.js"));
-var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
-var setWith_1 = __importDefault(__webpack_require__(/*! lodash/setWith */ "./node_modules/lodash/setWith.js"));
-var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
-var JaxExec = /** @class */ (function () {
-    function JaxExec() {
-        this.collect = {};
-        this.params = {};
-        this.storage = {};
-        this.get_emit = false;
-        this.collect = {};
-        this.onsuccess = null;
-        this.onerror = null;
-        this.ondone = null;
-        this.state = null;
-        this.params = {};
-        this.get_emit = false;
-        this.storage = {};
-    }
-    /**
-     * Execute command
-     * @param name
-     */
-    JaxExec.prototype.cmd = function (name) {
-        var cmd_name = name;
-        var that = this;
-        return new /** @class */ (function () {
-            function JaxController() {
-            }
-            /**
-             * Add with data
-             * @param withs
-             */
-            JaxController.prototype.with = function (withs) {
-                map_1.default(withs, function (i, k) {
-                    if (window.ljs.$state && window.ljs.$state.has(i)) {
-                        that.setWith((isNumber_1.default(k) ? i.replace(/\./g, '_') : k), window.ljs.$state.get(i));
-                    }
-                    else if (/^\:/.test(i)) {
-                        var name_1 = i.replace(/^\:/, ''), obj = document.querySelector("[name='" + name_1 + "']"), val = obj ? obj.value : null;
-                        that.setWith((isNumber_1.default(k) ? name_1 : k), isString_1.default(val) || isNumber_1.default(val) ? val : null);
-                    }
-                    else if (typeof i === 'string') {
-                        var obj = document.querySelector(i), val = obj ? obj.value : null;
-                        that.setWith((isNumber_1.default(k) ? i.replace(/[^a-zA-Z\_]/g, '') : k), isString_1.default(val) || isNumber_1.default(val) ? val : null);
-                    }
-                });
-                return this;
-            };
-            /**
-             * Call cmd
-             * @param name
-             * @param params
-             */
-            JaxController.prototype.call = function (name, params) {
-                var _this = this;
-                if (params === void 0) { params = null; }
-                cmd_name = cmd_name + "@" + name;
-                if (that.collect[cmd_name] === null) {
-                    that.collect[cmd_name] = {};
-                }
-                if (params instanceof HTMLFormElement) {
-                    params = [$(params).serializeArray()];
-                }
-                map_1.default(params, function (item, key) {
-                    if (typeof item === 'object' && !Array.isArray(item)) {
-                        params[key] = filter_1.default(item, function (data, segment) {
-                            if (segment === 'request') {
-                                _this.mergeParams(data);
-                                return false;
-                            }
-                        });
-                        if (!Object.keys(params[key]).length) {
-                            delete params[key];
-                        }
-                    }
-                });
-                that.collect[cmd_name] = params;
-                return this;
-            };
-            /**
-             * Get collect segment
-             * @param name
-             */
-            JaxController.prototype.get = function (name) {
-                return that.collect[cmd_name][name];
-            };
-            /**
-             * Remove collect segment
-             * @param name
-             */
-            JaxController.prototype.remove = function (name) {
-                delete that.collect[cmd_name][name];
-                return this;
-            };
-            /**
-             * Send cmd
-             */
-            JaxController.prototype.send = function () {
-                return that.send(cmd_name);
-            };
-            /**
-             * Add on success event
-             * @param data
-             * @param val
-             */
-            JaxController.prototype.onSuccess = function (data, val) {
-                if (val === void 0) { val = null; }
-                that.onSuccess(data, val);
-                return this;
-            };
-            /**
-             * Add on error event
-             * @param data
-             * @param val
-             */
-            JaxController.prototype.onError = function (data, val) {
-                if (val === void 0) { val = null; }
-                that.onError(data, val);
-                return this;
-            };
-            /**
-             * Add on done event
-             * @param data
-             * @param val
-             */
-            JaxController.prototype.onDone = function (data, val) {
-                if (val === void 0) { val = null; }
-                that.onDone(data, val);
-                return this;
-            };
-            /**
-             * Merge collect
-             * @param data
-             */
-            JaxController.prototype.mergeParams = function (data) {
-                that.mergeParams(data);
-                return this;
-            };
-            /**
-             * Merge data to storage
-             * @param storage
-             */
-            JaxController.prototype.storage = function (storage) {
-                that.toStorage(storage);
-                return this;
-            };
-            /**
-             * Set result to state
-             * @param path
-             */
-            JaxController.prototype.state = function (path) {
-                that.toState(path);
-                return this;
-            };
-            /**
-             * Make get query emitter
-             */
-            JaxController.prototype.emitGet = function () {
-                that.emitGet();
-                return this;
-            };
-            return JaxController;
-        }());
-    };
-    /**
-     * Add on success event
-     * @param data
-     * @param val
-     */
-    JaxExec.prototype.onSuccess = function (data, val) {
-        var _a;
-        if (val === void 0) { val = null; }
-        if (typeof data === 'string') {
-            data = (_a = {}, _a[data] = val, _a);
-        }
-        this.onsuccess = data;
-        return this;
-    };
-    /**
-     * Add on error event
-     * @param data
-     * @param val
-     */
-    JaxExec.prototype.onError = function (data, val) {
-        var _a;
-        if (val === void 0) { val = null; }
-        if (typeof data === 'string') {
-            data = (_a = {}, _a[data] = val, _a);
-        }
-        this.onerror = data;
-        return this;
-    };
-    /**
-     * Add on done event
-     * @param data
-     * @param val
-     */
-    JaxExec.prototype.onDone = function (data, val) {
-        var _a;
-        if (val === void 0) { val = null; }
-        if (typeof data === 'string') {
-            data = (_a = {}, _a[data] = val, _a);
-        }
-        this.ondone = data;
-        return this;
-    };
-    /**
-     * Merge collect
-     * @param object
-     */
-    JaxExec.prototype.merge = function (object) {
-        var _this = this;
-        if ('collect' in object) {
-            map_1.default(object.collect, function (item, key) {
-                var cmd_name = key.replace(/^([0-9\:]+)\:/, Object.keys(_this.collect).length + ":");
-                _this.collect[cmd_name] = item;
-            });
-        }
-        return this;
-    };
-    /**
-     * Set result to state
-     * @param path
-     */
-    JaxExec.prototype.toState = function (path) {
-        this.state = path;
-        return this;
-    };
-    /**
-     * Add next executor to state
-     * @param name
-     */
-    JaxExec.prototype.exclude = function (name) {
-        delete this.collect[name];
-        return this;
-    };
-    /**
-     * Send executors to backend
-     * @param name
-     */
-    JaxExec.prototype.send = function (name) {
-        var _this = this;
-        if (name === void 0) { name = null; }
-        if (this.get_emit) {
-            this.params = merge_1.default(this.params, Helper_1.Helper.query_get());
-        }
-        if (!('ljs' in window)) {
-            throw new Error("The artist cannot be sent until the shared library is initialized.");
-        }
-        if (Object.keys(this.collect).length && window.ljs.$jax) {
-            var result = window.ljs.$jax.exec(this)
-                .then(function () {
-                var data = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    data[_i] = arguments[_i];
-                }
-                _this._callEvent("onsuccess", data);
-                _this._callEvent("ondone", data);
-                var result = data[0];
-                if (_this.state && window.ljs.$state) {
-                    window.ljs.$state.set(_this.state, result);
-                }
-                return result;
-            }).catch(function () {
-                var data = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    data[_i] = arguments[_i];
-                }
-                _this._callEvent("onerror", data);
-                _this._callEvent("ondone", data);
-                if (0 in data && 'responseJSON' in data[0]) {
-                    var json_1 = data[0].responseJSON;
-                    if ('trace' in json_1 && 'message' in json_1) {
-                        "toast::error".exec(json_1.message);
-                    }
-                    else if (typeof json_1 === 'object' && !Array.isArray(json_1) && 'errors' in json_1 && 'message' in json_1) {
-                        var errs = Object.keys(json_1.errors);
-                        errs.map(function (key) {
-                            if (!window.ljs.help.isNumber(key)) {
-                                if (Array.isArray(json_1.errors[key])) {
-                                    json_1.errors[key].map(function (mess) { return "toast::error".exec(mess, window.ljs.help.camelize(key, true)); });
-                                }
-                                else if (typeof json_1.errors[key] === 'string') {
-                                    "toast::error".exec(json_1.errors[key], window.ljs.help.camelize(key, true));
-                                }
-                            }
-                        });
-                        if (!errs.length) {
-                            "toast::error".exec(json_1.message);
-                        }
-                    }
-                }
-                return data[0];
-            });
-            return result;
-        }
-        return (new Promise(function () { return false; }));
-    };
-    /**
-     * Make get query emitter
-     */
-    JaxExec.prototype.emitGet = function () {
-        this.get_emit = true;
-        return this;
-    };
-    /**
-     * Merge data to storage
-     * @param storage
-     */
-    JaxExec.prototype.toStorage = function (storage) {
-        if (storage === void 0) { storage = {}; }
-        this.storage = merge_1.default(this.storage, storage);
-        return this;
-    };
-    /**
-     * Get collect executors
-     */
-    JaxExec.prototype.render = function () {
-        return this.collect;
-    };
-    /**
-     * Get query params
-     */
-    JaxExec.prototype.getParams = function () {
-        return this.params;
-    };
-    /**
-     * Get storage
-     */
-    JaxExec.prototype.getStorage = function () {
-        return this.storage;
-    };
-    /**
-     * Merge params
-     * @param data
-     */
-    JaxExec.prototype.mergeParams = function (data) {
-        this.params = merge_1.default(this.params, data);
-        return this;
-    };
-    /**
-     * Set var to params
-     * @param name
-     * @param val
-     */
-    JaxExec.prototype.setWith = function (name, val) {
-        setWith_1.default(this.params, name, val);
-        return this;
-    };
-    /**
-     * Call inner event
-     * @param name
-     * @param params
-     * @private
-     */
-    JaxExec.prototype._callEvent = function (name, params) {
-        if (name in this) {
-            var e = this[name];
-            if (typeof e === "function") {
-                e(params);
-            }
-            else if (typeof e === "object") {
-                window.ljs.exec(e, null, params);
-            }
-        }
-        return this;
-    };
-    return JaxExec;
-}());
-exports.JaxExec = JaxExec;
-
-
-/***/ }),
-
 /***/ "./javascript/ljs/classes/JaxInstance.tsx":
 /*!************************************************!*\
   !*** ./javascript/ljs/classes/JaxInstance.tsx ***!
@@ -2993,7 +2206,6 @@ var JaxInstance = /** @class */ (function () {
      */
     function JaxInstance(ljs) {
         this.ljs = ljs;
-        this.jax_executor = __webpack_require__(/*! ./JaxExec */ "./javascript/ljs/classes/JaxExec.tsx")['JaxExec'];
     }
     /**
      * Method post
@@ -3056,43 +2268,6 @@ var JaxInstance = /** @class */ (function () {
         return this._sendAjax("delete", path, params, storage);
     };
     /**
-     * Execute php executor
-     * @param data
-     * @returns {*}
-     */
-    JaxInstance.prototype.exec = function (data) {
-        var _a, _b;
-        if (data.render === undefined || data.getParams === undefined || data.getStorage === undefined) {
-            if (true) {
-                window.ljs._error("Data must be subject to \"jaxExec\"");
-            }
-            return new Promise(function () { return false; });
-        }
-        var route = this.ljs.cfg('jax');
-        var route_param = route ? Helper_1.Helper.md5(route) : undefined;
-        var executed = this.ljs.cfg('executed');
-        if ((route && route_param) || executed) {
-            var exec = data.render();
-            var call = Object.keys(exec)[0];
-            if (!call) {
-                return (new Promise(function () { return false; }));
-            }
-            if (executed) {
-                return this.get(window.location.href, merge_1.default((_a = {}, _a[route_param + "[" + call + "]"] = exec[call], _a), data.getParams()), data.getStorage());
-            }
-            return this.post(window.location.origin + "/" + route, merge_1.default((_b = {}, _b[route_param + "[" + call + "]"] = exec[call], _b), data.getParams(), Helper_1.Helper.query_get()), data.getStorage());
-        }
-        //return this.get(window.location.href, merge({_exec: data.render()}, data.getParams()), data.getStorage());
-        return new Promise(function () { return false; });
-    };
-    /**
-     * Create jax command
-     * @param name
-     */
-    JaxInstance.prototype.cmd = function (name) {
-        return (new this.jax_executor()).cmd(name);
-    };
-    /**
      * Method wrapper
      * @param method
      * @param path
@@ -3111,9 +2286,7 @@ var JaxInstance = /** @class */ (function () {
         }
         var $methods = { "delete": "delete", "get": "get", "post": "post", "put": "put", "head": "head" };
         if ($methods[method] !== undefined) {
-            //window.ljs.progress.start();
             window.ljs.switchProcess(true);
-            //document.body.style.cursor = "progress";
             if (true) {
                 window.ljs._detail("Method: [" + method + "] Jax");
             }
@@ -3149,7 +2322,6 @@ var JaxInstance = /** @class */ (function () {
                 data: params,
                 type: method,
                 complete: function (response, textStatus) {
-                    //document.body.style.cursor = "auto";
                     window.ljs._onload_header(response.getAllResponseHeaders());
                     if (isObject_1.default(response.responseJSON)) {
                         var data_1 = {};
@@ -3159,7 +2331,6 @@ var JaxInstance = /** @class */ (function () {
                         });
                         window.ljs.exec(data_1, null, merge_1.default({ response: response, status: textStatus, method: method, path: path, params: params }, storage));
                     }
-                    //window.ljs.progress.done();
                     window.ljs.switchProcess(false);
                 }
             });
@@ -3202,7 +2373,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var LJSConstructor_1 = __webpack_require__(/*! ../Extends/LJSConstructor */ "./javascript/ljs/Extends/LJSConstructor.tsx");
 var LStorage_1 = __webpack_require__(/*! ./LStorage */ "./javascript/ljs/classes/LStorage.tsx");
 var StateInstance_1 = __webpack_require__(/*! ./StateInstance */ "./javascript/ljs/classes/StateInstance.tsx");
-var ProServer_1 = __webpack_require__(/*! ./ProServer */ "./javascript/ljs/classes/ProServer.tsx");
 var JaxInstance_1 = __webpack_require__(/*! ./JaxInstance */ "./javascript/ljs/classes/JaxInstance.tsx");
 var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
 var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
@@ -3215,12 +2385,10 @@ var LJS = /** @class */ (function (_super) {
         _this.$storage = new LStorage_1.LStorage(_this);
         _this.$state = new StateInstance_1.StateInstance(_this.$storage);
         _this.instance();
-        _this.$ws = new ProServer_1.ProServer(_this);
         _this.$jax = new JaxInstance_1.JaxInstance(_this);
         _this.progress = __webpack_require__(/*! nprogress */ "./node_modules/nprogress/nprogress.js");
         _this.echo = null;
         window.$state = _this.$state;
-        window.$ws = _this.$ws;
         window.$jax = _this.$jax;
         return _this;
     }
@@ -3238,13 +2406,6 @@ var LJS = /** @class */ (function (_super) {
      */
     LJS.prototype.isProcess = function () {
         return this.process;
-    };
-    /**
-     * jax alias
-     * @param name
-     */
-    LJS.prototype.jax = function (name) {
-        return this.$jax.cmd(name);
     };
     /**
      * Extend ljs
@@ -3349,6 +2510,7 @@ var LJS = /** @class */ (function (_super) {
     LJS.prototype.on = function (events, selector, data, handler) {
         if (data === void 0) { data = undefined; }
         if (handler === void 0) { handler = undefined; }
+        //return require('jquery/src/event')(document).on(events, selector, data, handler);
         return $(document).on(events, selector, data, handler);
     };
     /**
@@ -3672,10 +2834,10 @@ exports.LStorage = LStorage;
 
 /***/ }),
 
-/***/ "./javascript/ljs/classes/ProServer.tsx":
-/*!**********************************************!*\
-  !*** ./javascript/ljs/classes/ProServer.tsx ***!
-  \**********************************************/
+/***/ "./javascript/ljs/classes/Model.tsx":
+/*!******************************************!*\
+  !*** ./javascript/ljs/classes/Model.tsx ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3685,270 +2847,189 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
-var ProServer = /** @class */ (function () {
-    function ProServer(ljs) {
-        var _this = this;
-        this.ljs = ljs;
-        this.link = this.ljs.cfg("server");
-        this.disconnect_count = 0;
-        this.error_count = 0;
-        this.ws = null;
-        if (this.link && /^ws/.test(this.link)) {
-            this.connect();
-            this.onMessage();
-            window.addEventListener('focus', function () {
-                if (_this.ws) {
-                    _this.ws.send(_this.id);
-                    if (_this.ws.readyState === 3) {
-                        _this.reConnect();
-                    }
-                }
-            });
-        }
-        else {
-            if (true) {
-                ljs._warn("ProServer not loaded!");
-            }
-        }
+var unset_1 = __importDefault(__webpack_require__(/*! lodash/unset */ "./node_modules/lodash/unset.js"));
+var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
+var get_1 = __importDefault(__webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js"));
+var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
+var Model = /** @class */ (function () {
+    /**
+     * Model Constructor
+     * @param _path
+     * @param _params
+     * @param _state
+     */
+    function Model(_path, _params, _state) {
+        if (_path === void 0) { _path = ""; }
+        if (_params === void 0) { _params = {}; }
+        if (_state === void 0) { _state = {}; }
+        this._path = _path;
+        this._params = _params;
+        this._state = _state;
+        this._prox = new Proxy(this._make.bind(this), this);
+        return this._prox;
     }
-    Object.defineProperty(ProServer.prototype, "id", {
-        /**
-         * ID getter
-         */
-        get: function () {
-            return this.ws ? this.ws.url.split("=")[1] : '';
-        },
-        enumerable: true,
-        configurable: true
-    });
     /**
-     * Make connect
+     * Model state setter
+     * @param name
+     * @param value
      */
-    ProServer.prototype.connect = function () {
+    Model.prototype.state = function (name, value) {
+        if (!value)
+            value = name;
+        this._state[name] = value;
+        return this;
+    };
+    /**
+     * Model params setter
+     * @param params
+     */
+    Model.prototype.params = function (params) {
+        this._params = merge_1.default(this._params, params);
+        return this;
+    };
+    /**
+     * Model param setter
+     * @param name
+     * @param value
+     */
+    Model.prototype.param = function (name, value) {
+        this._params[name] = value;
+        return this;
+    };
+    /**
+     * Model blob maker
+     * @param name
+     * @param value
+     * @param options
+     */
+    Model.prototype.blob = function (name, value, options) {
+        if (!Array.isArray(value) && typeof value === 'object')
+            value = [JSON.stringify(value)];
+        if (!Array.isArray(value))
+            value = [value];
+        this._params[name] = new Blob(value, options);
+        return this;
+    };
+    /**
+     * Add blob collection
+     * @param fields
+     */
+    Model.prototype.blobs = function (fields) {
         var _this = this;
-        this.ws = new WebSocket(this.link);
-        this.ws.onclose = function (e) {
-            if (true) {
-                _this.ljs._detail("WebSocket disconnected!");
-            }
-            _this.disconnect_count++;
-        };
-        this.ws.onerror = function (e) {
-            if (_this.error_count > 500) {
-                location.reload();
-            }
-            else {
-                if (_this.error_count < 10) {
-                    _this.reConnect();
-                }
-            }
-            if (true) {
-                _this.ljs._error("WebSocket error:", e);
-            }
-            _this.ljs._dispatch_event("ws:error", { ws: _this.ws, error: e });
-            _this.error_count++;
-        };
-        this.ws.onopen = function () {
-            if (true) {
-                _this.ljs._detail("WebSocket connected!");
-            }
-            _this.ljs._dispatch_event("ws:open", _this.ws);
-        };
-        return this;
-    };
-    /**
-     * Disconnect connection
-     */
-    ProServer.prototype.disconnect = function () {
-        if (this.ws) {
-            this.ws.onclose = function () { };
-            this.ws.close();
-        }
-        this.ws = null;
-        return this;
-    };
-    /**
-     * Make event on message ws
-     */
-    ProServer.prototype.onMessage = function () {
-        var _this = this;
-        if (this.ws) {
-            this.ws.onmessage = function (event) {
-                var _data = {};
-                try {
-                    _data = JSON.parse(event.data);
-                    if (_data['registered']) {
-                        ProServer.onconnectsend.map(function (eve, k) {
-                            var _a;
-                            (_a = _this.ws) === null || _a === void 0 ? void 0 : _a.send(eve);
-                            delete ProServer.onconnectsend[k];
-                        });
-                    }
-                    map_1.default(_data, function (data, key) {
-                        if (key in ProServer.events) {
-                            ProServer.events[key].map(function (closure, k) {
-                                if (closure) {
-                                    var bind = ProServer.binds[key][k];
-                                    if (bind) {
-                                        closure = closure.bind(bind);
-                                    }
-                                    closure(data);
-                                }
-                            });
-                        }
-                        else {
-                            var result = _this.ljs.exec(key, data, { ws: _this });
-                            _this.ljs._detail('Exec ws', key, data, result);
-                        }
-                    });
-                }
-                catch (e) {
-                }
-                if (true) {
-                    _this.ljs._detail("onMessage data:", _data);
-                }
-            };
-        }
-        return this;
-    };
-    /**
-     * Add event
-     * @param event
-     * @param closure
-     * @param bind
-     */
-    ProServer.prototype.on = function (event, closure, bind) {
-        if (closure === void 0) { closure = null; }
-        if (bind === void 0) { bind = null; }
-        if (typeof event === 'function') {
-            bind = closure;
-            closure = event;
-            event = "*";
-        }
-        if (!(event in ProServer.binds)) {
-            ProServer.binds[event] = [];
-        }
-        if (!(event in ProServer.events)) {
-            ProServer.events[event] = [];
-        }
-        var has = false;
-        ProServer.events[event].map(function (hasClosure, key) {
-            has = closure === hasClosure;
-            if (has) {
-                ProServer.events[event][key] = closure;
-                ProServer.binds[event][key] = bind;
-            }
+        Object.keys(fields).map(function (key) {
+            _this.blob(key, fields[key]);
         });
-        if (!has) {
-            ProServer.events[event].push(closure);
-            ProServer.binds[event].push(bind);
-        }
-        if (this.ws && this.id && event !== '*' && event !== 'server_time') {
-            var eve = JSON.stringify({ CLIENT: this.id, EMIT: event, ON: true });
-            if (this.ws.readyState === 1) {
-                this.ws.send(eve);
-            }
-            else {
-                ProServer.onconnectsend.push(eve);
-            }
-        }
         return this;
     };
     /**
-     * Off event
-     * @param event
-     * @param closure
+     * Proxy get event
+     * @param target
+     * @param prop
      */
-    ProServer.prototype.off = function (event, closure) {
-        if (event === void 0) { event = null; }
-        if (closure === void 0) { closure = null; }
-        if (typeof event === 'function') {
-            closure = event;
-            event = "*";
+    Model.prototype.get = function (target, prop) {
+        var that = this;
+        var is_method = false;
+        if (prop in this) {
+            return this[prop];
         }
-        if (event === null) {
-            event = "*";
+        var path = (this._path ? this._path + '.' : this._path) + prop;
+        var model = (new Model(path, this._params, this._state));
+        this._params = {};
+        this._state = {};
+        return model;
+    };
+    /**
+     * Proxy make target
+     * @param params
+     */
+    Model.prototype._make = function () {
+        var params = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            params[_i] = arguments[_i];
         }
-        if (event in ProServer.events) {
-            if (closure) {
-                ProServer.events[event].map(function (original, key) {
-                    if (original === closure) {
-                        delete ProServer.events[event][key];
-                        delete ProServer.binds[event][key];
-                    }
+        var send_params = merge_1.default(Helper_1.Helper.query_get(), this._params);
+        var route = window.ljs.cfg('jax');
+        var route_param = route ? Helper_1.Helper.md5(route) : undefined;
+        this._path = this._path.replace(/\.([a-zA-Z0-9\_]+)$/i, '@$1');
+        var form = new FormData();
+        form.append(route_param + "[" + this._path + "]", JSON.stringify(params));
+        var addFormData = function (data, parentKey) {
+            if (data && typeof data === 'object' &&
+                !(data instanceof Date) &&
+                !(data instanceof File) &&
+                !(data instanceof Blob)) {
+                Object.keys(data).forEach(function (key) {
+                    addFormData(data[key], parentKey ? parentKey + "[" + key + "]" : key);
                 });
-                if (!Object.values(ProServer.events[event]).length) {
-                    delete ProServer.events[event];
-                    delete ProServer.binds[event];
-                    if (this.ws && this.id && event !== '*' && event !== 'server_time') {
-                        this.ws.send(JSON.stringify({ CLIENT: this.id, EMIT: event, OFF: true }));
-                    }
-                }
             }
             else {
-                delete ProServer.events[event];
-                delete ProServer.binds[event];
-                if (this.ws && this.id && event !== '*' && event !== 'server_time') {
-                    this.ws.send(JSON.stringify({ CLIENT: this.id, EMIT: event, OFF: true }));
+                var value = data === null ? '' : data;
+                if (parentKey) {
+                    form.append(parentKey, value);
                 }
             }
-        }
-        return this;
+        };
+        addFormData(send_params);
+        return Model.request(form, this._state);
     };
     /**
-     * Run reconnect procession
+     * Make ajax request
+     * @param query
+     * @param state
      */
-    ProServer.prototype.reConnect = function () {
+    Model.request = function (query, state) {
         var _this = this;
-        if (true) {
-            this.ljs._detail("Reconnect begin...");
-        }
-        $.get(window.location.href).then(function () {
-            if (true) {
-                _this.ljs._detail("Reconnected!");
-            }
-            _this.resetConnect();
+        return new Promise(function (resolve, reject) {
+            window.ljs.switchProcess(true);
+            var xhr = new XMLHttpRequest();
+            var route = window.ljs.cfg('jax');
+            xhr.open('post', window.location.origin + "/" + route, true);
+            xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.send(query);
+            xhr.onload = function (e) {
+                var target = e.target;
+                window.ljs._onload_header(target.getAllResponseHeaders());
+                if (target.status >= 200 && target.status < 300) {
+                    var data = void 0;
+                    try {
+                        data = JSON.parse(target.response);
+                    }
+                    catch (e) {
+                        data = target.response;
+                    }
+                    if (typeof data === 'object' && '$exec' in data) {
+                        window.ljs.exec(data.$exec);
+                        unset_1.default(data, '$exec');
+                    }
+                    _this.applyStates(state, data);
+                    resolve(data);
+                }
+                else {
+                    reject({ status: target.status, statusText: target.statusText });
+                }
+                window.ljs.switchProcess(false);
+            };
+            xhr.onerror = function (e) {
+                var target = e.target;
+                reject({ status: target.status, statusText: target.statusText });
+                window.ljs.switchProcess(false);
+            };
         });
-        return this;
     };
     /**
-     * Reset connection
-     */
-    ProServer.prototype.resetConnect = function () {
-        var _this = this;
-        this.disconnect();
-        setTimeout(function () {
-            _this.connect();
-            _this.onMessage();
-        }, 500);
-        return this;
-    };
-    /**
-     * Send data on executor
-     * @param execute
+     * Apply state requests
+     * @param state
      * @param data
      */
-    ProServer.prototype.send = function (execute, data) {
-        if (data === void 0) { data = null; }
-        if (this.ws) {
-            if (!data) {
-                data = null;
-            }
-            var _send = { ID: this.link.split("=")[1], EXECUTE: execute, DATA: data };
-            this.ws.send(JSON.stringify(_send));
-            if (true) {
-                this.ljs._detail("WS Send:", _send);
-            }
-        }
-        return this;
+    Model.applyStates = function (state, data) {
+        Object.keys(state).map(function (key) {
+            window.state.set(key, get_1.default(data, state[key]));
+        });
     };
-    ProServer.events = {};
-    ProServer.binds = {};
-    ProServer.onconnectsend = [];
-    return ProServer;
+    return Model;
 }());
-exports.ProServer = ProServer;
+exports.Model = Model;
 
 
 /***/ }),
@@ -4491,13 +3572,9 @@ exports.HTMLDataEvent = HTMLDataEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var HTMLstate_1 = __webpack_require__(/*! ./HTMLstate */ "./javascript/ljs/data/HTMLstate.tsx");
 var HTMLDataEvent_1 = __webpack_require__(/*! ./HTMLDataEvent */ "./javascript/ljs/data/HTMLDataEvent.tsx");
 var HTMLReady = /** @class */ (function () {
     function HTMLReady($root) {
-        $root.querySelectorAll('[data-state]').forEach(function (obj) {
-            new HTMLstate_1.HTMLState(obj);
-        });
         $root.querySelectorAll('[data-load]').forEach(function (obj) {
             new HTMLDataEvent_1.HTMLDataEvent('load', { target: obj, currentTarget: obj }, function () {
                 obj.removeAttribute("data-load");
@@ -4531,10 +3608,10 @@ var get_1 = __importDefault(__webpack_require__(/*! lodash/get */ "./node_module
 var HTMLRegisterEvents = /** @class */ (function () {
     function HTMLRegisterEvents(ljs) {
         this.ljs = ljs;
-        this.stateChanged()
-            .makeEvents()
+        this.makeEvents()
             .dynamicElements()
             .dataHref()
+            .watcher()
             .makePopState();
     }
     /**
@@ -4549,9 +3626,9 @@ var HTMLRegisterEvents = /** @class */ (function () {
         return this;
     };
     /**
-     * Make data href click
+     * Watcher on load event
      */
-    HTMLRegisterEvents.prototype.dataHref = function () {
+    HTMLRegisterEvents.prototype.watcher = function () {
         window.ljs.on('ljs:on_watch', function () {
             document.querySelectorAll('[data-live] [data-load]').forEach(function (obj) {
                 new HTMLDataEvent_1.HTMLDataEvent('load', { target: obj, currentTarget: obj }, function () {
@@ -4559,6 +3636,12 @@ var HTMLRegisterEvents = /** @class */ (function () {
                 });
             });
         });
+        return this;
+    };
+    /**
+     * Make data href click
+     */
+    HTMLRegisterEvents.prototype.dataHref = function () {
         window.ljs.on('click', '[data-href]', function (event) {
             if (event.target.hasAttribute('href') || event.target.closest('a[href]')) {
                 if (event.target.nodeName === 'A' && event.target.getAttribute('href')) {
@@ -4677,112 +3760,9 @@ var HTMLRegisterEvents = /** @class */ (function () {
             window.$jax[method](jaxUrl, params, storage);
         });
     };
-    /**
-     * Register data events state change
-     */
-    HTMLRegisterEvents.prototype.stateChanged = function () {
-        this.ljs.on('state:changed', function (_a) {
-            var _b = _a.detail, value = _b.value, state_name = _b.state_name;
-            if (window.state.has(state_name) || value) {
-                document.querySelectorAll("[data-stated='" + state_name + "']").forEach(function (obj) {
-                    if (obj.value !== undefined) {
-                        obj.value = value;
-                        if (obj.type === 'checkbox' || obj.type === 'radio') {
-                            obj.checked = !!value;
-                        }
-                        obj.dispatchEvent(new Event("change"));
-                    }
-                    else {
-                        obj.innerText = value;
-                    }
-                });
-            }
-        });
-        return this;
-    };
     return HTMLRegisterEvents;
 }());
 exports.HTMLRegisterEvents = HTMLRegisterEvents;
-
-
-/***/ }),
-
-/***/ "./javascript/ljs/data/HTMLstate.tsx":
-/*!*******************************************!*\
-  !*** ./javascript/ljs/data/HTMLstate.tsx ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var HTMLState = /** @class */ (function () {
-    function HTMLState(obj, create_event) {
-        if (create_event === void 0) { create_event = true; }
-        var $name = obj.dataset.state, targetName = obj.getAttribute('name');
-        var targetValue = obj.value;
-        if ('$' in window) {
-            var ret = null;
-            var hooks = $.valHooks[obj.type] ||
-                $.valHooks[obj.nodeName.toLowerCase()];
-            if (hooks &&
-                "get" in hooks &&
-                (ret = hooks.get(obj, "value")) !== undefined) {
-                targetValue = ret;
-            }
-            else {
-                targetValue = obj.value;
-            }
-        }
-        // Handle most common string cases
-        if (typeof targetValue === "string") {
-            targetValue = targetValue.replace(/\r/g, "");
-        }
-        targetValue = targetValue == null ? "" : targetValue;
-        if ($name)
-            $name = targetName ? $name + "." + targetName : $name;
-        else
-            $name = targetName;
-        if ($name && $name !== "") {
-            var formParent = obj.closest('form');
-            if (formParent) {
-                var formName = formParent.getAttribute('name');
-                if (formName) {
-                    $name = formName + "." + $name;
-                }
-            }
-            if (obj.type === 'checkbox') {
-                targetValue = obj.checked;
-            }
-            if (obj.type === 'radio') {
-                targetValue = obj.checked ? targetValue : null;
-                if (window.ljs.$state.has($name) && !obj.checked) {
-                    targetValue = window.ljs.$state.get($name);
-                }
-            }
-            window.ljs.$state.make_storage($name, {
-                target: obj,
-                data: obj.dataset
-            });
-            window.ljs.$state.set($name, targetValue);
-            if (create_event) {
-                $(obj).on(obj.dataset.live !== undefined ? 'keyup' : 'change', function (event) {
-                    if (event.target) {
-                        new HTMLState(event.target, false);
-                    }
-                });
-            }
-        }
-        else {
-            if (true) {
-                window.ljs._error('Undefined name of target.', obj);
-            }
-        }
-    }
-    return HTMLState;
-}());
-exports.HTMLState = HTMLState;
 
 
 /***/ }),
@@ -5843,38 +4823,6 @@ var baseForOwn = __webpack_require__(/*! ./_baseForOwn */ "./node_modules/lodash
 var baseEach = createBaseEach(baseForOwn);
 
 module.exports = baseEach;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseFilter.js":
-/*!********************************************!*\
-  !*** ./node_modules/lodash/_baseFilter.js ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseEach = __webpack_require__(/*! ./_baseEach */ "./node_modules/lodash/_baseEach.js");
-
-/**
- * The base implementation of `_.filter` without support for iteratee shorthands.
- *
- * @private
- * @param {Array|Object} collection The collection to iterate over.
- * @param {Function} predicate The function invoked per iteration.
- * @returns {Array} Returns the new filtered array.
- */
-function baseFilter(collection, predicate) {
-  var result = [];
-  baseEach(collection, function(value, index, collection) {
-    if (predicate(value, index, collection)) {
-      result.push(value);
-    }
-  });
-  return result;
-}
-
-module.exports = baseFilter;
 
 
 /***/ }),
@@ -10633,65 +9581,6 @@ module.exports = eq;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/filter.js":
-/*!***************************************!*\
-  !*** ./node_modules/lodash/filter.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var arrayFilter = __webpack_require__(/*! ./_arrayFilter */ "./node_modules/lodash/_arrayFilter.js"),
-    baseFilter = __webpack_require__(/*! ./_baseFilter */ "./node_modules/lodash/_baseFilter.js"),
-    baseIteratee = __webpack_require__(/*! ./_baseIteratee */ "./node_modules/lodash/_baseIteratee.js"),
-    isArray = __webpack_require__(/*! ./isArray */ "./node_modules/lodash/isArray.js");
-
-/**
- * Iterates over elements of `collection`, returning an array of all elements
- * `predicate` returns truthy for. The predicate is invoked with three
- * arguments: (value, index|key, collection).
- *
- * **Note:** Unlike `_.remove`, this method returns a new array.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Collection
- * @param {Array|Object} collection The collection to iterate over.
- * @param {Function} [predicate=_.identity] The function invoked per iteration.
- * @returns {Array} Returns the new filtered array.
- * @see _.reject
- * @example
- *
- * var users = [
- *   { 'user': 'barney', 'age': 36, 'active': true },
- *   { 'user': 'fred',   'age': 40, 'active': false }
- * ];
- *
- * _.filter(users, function(o) { return !o.active; });
- * // => objects for ['fred']
- *
- * // The `_.matches` iteratee shorthand.
- * _.filter(users, { 'age': 36, 'active': true });
- * // => objects for ['barney']
- *
- * // The `_.matchesProperty` iteratee shorthand.
- * _.filter(users, ['active', false]);
- * // => objects for ['fred']
- *
- * // The `_.property` iteratee shorthand.
- * _.filter(users, 'active');
- * // => objects for ['barney']
- */
-function filter(collection, predicate) {
-  var func = isArray(collection) ? arrayFilter : baseFilter;
-  return func(collection, baseIteratee(predicate, 3));
-}
-
-module.exports = filter;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/get.js":
 /*!************************************!*\
   !*** ./node_modules/lodash/get.js ***!
@@ -11729,60 +10618,6 @@ function map(collection, iteratee) {
 }
 
 module.exports = map;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/mapValues.js":
-/*!******************************************!*\
-  !*** ./node_modules/lodash/mapValues.js ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseAssignValue = __webpack_require__(/*! ./_baseAssignValue */ "./node_modules/lodash/_baseAssignValue.js"),
-    baseForOwn = __webpack_require__(/*! ./_baseForOwn */ "./node_modules/lodash/_baseForOwn.js"),
-    baseIteratee = __webpack_require__(/*! ./_baseIteratee */ "./node_modules/lodash/_baseIteratee.js");
-
-/**
- * Creates an object with the same keys as `object` and values generated
- * by running each own enumerable string keyed property of `object` thru
- * `iteratee`. The iteratee is invoked with three arguments:
- * (value, key, object).
- *
- * @static
- * @memberOf _
- * @since 2.4.0
- * @category Object
- * @param {Object} object The object to iterate over.
- * @param {Function} [iteratee=_.identity] The function invoked per iteration.
- * @returns {Object} Returns the new mapped object.
- * @see _.mapKeys
- * @example
- *
- * var users = {
- *   'fred':    { 'user': 'fred',    'age': 40 },
- *   'pebbles': { 'user': 'pebbles', 'age': 1 }
- * };
- *
- * _.mapValues(users, function(o) { return o.age; });
- * // => { 'fred': 40, 'pebbles': 1 } (iteration order is not guaranteed)
- *
- * // The `_.property` iteratee shorthand.
- * _.mapValues(users, 'age');
- * // => { 'fred': 40, 'pebbles': 1 } (iteration order is not guaranteed)
- */
-function mapValues(object, iteratee) {
-  var result = {};
-  iteratee = baseIteratee(iteratee, 3);
-
-  baseForOwn(object, function(value, key, object) {
-    baseAssignValue(result, key, iteratee(value, key, object));
-  });
-  return result;
-}
-
-module.exports = mapValues;
 
 
 /***/ }),

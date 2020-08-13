@@ -413,13 +413,9 @@ exports.HTMLDataEvent = HTMLDataEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var HTMLstate_1 = __webpack_require__(/*! ./HTMLstate */ "./javascript/ljs/data/HTMLstate.tsx");
 var HTMLDataEvent_1 = __webpack_require__(/*! ./HTMLDataEvent */ "./javascript/ljs/data/HTMLDataEvent.tsx");
 var HTMLReady = /** @class */ (function () {
     function HTMLReady($root) {
-        $root.querySelectorAll('[data-state]').forEach(function (obj) {
-            new HTMLstate_1.HTMLState(obj);
-        });
         $root.querySelectorAll('[data-load]').forEach(function (obj) {
             new HTMLDataEvent_1.HTMLDataEvent('load', { target: obj, currentTarget: obj }, function () {
                 obj.removeAttribute("data-load");
@@ -429,86 +425,6 @@ var HTMLReady = /** @class */ (function () {
     return HTMLReady;
 }());
 exports.HTMLReady = HTMLReady;
-
-
-/***/ }),
-
-/***/ "./javascript/ljs/data/HTMLstate.tsx":
-/*!*******************************************!*\
-  !*** ./javascript/ljs/data/HTMLstate.tsx ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var HTMLState = /** @class */ (function () {
-    function HTMLState(obj, create_event) {
-        if (create_event === void 0) { create_event = true; }
-        var $name = obj.dataset.state, targetName = obj.getAttribute('name');
-        var targetValue = obj.value;
-        if ('$' in window) {
-            var ret = null;
-            var hooks = $.valHooks[obj.type] ||
-                $.valHooks[obj.nodeName.toLowerCase()];
-            if (hooks &&
-                "get" in hooks &&
-                (ret = hooks.get(obj, "value")) !== undefined) {
-                targetValue = ret;
-            }
-            else {
-                targetValue = obj.value;
-            }
-        }
-        // Handle most common string cases
-        if (typeof targetValue === "string") {
-            targetValue = targetValue.replace(/\r/g, "");
-        }
-        targetValue = targetValue == null ? "" : targetValue;
-        if ($name)
-            $name = targetName ? $name + "." + targetName : $name;
-        else
-            $name = targetName;
-        if ($name && $name !== "") {
-            var formParent = obj.closest('form');
-            if (formParent) {
-                var formName = formParent.getAttribute('name');
-                if (formName) {
-                    $name = formName + "." + $name;
-                }
-            }
-            if (obj.type === 'checkbox') {
-                targetValue = obj.checked;
-            }
-            if (obj.type === 'radio') {
-                targetValue = obj.checked ? targetValue : null;
-                if (window.ljs.$state.has($name) && !obj.checked) {
-                    targetValue = window.ljs.$state.get($name);
-                }
-            }
-            window.ljs.$state.make_storage($name, {
-                target: obj,
-                data: obj.dataset
-            });
-            window.ljs.$state.set($name, targetValue);
-            if (create_event) {
-                $(obj).on(obj.dataset.live !== undefined ? 'keyup' : 'change', function (event) {
-                    if (event.target) {
-                        new HTMLState(event.target, false);
-                    }
-                });
-            }
-        }
-        else {
-            if (true) {
-                window.ljs._error('Undefined name of target.', obj);
-            }
-        }
-    }
-    return HTMLState;
-}());
-exports.HTMLState = HTMLState;
 
 
 /***/ }),

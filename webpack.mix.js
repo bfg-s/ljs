@@ -19,7 +19,7 @@ mix
     .js('javascript/plugins/nav/nav.tsx', 'assets/js/plugins')
     .js('javascript/plugins/echo/echo.tsx', 'assets/js/plugins')
     .js('javascript/plugins/alert/alert.tsx', 'assets/js/plugins')
-    .js('javascript/plugins/model/model.tsx', 'assets/js/plugins')
+    //.js('javascript/plugins/model/model.tsx', 'assets/js/plugins')
     .js('javascript/plugins/mask.tsx', 'assets/js/plugins')
     .js('javascript/plugins/select2.tsx', 'assets/js/plugins')
     .js('javascript/plugins/jquery.tsx', 'assets/js/plugins')

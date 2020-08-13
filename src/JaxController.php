@@ -7,6 +7,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
+use Lar\Layout\Core\LConfigs;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -21,12 +22,21 @@ class JaxController
     static $list = [];
 
     /**
+     * @var array
+     */
+    static $namespaces = [
+        'app/Jax' => 'App\\Jax'
+    ];
+
+    /**
      * @var int
      */
     protected $status = 200;
 
     /**
      * @param  Request  $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|JsonResource|\Illuminate\Http\Response|Collection|string[]|Response|\Throwable
+     * @throws \ReflectionException
      */
     public function index(Request $request)
     {
@@ -57,7 +67,12 @@ class JaxController
 
         if ($params === null) {
 
-            return response(['Invalid call event parameters.'], 406);
+            $params = $exec[$event];
+        }
+
+        if (!is_array($params)) {
+
+            $params = [$params];
         }
 
         $event = \Str::parseCallback($event, '__invoke');
@@ -92,23 +107,28 @@ class JaxController
             return response(['The specified method is not acceptable.'], 405);
         }
 
+        LConfigs::makeDefaults();
+
         $result = $this->call($executor, $method, $params, $executor_class_name);
 
         if ($result instanceof JsonResource) {
 
-            return $result->additional(respond()->toArray());
+            return $result->additional(['exec' => respond()->toArray()]);
 
         }  else if ($result instanceof Response) {
+
+            foreach (LConfigs::$list as $key => $values) {
+
+                $result->headers->set($key, $values);
+            }
 
             return $result;
         }
 
-        return response(
-            respond()->justMerge(
-                $result
-            ),
+        return response()->json(
+            $result,
             $this->status
-        );
+        )->withHeaders(LConfigs::$list);
     }
 
     /**
@@ -116,8 +136,7 @@ class JaxController
      * @param  string  $method
      * @param  array  $arguments
      * @param  string  $executor_class_name
-     * @return array|Collection|string|mixed
-     * @throws \ReflectionException
+     * @return JsonResource|Collection|mixed|string|string[]|Response|\Throwable
      */
     protected function call(JaxExecutor $executor, string $method, array $arguments, string $executor_class_name)
     {
@@ -206,7 +225,16 @@ class JaxController
             $result = $result->render();
         }
 
-        return collect($result);
+        $exec = respond()->toArray();
+
+        $return = collect($result);
+
+        if (count($exec)) {
+
+            $return = $return->merge(['$exec' => $exec]);
+        }
+
+        return $return;
     }
 
     /**
@@ -218,23 +246,32 @@ class JaxController
         if (isset(static::$list[$executor])) {
 
             return static::$list[$executor];
-
         }
 
-        $executor_camel = ucfirst(\Str::camel($executor));
+        $name = implode(
+            '\\',
+            array_map(
+                'ucfirst',
+                array_map(
+                    'Str::camel',
+                    explode(
+                        '.', $executor
+                    )
+                )
+            )
+        );
 
-        if (class_exists("App\\JaxExecutors\\{$executor_camel}")) {
+        foreach (static::$namespaces as $namespace) {
 
-            return "App\\JaxExecutors\\{$executor_camel}";
+            if (class_exists("{$namespace}\\{$name}")) {
+
+                return "{$namespace}\\{$name}";
+            }
         }
 
-        else if (class_exists("App\\Http\\JaxExecutors\\{$executor_camel}")) {
+        if (class_exists($name)) {
 
-            return "App\\Http\\JaxExecutors\\{$executor_camel}";
-
-        } else if (class_exists($executor)) {
-
-            return $executor;
+            return $name;
         }
 
         return false;

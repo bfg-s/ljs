@@ -3,11 +3,9 @@ import merge from 'lodash/merge';
 import isObject from 'lodash/isObject';
 import {Helper} from "../../Helper";
 
-export class
-JaxInstance implements JaxInterface {
+export class JaxInstance implements JaxInterface {
 
     public ljs: Ljs
-    public jax_executor: JaxExecInterface
 
     /**
      * JAX Constructor
@@ -16,7 +14,6 @@ JaxInstance implements JaxInterface {
     constructor (ljs: Ljs) {
 
         this.ljs = ljs;
-        this.jax_executor = require('./JaxExec')['JaxExec'];
     }
 
     /**
@@ -75,59 +72,6 @@ JaxInstance implements JaxInterface {
     }
 
     /**
-     * Execute php executor
-     * @param data
-     * @returns {*}
-     */
-    exec (data: JaxExecInterface) {
-
-        if (data.render === undefined || data.getParams === undefined || data.getStorage === undefined) {
-
-            if (process.env.NODE_ENV === 'development') {
-                window.ljs._error("Data must be subject to \"jaxExec\"");
-            }
-            return new Promise(() => false);
-        }
-
-        let route = this.ljs.cfg('jax');
-
-        let route_param = route ? Helper.md5(route) : undefined;
-
-        let executed = this.ljs.cfg('executed');
-
-        if ((route && route_param) || executed) {
-
-            let exec = data.render();
-
-            let call = Object.keys(exec)[0];
-
-            if (!call) {
-
-                return (new Promise(() => false));
-            }
-
-            if (executed) {
-
-                return this.get(window.location.href, merge({[`${route_param}[${call}]`]: exec[call]}, data.getParams()), data.getStorage());
-            }
-
-            return this.post(`${window.location.origin}/${route}`, merge({[`${route_param}[${call}]`]: exec[call]}, data.getParams(), Helper.query_get()), data.getStorage());
-        }
-
-        //return this.get(window.location.href, merge({_exec: data.render()}, data.getParams()), data.getStorage());
-        return new Promise(() => false);
-    }
-
-    /**
-     * Create jax command
-     * @param name
-     */
-    cmd (name: string) {
-
-        return (new (this.jax_executor as any)()).cmd(name);
-    }
-
-    /**
      * Method wrapper
      * @param method
      * @param path
@@ -143,11 +87,7 @@ JaxInstance implements JaxInterface {
 
         if ($methods[method] !== undefined) {
 
-            //window.ljs.progress.start();
-
             window.ljs.switchProcess(true);
-
-            //document.body.style.cursor = "progress";
 
             if (process.env.NODE_ENV === 'development') {
                 window.ljs._detail(`Method: [${method}] Jax`);
@@ -187,8 +127,6 @@ JaxInstance implements JaxInterface {
                 type: method,
                 complete: (response, textStatus) => {
 
-                    //document.body.style.cursor = "auto";
-
                     window.ljs._onload_header(response.getAllResponseHeaders());
 
                     if (isObject(response.responseJSON)) {
@@ -201,8 +139,6 @@ JaxInstance implements JaxInterface {
 
                         window.ljs.exec(data, null, merge({response, status: textStatus, method, path, params}, storage));
                     }
-
-                    //window.ljs.progress.done();
 
                     window.ljs.switchProcess(false);
                 }

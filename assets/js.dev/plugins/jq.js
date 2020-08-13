@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -6430,7 +6430,7 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ 9:
+/***/ 8:
 /*!*****************************************!*\
   !*** multi ./javascript/plugins/jq.tsx ***!
   \*****************************************/

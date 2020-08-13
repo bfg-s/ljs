@@ -52,6 +52,7 @@
     "minimist": "^1.2.0",
     "moment": "^2.27.0",
     "nprogress": "^0.2.0",
+    "on-change": "^2.0.1",
     "pluralize": "^8.0.0",
     "pusher-js": "^6.0.3",
     "script-loader": "^0.7.2",

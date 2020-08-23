@@ -95,7 +95,7 @@ class JaxController
 
         if (!($executor instanceof JaxExecutor)) {
             
-            return response(['Invalid call object.'], 403);
+            return response(['Object don\'t hav a parent JaxExecutor.'], 403);
         }
 
         $executor->setParent($this);

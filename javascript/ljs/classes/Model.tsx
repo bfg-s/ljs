@@ -77,32 +77,17 @@ export class Model
     }
 
     /**
-     * Proxy get event
-     * @param target
-     * @param prop
-     */
-    get (target: Model, prop: string) {
-        let that = this;
-        let is_method = false;
-        if (prop in this) { return (this as any)[prop]; }
-        let path = (this._path ? this._path + '.' : this._path) + prop;
-        let model = (new Model(path, this._params, this._state));
-        this._params = {};
-        this._state  = {};
-        return model;
-    }
-
-    /**
-     * Proxy make target
+     * Set custom path
+     * @param path
      * @param params
      */
-    _make (...params: any) {
+    path (path: string, ...params: any) {
         let send_params = merge(Helper.query_get(), this._params);
         let route = window.ljs.cfg('jax');
         let route_param = route ? Helper.md5(route) : undefined;
-        this._path = this._path.replace(/\.([a-zA-Z0-9\_]+)$/i, '@$1');
         let form = new FormData();
-        form.append(`${route_param}[${this._path}]`, JSON.stringify(params));
+        path = path.replace(/\.([a-zA-Z0-9\_]+)$/i, '@$1');
+        form.append(`${route_param}[${path}]`, JSON.stringify(params));
         let addFormData = (data: any, parentKey?: string|null) => {
             if (
                 data && typeof data === 'object' &&
@@ -120,6 +105,32 @@ export class Model
         }
         addFormData(send_params);
         return Model.request(form, this._state);
+    }
+
+    /**
+     * Proxy get event
+     * @param target
+     * @param prop
+     */
+    get (target: Model, prop: string) {
+        let that = this;
+        let is_method = false;
+        if (prop === 'toJSON') return  false;
+        if (prop === 'apply') prop = '';
+        if (prop in this && prop !== 'get') { return (this as any)[prop]; }
+        let path = prop ? ((this._path ? this._path + '.' : this._path) + prop) : this._path;
+        let model = (new Model(path, this._params, this._state));
+        this._params = {};
+        this._state  = {};
+        return model;
+    }
+
+    /**
+     * Proxy make target
+     * @param params
+     */
+    _make (...params: any) {
+        return this.path(this._path, ...params);
     }
 
     /**

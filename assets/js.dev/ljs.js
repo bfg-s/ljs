@@ -2843,6 +2843,13 @@ exports.LStorage = LStorage;
 
 "use strict";
 
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -2922,37 +2929,21 @@ var Model = /** @class */ (function () {
         return this;
     };
     /**
-     * Proxy get event
-     * @param target
-     * @param prop
-     */
-    Model.prototype.get = function (target, prop) {
-        var that = this;
-        var is_method = false;
-        if (prop in this) {
-            return this[prop];
-        }
-        var path = (this._path ? this._path + '.' : this._path) + prop;
-        var model = (new Model(path, this._params, this._state));
-        this._params = {};
-        this._state = {};
-        return model;
-    };
-    /**
-     * Proxy make target
+     * Set custom path
+     * @param path
      * @param params
      */
-    Model.prototype._make = function () {
+    Model.prototype.path = function (path) {
         var params = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            params[_i] = arguments[_i];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
         }
         var send_params = merge_1.default(Helper_1.Helper.query_get(), this._params);
         var route = window.ljs.cfg('jax');
         var route_param = route ? Helper_1.Helper.md5(route) : undefined;
-        this._path = this._path.replace(/\.([a-zA-Z0-9\_]+)$/i, '@$1');
         var form = new FormData();
-        form.append(route_param + "[" + this._path + "]", JSON.stringify(params));
+        path = path.replace(/\.([a-zA-Z0-9\_]+)$/i, '@$1');
+        form.append(route_param + "[" + path + "]", JSON.stringify(params));
         var addFormData = function (data, parentKey) {
             if (data && typeof data === 'object' &&
                 !(data instanceof Date) &&
@@ -2971,6 +2962,38 @@ var Model = /** @class */ (function () {
         };
         addFormData(send_params);
         return Model.request(form, this._state);
+    };
+    /**
+     * Proxy get event
+     * @param target
+     * @param prop
+     */
+    Model.prototype.get = function (target, prop) {
+        var that = this;
+        var is_method = false;
+        if (prop === 'toJSON')
+            return false;
+        if (prop === 'apply')
+            prop = '';
+        if (prop in this && prop !== 'get') {
+            return this[prop];
+        }
+        var path = prop ? ((this._path ? this._path + '.' : this._path) + prop) : this._path;
+        var model = (new Model(path, this._params, this._state));
+        this._params = {};
+        this._state = {};
+        return model;
+    };
+    /**
+     * Proxy make target
+     * @param params
+     */
+    Model.prototype._make = function () {
+        var params = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            params[_i] = arguments[_i];
+        }
+        return this.path.apply(this, __spreadArrays([this._path], params));
     };
     /**
      * Make ajax request

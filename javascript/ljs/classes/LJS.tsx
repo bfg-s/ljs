@@ -214,20 +214,9 @@ export class LJS extends LJSConstructor implements Ljs {
      */
     routeCollection ($collection: any) {
 
-        let host = window.location.host;
+        LJS.$route_collection = merge(LJS.$route_collection, $collection);
 
-        if (host in $collection) {
-
-            LJS.$route_collection = merge(LJS.$route_collection, $collection);
-        }
-
-        else {
-
-            LJS.$route_collection[host] = merge(
-                (host in LJS.$route_collection ? LJS.$route_collection[host] : {}),
-                $collection
-            );
-        }
+        return this;
     }
 
     /**
@@ -238,7 +227,7 @@ export class LJS extends LJSConstructor implements Ljs {
 
         let host = window.location.host,
             protocol = window.location.protocol,
-            collect = host in LJS.$route_collection ? LJS.$route_collection[host] : {};
+            collect = host in LJS.$route_collection ? LJS.$route_collection[host] : LJS.$route_collection.global;
 
         if (!($name in collect)) {
 

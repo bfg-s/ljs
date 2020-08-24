@@ -2527,20 +2527,15 @@ var LJS = /** @class */ (function (_super) {
      * @param $collection
      */
     LJS.prototype.routeCollection = function ($collection) {
-        var host = window.location.host;
-        if (host in $collection) {
-            LJS.$route_collection = merge_1.default(LJS.$route_collection, $collection);
-        }
-        else {
-            LJS.$route_collection[host] = merge_1.default((host in LJS.$route_collection ? LJS.$route_collection[host] : {}), $collection);
-        }
+        LJS.$route_collection = merge_1.default(LJS.$route_collection, $collection);
+        return this;
     };
     /**
      * Get route methods
      * @param $name
      */
     LJS.prototype.routeMethods = function ($name) {
-        var host = window.location.host, protocol = window.location.protocol, collect = host in LJS.$route_collection ? LJS.$route_collection[host] : {};
+        var host = window.location.host, protocol = window.location.protocol, collect = host in LJS.$route_collection ? LJS.$route_collection[host] : LJS.$route_collection.global;
         if (!($name in collect)) {
             return ['GET'];
         }

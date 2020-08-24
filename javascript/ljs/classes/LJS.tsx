@@ -257,7 +257,7 @@ export class LJS extends LJSConstructor implements Ljs {
 
         let host = window.location.host,
             protocol = window.location.protocol,
-            collect = host in LJS.$route_collection ? LJS.$route_collection[host] : {},
+            collect = host in LJS.$route_collection ? LJS.$route_collection[host] : LJS.$route_collection.global,
             re = /\{([a-zA-Z0-9\.\_\-]+)([\?]?)\}/g;
 
         if (!($name in collect)) {

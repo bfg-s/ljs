@@ -20,7 +20,7 @@ class JsRouteGenerator implements DumpExecute
     public function handle(Command $command)
     {
         $routes_list = [];
-        $host = parse_url(config('app.url'))['host'];
+        $host = 'global';
 
         /** @var \Illuminate\Routing\Route $route */
         foreach (\Route::getRoutes()->getRoutes() as $route) {

@@ -2553,7 +2553,7 @@ var LJS = /** @class */ (function (_super) {
      */
     LJS.prototype.route = function ($name, $params) {
         if ($params === void 0) { $params = {}; }
-        var host = window.location.host, protocol = window.location.protocol, collect = host in LJS.$route_collection ? LJS.$route_collection[host] : {}, re = /\{([a-zA-Z0-9\.\_\-]+)([\?]?)\}/g;
+        var host = window.location.host, protocol = window.location.protocol, collect = host in LJS.$route_collection ? LJS.$route_collection[host] : LJS.$route_collection.global, re = /\{([a-zA-Z0-9\.\_\-]+)([\?]?)\}/g;
         if (!($name in collect)) {
             throw new Error("Undefined route name [" + $name + "]");
         }

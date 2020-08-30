@@ -345,6 +345,14 @@ export class LJSConstructor extends ExecutorMethods {
                             if (last_key === i) {
 
                                 return this._force_object(now, key[i], item, true, storage_data);
+                                // if (Array.isArray(item)) {
+                                //
+                                //     return now[key[i]](...item);
+                                //
+                                // } else {
+                                //
+                                //     return now[key[i]](item);
+                                // }
 
                             } else {
 

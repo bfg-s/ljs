@@ -3,6 +3,27 @@ import merge from 'lodash/merge';
 import get from 'lodash/get';
 import {Helper} from "../../Helper";
 
+(function() {
+    let proxyInstances: any = new WeakSet()
+    let originalProxy: any = Proxy
+    Proxy = new Proxy(Proxy, {
+        construct(target, args: any) {
+            let newProxy = new originalProxy(...args)
+            proxyInstances.add(newProxy)
+            return newProxy
+        },
+        get: function(obj, prop) {
+            if (prop == Symbol.hasInstance) {
+                return function(instance: any) {
+                    return proxyInstances.has(instance)
+                }
+            }
+            // @ts-ignore
+            return Reflect.get(...arguments)
+        }
+    })
+})()
+
 export class Model
 {
     private _prox: any;
@@ -130,6 +151,9 @@ export class Model
      * @param params
      */
     _make (...params: any) {
+        if (params[0] instanceof Proxy) {
+            params = params[1];
+        }
         return this.path(this._path, ...params);
     }
 

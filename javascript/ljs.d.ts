@@ -15,6 +15,8 @@ declare interface Window {
     locales: any
     switchLocale(locale: string): void
     __($path: string, $params?: any): any
+    phpdebugbar: any
+    PhpDebugBar: any
 }
 
 declare interface Ljs {

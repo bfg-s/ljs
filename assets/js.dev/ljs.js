@@ -1913,6 +1913,14 @@ var LJSConstructor = /** @class */ (function (_super) {
                         if (now[key[i]] !== undefined) {
                             if (last_key === i) {
                                 return this._force_object(now, key[i], item, true, storage_data);
+                                // if (Array.isArray(item)) {
+                                //
+                                //     return now[key[i]](...item);
+                                //
+                                // } else {
+                                //
+                                //     return now[key[i]](item);
+                                // }
                             }
                             else {
                                 _tmp_link = now[key[i]];
@@ -2853,6 +2861,26 @@ var unset_1 = __importDefault(__webpack_require__(/*! lodash/unset */ "./node_mo
 var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
 var get_1 = __importDefault(__webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js"));
 var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
+(function () {
+    var proxyInstances = new WeakSet();
+    var originalProxy = Proxy;
+    Proxy = new Proxy(Proxy, {
+        construct: function (target, args) {
+            var newProxy = new (originalProxy.bind.apply(originalProxy, __spreadArrays([void 0], args)))();
+            proxyInstances.add(newProxy);
+            return newProxy;
+        },
+        get: function (obj, prop) {
+            if (prop == Symbol.hasInstance) {
+                return function (instance) {
+                    return proxyInstances.has(instance);
+                };
+            }
+            // @ts-ignore
+            return Reflect.get.apply(Reflect, arguments);
+        }
+    });
+})();
 var Model = /** @class */ (function () {
     /**
      * Model Constructor
@@ -2987,6 +3015,9 @@ var Model = /** @class */ (function () {
         var params = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             params[_i] = arguments[_i];
+        }
+        if (params[0] instanceof Proxy) {
+            params = params[1];
         }
         return this.path.apply(this, __spreadArrays([this._path], params));
     };

@@ -3622,6 +3622,7 @@ exports.HTMLDataEvent = HTMLDataEvent;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var HTMLDataEvent_1 = __webpack_require__(/*! ./HTMLDataEvent */ "./javascript/ljs/data/HTMLDataEvent.tsx");
+window.HTMLDataEvent = HTMLDataEvent_1.HTMLDataEvent;
 var HTMLReady = /** @class */ (function () {
     function HTMLReady($root) {
         $root.querySelectorAll('[data-load]').forEach(function (obj) {

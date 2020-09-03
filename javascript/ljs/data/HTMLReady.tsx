@@ -1,5 +1,7 @@
 import {HTMLDataEvent} from "./HTMLDataEvent";
 
+window.HTMLDataEvent = HTMLDataEvent;
+
 export class HTMLReady {
 
     constructor($root: any) {

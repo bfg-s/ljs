@@ -17,6 +17,7 @@ declare interface Window {
     __($path: string, $params?: any): any
     phpdebugbar: any
     PhpDebugBar: any
+    HTMLDataEvent: any
 }
 
 declare interface Ljs {

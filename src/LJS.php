@@ -594,4 +594,16 @@ class LJS implements Renderable
 
         return $this;
     }
+
+    /**
+     * @param  string  $dir
+     * @param  string  $namespace
+     * @return $this
+     */
+    public function jaxNamespace(string $dir, string $namespace)
+    {
+        JaxController::$namespaces[$dir] = $namespace;
+
+        return $this;
+    }
 }

@@ -3596,7 +3596,14 @@ var HTMLDataEvent = /** @class */ (function () {
         }
         catch (e) {
             if (typeof params === "string") {
-                params = params.split('&&').map(function (i) { return i.trim().parse(storage); });
+                params = params.split('&&').map(function (i) {
+                    i = i.trim().parse(storage);
+                    try {
+                        i = JSON.parse(i);
+                    }
+                    catch (e) { }
+                    return i;
+                });
             }
         }
         if (typeof after === 'function') {

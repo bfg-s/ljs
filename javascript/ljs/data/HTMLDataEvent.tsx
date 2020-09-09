@@ -13,7 +13,13 @@ export class HTMLDataEvent {
         if (obj.executors === undefined) { obj.executors = {}; }
 
         try { exec = JSON.parse(exec); } catch (e) {}
-        try { params = JSON.parse(params); }catch (e) { if (typeof params === "string") { params = params.split('&&').map(i => i.trim().parse(storage)); } }
+        try { params = JSON.parse(params); }catch (e) { if (typeof params === "string") {
+            params = params.split('&&').map(i => {
+                i = i.trim().parse(storage);
+                try { i = JSON.parse(i); } catch (e) {}
+                return i;
+            });
+        } }
 
         if (typeof after === 'function') {
 

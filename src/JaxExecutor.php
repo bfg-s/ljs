@@ -184,7 +184,7 @@ abstract class JaxExecutor
     public static function addNamespace(string $dir, string $namespace)
     {
         $dir = realpath($dir);
-        $dir = str_replace(base_path(), '', $dir);
+        $dir = str_replace(base_path().'/', '', $dir);
         JaxController::$namespaces[$dir] = $namespace;
     }
 }

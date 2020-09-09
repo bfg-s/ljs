@@ -34,12 +34,30 @@ class JaxController
     protected $status = 200;
 
     /**
+     * @var \Closure[]
+     */
+    static protected $on_start = [];
+
+    /**
+     * @param  \Closure  $closure
+     */
+    public static function on_start(\Closure $closure)
+    {
+        static::$on_start[] = $closure;
+    }
+
+    /**
      * @param  Request  $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|JsonResource|\Illuminate\Http\Response|Collection|string[]|Response|\Throwable
      * @throws \ReflectionException
      */
     public function index(Request $request)
     {
+        foreach (static::$on_start as $item) {
+
+            $item($this);
+        }
+
         $param = md5(md5(config('app.url')));
 
         if (!$request->ajax() || !$request->has($param)) {

@@ -158,12 +158,12 @@ class JaxController
      */
     protected function call(JaxExecutor $executor, string $method, array $arguments, string $executor_class_name)
     {
-        if (method_exists($executor, "{$method}_access") && !ccc([$executor, "{$method}_access"], $arguments)) {
+        if (method_exists($executor, "{$method}_access") && !embedded_call([$executor, "{$method}_access"], $arguments)) {
 
             if (method_exists($executor, "{$method}_default")) {
 
                 try {
-                    return ccc([$executor, "{$method}_default"], $arguments); //$executor->{"{$method}_default"}($arguments);
+                    return embedded_call([$executor, "{$method}_default"], $arguments); //$executor->{"{$method}_default"}($arguments);
                 } catch (\Throwable $throwable) {
                     return method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
                 }
@@ -176,13 +176,13 @@ class JaxController
 
         else if (
             method_exists($executor, 'access') &&
-            !ccc([$executor, 'access'])
+            !embedded_call([$executor, 'access'])
         ) {
 
             if (method_exists($executor, 'default')) {
 
                 try {
-                    return ccc([$executor, 'default'], $arguments); //$executor->default($arguments);
+                    return embedded_call([$executor, 'default'], $arguments); //$executor->default($arguments);
                 } catch (\Throwable $throwable) {
                     return method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
                 }
@@ -212,7 +212,7 @@ class JaxController
 
         } else if (!$executor->simple_call) {
 
-            $result = ccc([$executor, $method], $arguments, function (\Throwable $throwable) use ($executor) {
+            $result = embedded_call([$executor, $method], $arguments, function (\Throwable $throwable) use ($executor) {
                 return method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
             });
 

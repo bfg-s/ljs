@@ -95,16 +95,10 @@ class MakeJaxExecutor extends Command
 
         if (file_put_contents($file, $obj->render())) {
 
-            CfgFile::open(config_path('executors.php'))->write($this->name(), $class_namespace);
-
-            $this->info("Add [{$this->name()}] to [config/executors.php]!");
-
-            $this->info("Executor [{$file}] created!");
-
-            $this->call('lar:dump');
+            $this->info("Executor [{$class_namespace}] created!");
         }
 
-        return ;
+        return 0;
     }
 
     /**

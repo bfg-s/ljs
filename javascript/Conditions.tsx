@@ -33,6 +33,13 @@ export class Conditions {
     }
 
     /**
+     * Check is ios device
+     */
+    static isIos () {
+        return window.navigator.userAgent.match(/ipad|iphone/i);
+    }
+
+    /**
      * Determine if a given string matches a given pattern.
      * @param pattern
      * @param text

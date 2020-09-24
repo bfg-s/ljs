@@ -1,6 +1,7 @@
 import {ExecutorParent} from "../Extends/ExecutorParent";
 import {Helper} from "../../Helper";
 import map from 'lodash/map';
+import {Clipboard} from "../Extends/Clipboard";
 
 export class Doc extends ExecutorParent {
 
@@ -180,14 +181,7 @@ export class Doc extends ExecutorParent {
      */
     pbcopy($data: string = "") {
 
-        if (window.$state.has($data)) $data = window.$state.get($data);
-        const el = document.createElement('textarea');
-        el.value = $data;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-        document.execCommand("copy");
+        Clipboard.copy($data);
         return $data;
     }
 
@@ -197,7 +191,7 @@ export class Doc extends ExecutorParent {
      */
     informed_pbcopy ($data: string) {
 
-        if (this.pbcopy($data)) {
+        if (Clipboard.copy($data)) {
 
             "toast::success".exec("Copied to clipboard");
         }

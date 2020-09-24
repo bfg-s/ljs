@@ -128,6 +128,12 @@ var Conditions = /** @class */ (function () {
         return !isNaN(Number(num));
     };
     /**
+     * Check is ios device
+     */
+    Conditions.isIos = function () {
+        return window.navigator.userAgent.match(/ipad|iphone/i);
+    };
+    /**
      * Determine if a given string matches a given pattern.
      * @param pattern
      * @param text
@@ -595,6 +601,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ExecutorParent_1 = __webpack_require__(/*! ../Extends/ExecutorParent */ "./javascript/ljs/Extends/ExecutorParent.tsx");
 var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
 var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
+var Clipboard_1 = __webpack_require__(/*! ../Extends/Clipboard */ "./javascript/ljs/Extends/Clipboard.tsx");
 var Doc = /** @class */ (function (_super) {
     __extends(Doc, _super);
     function Doc(ljs) {
@@ -740,15 +747,7 @@ var Doc = /** @class */ (function (_super) {
      */
     Doc.prototype.pbcopy = function ($data) {
         if ($data === void 0) { $data = ""; }
-        if (window.$state.has($data))
-            $data = window.$state.get($data);
-        var el = document.createElement('textarea');
-        el.value = $data;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-        document.execCommand("copy");
+        Clipboard_1.Clipboard.copy($data);
         return $data;
     };
     /**
@@ -756,7 +755,7 @@ var Doc = /** @class */ (function (_super) {
      * @param $data
      */
     Doc.prototype.informed_pbcopy = function ($data) {
-        if (this.pbcopy($data)) {
+        if (Clipboard_1.Clipboard.copy($data)) {
             "toast::success".exec("Copied to clipboard");
         }
         return $data;
@@ -1172,6 +1171,79 @@ var Tpl = /** @class */ (function (_super) {
     return Tpl;
 }(ExecutorParent_1.ExecutorParent));
 exports.Tpl = Tpl;
+
+
+/***/ }),
+
+/***/ "./javascript/ljs/Extends/Clipboard.tsx":
+/*!**********************************************!*\
+  !*** ./javascript/ljs/Extends/Clipboard.tsx ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
+/**
+ * Work with Clipboard
+ */
+var Clipboard = /** @class */ (function () {
+    function Clipboard() {
+    }
+    /**
+     * Create HTML Textarea element
+     * @param text
+     */
+    Clipboard.prototype.create_text_area = function (text) {
+        this.text_area = document.createElement('textArea');
+        this.text_area.value = text;
+        document.body.appendChild(this.text_area);
+    };
+    /**
+     * Select text in HTML Textarea element
+     */
+    Clipboard.prototype.select_text = function () {
+        if (Helper_1.Helper.isIos()) {
+            var range = void 0, selection = void 0;
+            range = document.createRange();
+            range.selectNodeContents(this.text_area);
+            selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            this.text_area.setSelectionRange(0, 999999);
+        }
+        else {
+            this.text_area.select();
+        }
+    };
+    /**
+     * Execute copy with selected text
+     */
+    Clipboard.prototype.copy_to_clipboard = function () {
+        document.execCommand('copy');
+        document.body.removeChild(this.text_area);
+    };
+    /**
+     * Run copy process
+     * @param text
+     */
+    Clipboard.copy = function (text) {
+        try {
+            var clipboard = new Clipboard();
+            clipboard.create_text_area(text);
+            clipboard.select_text();
+            clipboard.copy_to_clipboard();
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    };
+    return Clipboard;
+}());
+exports.Clipboard = Clipboard;
 
 
 /***/ }),

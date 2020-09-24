@@ -96,6 +96,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Conditions = void 0;
 var Conditions = /** @class */ (function () {
     function Conditions() {
     }
@@ -174,6 +175,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Helper = void 0;
 var Conditions_1 = __webpack_require__(/*! ./Conditions */ "./javascript/Conditions.tsx");
 var Helper = /** @class */ (function (_super) {
     __extends(Helper, _super);
@@ -378,6 +380,7 @@ exports.Helper = Helper;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EchoChannel = void 0;
 var EchoHelp_1 = __webpack_require__(/*! ./EchoHelp */ "./javascript/plugins/echo/EchoHelp.tsx");
 var EchoChannel = /** @class */ (function () {
     /**
@@ -464,6 +467,7 @@ exports.EchoChannel = EchoChannel;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EchoHelp = void 0;
 var EchoHelp = /** @class */ (function () {
     function EchoHelp() {
     }
@@ -534,6 +538,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EchoPresenceChannel = void 0;
 var EchoHelp_1 = __webpack_require__(/*! ./EchoHelp */ "./javascript/plugins/echo/EchoHelp.tsx");
 var EchoChannel_1 = __webpack_require__(/*! ./EchoChannel */ "./javascript/plugins/echo/EchoChannel.tsx");
 var EchoPresenceChannel = /** @class */ (function (_super) {
@@ -611,6 +616,7 @@ exports.EchoPresenceChannel = EchoPresenceChannel;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EchoWrapper = void 0;
 var EchoChannel_1 = __webpack_require__(/*! ./EchoChannel */ "./javascript/plugins/echo/EchoChannel.tsx");
 var EchoPresenceChannel_1 = __webpack_require__(/*! ./EchoPresenceChannel */ "./javascript/plugins/echo/EchoPresenceChannel.tsx");
 var EchoWrapper = /** @class */ (function () {
@@ -1159,7 +1165,7 @@ var Channel = /*#__PURE__*/function () {
       return this.listen('.Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', callback);
     }
     /**
-     * Stop listening for a whispser event on the channel instance.
+     * Stop listening for a whisper event on the channel instance.
      */
 
   }, {
@@ -1278,6 +1284,18 @@ var PusherChannel = /*#__PURE__*/function (_Channel) {
     key: "stopListening",
     value: function stopListening(event) {
       this.subscription.unbind(this.eventFormatter.format(event));
+      return this;
+    }
+    /**
+     * Register a callback to be called anytime a subscription error occurs.
+     */
+
+  }, {
+    key: "error",
+    value: function error(callback) {
+      this.on('pusher:subscription_error', function (status) {
+        callback(status);
+      });
       return this;
     }
     /**
@@ -1506,6 +1524,15 @@ var SocketIoChannel = /*#__PURE__*/function (_Channel) {
       return this;
     }
     /**
+     * Register a callback to be called anytime an error occurs.
+     */
+
+  }, {
+    key: "error",
+    value: function error(callback) {
+      return this;
+    }
+    /**
      * Bind the channel's socket to an event and store the callback.
      */
 
@@ -1710,6 +1737,15 @@ var NullChannel = /*#__PURE__*/function (_Channel) {
   }, {
     key: "stopListening",
     value: function stopListening(event) {
+      return this;
+    }
+    /**
+     * Register a callback to be called anytime an error occurs.
+     */
+
+  }, {
+    key: "error",
+    value: function error(callback) {
       return this;
     }
     /**
@@ -2431,7 +2467,7 @@ var Echo = /*#__PURE__*/function () {
         message = utf8.stringToBytes(message);
     else if (isBuffer(message))
       message = Array.prototype.slice.call(message, 0);
-    else if (!Array.isArray(message))
+    else if (!Array.isArray(message) && message.constructor !== Uint8Array)
       message = message.toString();
     // else, assume byte array already
 

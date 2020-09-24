@@ -96,6 +96,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Conditions = void 0;
 var Conditions = /** @class */ (function () {
     function Conditions() {
     }
@@ -174,6 +175,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Helper = void 0;
 var Conditions_1 = __webpack_require__(/*! ./Conditions */ "./javascript/Conditions.tsx");
 var Helper = /** @class */ (function (_super) {
     __extends(Helper, _super);
@@ -381,6 +383,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ExecutorParent = void 0;
 var camelCase_1 = __importDefault(__webpack_require__(/*! lodash/camelCase */ "./node_modules/lodash/camelCase.js"));
 var ExecutorParent = /** @class */ (function () {
     /**
@@ -412,7 +415,7 @@ var ExecutorParent = /** @class */ (function () {
         get: function () {
             return this.__now_method;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "target", {
@@ -441,7 +444,7 @@ var ExecutorParent = /** @class */ (function () {
             }
             return obj;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "currentTarget", {
@@ -457,7 +460,7 @@ var ExecutorParent = /** @class */ (function () {
             }
             return document;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     ExecutorParent.prototype.data = function ($name, $default) {
@@ -501,7 +504,7 @@ var ExecutorParent = /** @class */ (function () {
             }
             return undefined;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "event", {
@@ -514,7 +517,7 @@ var ExecutorParent = /** @class */ (function () {
             }
             return this.storage;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "jq", {
@@ -524,7 +527,7 @@ var ExecutorParent = /** @class */ (function () {
         get: function () {
             return $(this.currentTarget);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "storage", {
@@ -534,7 +537,7 @@ var ExecutorParent = /** @class */ (function () {
         get: function () {
             return ExecutorParent.storage;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -1867,8 +1870,8 @@ function baseMerge(object, source, srcIndex, customizer, stack) {
     return;
   }
   baseFor(source, function(srcValue, key) {
+    stack || (stack = new Stack);
     if (isObject(srcValue)) {
-      stack || (stack = new Stack);
       baseMergeDeep(object, source, key, srcIndex, baseMerge, customizer, stack);
     }
     else {
@@ -3956,7 +3959,7 @@ module.exports = root;
 /***/ (function(module, exports) {
 
 /**
- * Gets the value at `key`, unless `key` is "__proto__".
+ * Gets the value at `key`, unless `key` is "__proto__" or "constructor".
  *
  * @private
  * @param {Object} object The object to query.
@@ -3964,6 +3967,10 @@ module.exports = root;
  * @returns {*} Returns the property value.
  */
 function safeGet(object, key) {
+  if (key === 'constructor' && typeof object[key] === 'function') {
+    return;
+  }
+
   if (key == '__proto__') {
     return;
   }
@@ -5696,7 +5703,7 @@ module.exports = words;
         message = utf8.stringToBytes(message);
     else if (isBuffer(message))
       message = Array.prototype.slice.call(message, 0);
-    else if (!Array.isArray(message))
+    else if (!Array.isArray(message) && message.constructor !== Uint8Array)
       message = message.toString();
     // else, assume byte array already
 

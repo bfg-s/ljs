@@ -96,6 +96,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Conditions = void 0;
 var Conditions = /** @class */ (function () {
     function Conditions() {
     }
@@ -174,6 +175,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Helper = void 0;
 var Conditions_1 = __webpack_require__(/*! ./Conditions */ "./javascript/Conditions.tsx");
 var Helper = /** @class */ (function (_super) {
     __extends(Helper, _super);
@@ -501,7 +503,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_8_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VueTerminal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--8-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--8-2!../../../node_modules/vue-loader/lib??vue-loader-options!./VueTerminal.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./javascript/plugins/debug/VueTerminal.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_8_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VueTerminal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_8_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VueTerminal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_8_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VueTerminal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_8_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VueTerminal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_8_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VueTerminal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_8_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VueTerminal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
  /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_8_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VueTerminal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
@@ -571,15 +573,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _VueTerminal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./VueTerminal */ "./javascript/plugins/debug/VueTerminal.vue");
 /* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js");
 /* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash_get__WEBPACK_IMPORTED_MODULE_1__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 //
 //
@@ -1076,7 +1082,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* hight settings */\n#terminal.default-height { max-height: 250px;}\n#terminal.fullscreen-height { height: 100vh;}\n\n/* basic bw theme */\n.boring, .boring .prompt, .boring .content{ font-family: \"Courier New\", Courier, monospace; background-color: #111; color: #ddd;\n}\n.boring .content{ padding: 15px 15px 0 15px;\n}\n.boring .prompt{ padding: 0 15px 15px 15px;\n}\n.boring .loading span::after{content: \"\\2699\"; color: #ddd; font-size: 10em; border-radius: 10em; opacity: 0.4;}\n.boring .content ul{ margin: 0;\n}\n.boring .prompt .input.show-caret{ color: #ddd; opacity: .85;\n}\n.boring .prompt .input, .boring .prompt .input::before, .boring .prompt .input::after{ color: transparent; text-shadow:0 0 0 #ddd;\n}\n.boring .content div .cmd_in .cmd_ps, .boring .prompt .input::before{ padding-right: 10px;\n}\n.boring .content ul li{ list-style-type: none;\n}\n.boring div.prompt div.input::after{ font-size: 2em;\n}\n.boring div.prompt div.input, .boring div.content div div.cmd_in, .boring div.prompt div.input::before{ line-height: 2em;\n}\n\n/* other styles */\n#terminal{ position: relative; display: block; overflow-X: hidden; height: 100%;text-align: left;\n}\n#terminal div.content div p{ margin: 0;\n}\n#terminal div.content div{ clear: both;  word-wrap:break-word;\n}\n#terminal div.content div ul{ padding: 0; white-space: normal\n}\n#terminal div.content div ul li{ list-style: none;\n}\n#terminal div.content div ul.sq-li li{ display: inline-block; text-align: center; padding: 10px; min-width: 5%;\n}\n#terminal div.prompt div.input{ width: 100%; white-space:pre-wrap; word-wrap:break-word; cursor: default; outline: none;}\n#terminal div.prompt div.input::before{ vertical-align: middle; content: attr(data-ps);\n}\n#terminal div.prompt div.input::after{ visibility : visible; vertical-align: middle; content: attr(data-caret);\n}\n#terminal div.prompt div.input.blink::after{ visibility : hidden;\n}\n#terminal div.prompt .hide{ position:absolute; top: -9999em;\n}\n#terminal div.loading{ display: none;\n}\n#terminal div.loading.working{ display: block; display:flex; justify-content: center; align-items: center;position: fixed;  width: inherit; height: inherit;\n}\n#terminal div.loading span{ -webkit-animation: spin 4s linear infinite; animation: spin 4s linear infinite;\n}@-webkit-keyframes spin {\n100% { -webkit-transform: rotate(360deg);\n}\n}@keyframes spin {\n100% { -webkit-transform: rotate(360deg); transform: rotate(360deg);\n}\n}\n\n/* loader */\n@keyframes lds-rolling {\n0% {\n    -webkit-transform: translate(-50%, -50%) rotate(0deg);\n    transform: translate(-50%, -50%) rotate(0deg);\n}\n100% {\n    -webkit-transform: translate(-50%, -50%) rotate(360deg);\n    transform: translate(-50%, -50%) rotate(360deg);\n}\n}\n@-webkit-keyframes lds-rolling {\n0% {\n    -webkit-transform: translate(-50%, -50%) rotate(0deg);\n    transform: translate(-50%, -50%) rotate(0deg);\n}\n100% {\n    -webkit-transform: translate(-50%, -50%) rotate(360deg);\n    transform: translate(-50%, -50%) rotate(360deg);\n}\n}\n.lds-css {\n  position: absolute;\n}\n.lds-rolling {\n   position: fixed;\n    top: 30px;\n    z-index: 1000;\n    right: 10px;\n}\n.lds-rolling div,\n.lds-rolling div:after {\n  position: absolute;\n  width: 160px;\n  height: 160px;\n  border: 20px solid #ffffff;\n  border-top-color: transparent;\n  border-radius: 50%;\n}\n.lds-rolling div {\n  -webkit-animation: lds-rolling 1s linear infinite;\n  animation: lds-rolling 1s linear infinite;\n  top: 100px;\n  left: 100px;\n}\n.lds-rolling div:after {\n  -webkit-transform: rotate(90deg);\n  transform: rotate(90deg);\n}\n.lds-rolling {\n  width: 36px !important;\n  height: 36px !important;\n  -webkit-transform: translate(-18px, -18px) scale(0.18) translate(18px, 18px);\n  transform: translate(-18px, -18px) scale(0.18) translate(18px, 18px);\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* hight settings */\n#terminal.default-height { max-height: 250px;}\n#terminal.fullscreen-height { height: 100vh;}\n\n/* basic bw theme */\n.boring, .boring .prompt, .boring .content{ font-family: \"Courier New\", Courier, monospace; background-color: #111; color: #ddd;\n}\n.boring .content{ padding: 15px 15px 0 15px;\n}\n.boring .prompt{ padding: 0 15px 15px 15px;\n}\n.boring .loading span::after{content: \"\\2699\"; color: #ddd; font-size: 10em; border-radius: 10em; opacity: 0.4;}\n.boring .content ul{ margin: 0;\n}\n.boring .prompt .input.show-caret{ color: #ddd; opacity: .85;\n}\n.boring .prompt .input, .boring .prompt .input::before, .boring .prompt .input::after{ color: transparent; text-shadow:0 0 0 #ddd;\n}\n.boring .content div .cmd_in .cmd_ps, .boring .prompt .input::before{ padding-right: 10px;\n}\n.boring .content ul li{ list-style-type: none;\n}\n.boring div.prompt div.input::after{ font-size: 2em;\n}\n.boring div.prompt div.input, .boring div.content div div.cmd_in, .boring div.prompt div.input::before{ line-height: 2em;\n}\n\n/* other styles */\n#terminal{ position: relative; display: block; overflow-X: hidden; height: 100%;text-align: left;\n}\n#terminal div.content div p{ margin: 0;\n}\n#terminal div.content div{ clear: both;  word-wrap:break-word;\n}\n#terminal div.content div ul{ padding: 0; white-space: normal\n}\n#terminal div.content div ul li{ list-style: none;\n}\n#terminal div.content div ul.sq-li li{ display: inline-block; text-align: center; padding: 10px; min-width: 5%;\n}\n#terminal div.prompt div.input{ width: 100%; white-space:pre-wrap; word-wrap:break-word; cursor: default; outline: none;}\n#terminal div.prompt div.input::before{ vertical-align: middle; content: attr(data-ps);\n}\n#terminal div.prompt div.input::after{ visibility : visible; vertical-align: middle; content: attr(data-caret);\n}\n#terminal div.prompt div.input.blink::after{ visibility : hidden;\n}\n#terminal div.prompt .hide{ position:absolute; top: -9999em;\n}\n#terminal div.loading{ display: none;\n}\n#terminal div.loading.working{ display: block; display:flex; justify-content: center; align-items: center;position: fixed;  width: inherit; height: inherit;\n}\n#terminal div.loading span{ -webkit-animation: spin 4s linear infinite; animation: spin 4s linear infinite;\n}@-webkit-keyframes spin {\n100% { -webkit-transform: rotate(360deg);\n}\n}@keyframes spin {\n100% { transform: rotate(360deg);\n}\n}\n\n/* loader */\n@keyframes lds-rolling {\n0% {\n    transform: translate(-50%, -50%) rotate(0deg);\n}\n100% {\n    transform: translate(-50%, -50%) rotate(360deg);\n}\n}\n@-webkit-keyframes lds-rolling {\n0% {\n    transform: translate(-50%, -50%) rotate(0deg);\n}\n100% {\n    transform: translate(-50%, -50%) rotate(360deg);\n}\n}\n.lds-css {\n  position: absolute;\n}\n.lds-rolling {\n   position: fixed;\n    top: 30px;\n    z-index: 1000;\n    right: 10px;\n}\n.lds-rolling div,\n.lds-rolling div:after {\n  position: absolute;\n  width: 160px;\n  height: 160px;\n  border: 20px solid #ffffff;\n  border-top-color: transparent;\n  border-radius: 50%;\n}\n.lds-rolling div {\n  -webkit-animation: lds-rolling 1s linear infinite;\n  animation: lds-rolling 1s linear infinite;\n  top: 100px;\n  left: 100px;\n}\n.lds-rolling div:after {\n  transform: rotate(90deg);\n}\n.lds-rolling {\n  width: 36px !important;\n  height: 36px !important;\n  transform: translate(-18px, -18px) scale(0.18) translate(18px, 18px);\n}\n", ""]);
 
 // exports
 
@@ -3044,7 +3050,7 @@ module.exports = toString;
         message = utf8.stringToBytes(message);
     else if (isBuffer(message))
       message = Array.prototype.slice.call(message, 0);
-    else if (!Array.isArray(message))
+    else if (!Array.isArray(message) && message.constructor !== Uint8Array)
       message = message.toString();
     // else, assume byte array already
 
@@ -3896,7 +3902,12 @@ function normalizeComponent (
     options._ssrRegister = hook
   } else if (injectStyles) {
     hook = shadowMode
-      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      ? function () {
+        injectStyles.call(
+          this,
+          (options.functional ? this.parent : this).$root.$options.shadowRoot
+        )
+      }
       : injectStyles
   }
 
@@ -3905,7 +3916,7 @@ function normalizeComponent (
       // for template-only hot-reload because in that case the render fn doesn't
       // go through the normalizer
       options._injectStyles = hook
-      // register for functioal component in vue file
+      // register for functional component in vue file
       var originalRender = options.render
       options.render = function renderWithStyleInjection (h, context) {
         hook.call(context)

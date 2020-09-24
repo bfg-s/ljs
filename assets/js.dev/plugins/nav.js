@@ -96,6 +96,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Conditions = void 0;
 var Conditions = /** @class */ (function () {
     function Conditions() {
     }
@@ -174,6 +175,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Helper = void 0;
 var Conditions_1 = __webpack_require__(/*! ./Conditions */ "./javascript/Conditions.tsx");
 var Helper = /** @class */ (function (_super) {
     __extends(Helper, _super);
@@ -378,6 +380,7 @@ exports.Helper = Helper;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HTMLDataEvent = void 0;
 var HTMLDataEvent = /** @class */ (function () {
     function HTMLDataEvent(event_name, event, after) {
         if (after === void 0) { after = null; }
@@ -426,6 +429,7 @@ exports.HTMLDataEvent = HTMLDataEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HTMLReady = void 0;
 var HTMLDataEvent_1 = __webpack_require__(/*! ./HTMLDataEvent */ "./javascript/ljs/data/HTMLDataEvent.tsx");
 window.HTMLDataEvent = HTMLDataEvent_1.HTMLDataEvent;
 var HTMLReady = /** @class */ (function () {
@@ -456,6 +460,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Nav = void 0;
 var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
 var HTMLReady_1 = __webpack_require__(/*! ../../../ljs/data/HTMLReady */ "./javascript/ljs/data/HTMLReady.tsx");
 var Nav = /** @class */ (function () {
@@ -617,7 +622,7 @@ Helper_1.Helper.before_load(function (ljs) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /*!
  * Copyright 2012, Chris Wanstrath
@@ -2487,8 +2492,8 @@ function baseMerge(object, source, srcIndex, customizer, stack) {
     return;
   }
   baseFor(source, function(srcValue, key) {
+    stack || (stack = new Stack);
     if (isObject(srcValue)) {
-      stack || (stack = new Stack);
       baseMergeDeep(object, source, key, srcIndex, baseMerge, customizer, stack);
     }
     else {
@@ -4099,7 +4104,7 @@ module.exports = root;
 /***/ (function(module, exports) {
 
 /**
- * Gets the value at `key`, unless `key` is "__proto__".
+ * Gets the value at `key`, unless `key` is "__proto__" or "constructor".
  *
  * @private
  * @param {Object} object The object to query.
@@ -4107,6 +4112,10 @@ module.exports = root;
  * @returns {*} Returns the property value.
  */
 function safeGet(object, key) {
+  if (key === 'constructor' && typeof object[key] === 'function') {
+    return;
+  }
+
   if (key == '__proto__') {
     return;
   }
@@ -5193,7 +5202,7 @@ module.exports = toPlainObject;
         message = utf8.stringToBytes(message);
     else if (isBuffer(message))
       message = Array.prototype.slice.call(message, 0);
-    else if (!Array.isArray(message))
+    else if (!Array.isArray(message) && message.constructor !== Uint8Array)
       message = message.toString();
     // else, assume byte array already
 

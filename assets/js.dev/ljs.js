@@ -96,6 +96,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Conditions = void 0;
 var Conditions = /** @class */ (function () {
     function Conditions() {
     }
@@ -174,6 +175,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Helper = void 0;
 var Conditions_1 = __webpack_require__(/*! ./Conditions */ "./javascript/Conditions.tsx");
 var Helper = /** @class */ (function (_super) {
     __extends(Helper, _super);
@@ -427,6 +429,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Core = void 0;
 var LJS_1 = __webpack_require__(/*! ./classes/LJS */ "./javascript/ljs/classes/LJS.tsx");
 var StateExec_1 = __webpack_require__(/*! ./Executors/StateExec */ "./javascript/ljs/Executors/StateExec.tsx");
 var Script_1 = __webpack_require__(/*! ./Executors/Script */ "./javascript/ljs/Executors/Script.tsx");
@@ -594,14 +597,34 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Doc = void 0;
 var ExecutorParent_1 = __webpack_require__(/*! ../Extends/ExecutorParent */ "./javascript/ljs/Extends/ExecutorParent.tsx");
 var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
 var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
-var Clipboard_1 = __webpack_require__(/*! ../Extends/Clipboard */ "./javascript/ljs/Extends/Clipboard.tsx");
+var clipboard = __importStar(__webpack_require__(/*! clipboard-polyfill/text */ "./node_modules/clipboard-polyfill/dist/text/clipboard-polyfill.text.esm.js"));
 var Doc = /** @class */ (function (_super) {
     __extends(Doc, _super);
     function Doc(ljs) {
@@ -747,7 +770,8 @@ var Doc = /** @class */ (function (_super) {
      */
     Doc.prototype.pbcopy = function ($data) {
         if ($data === void 0) { $data = ""; }
-        Clipboard_1.Clipboard.copy($data);
+        //Clipboard.copy($data);
+        clipboard.writeText($data);
         return $data;
     };
     /**
@@ -755,9 +779,13 @@ var Doc = /** @class */ (function (_super) {
      * @param $data
      */
     Doc.prototype.informed_pbcopy = function ($data) {
-        if (Clipboard_1.Clipboard.copy($data)) {
+        clipboard.writeText($data).then(function () {
             "toast::success".exec("Copied to clipboard");
-        }
+        });
+        // if (Clipboard.copy($data)) {
+        //
+        //     "toast::success".exec("Copied to clipboard");
+        // }
         return $data;
     };
     Doc.__name = function () {
@@ -793,6 +821,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Script = void 0;
 var ExecutorParent_1 = __webpack_require__(/*! ../Extends/ExecutorParent */ "./javascript/ljs/Extends/ExecutorParent.tsx");
 var Script = /** @class */ (function (_super) {
     __extends(Script, _super);
@@ -848,6 +877,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StateExec = void 0;
 var ExecutorParent_1 = __webpack_require__(/*! ../Extends/ExecutorParent */ "./javascript/ljs/Extends/ExecutorParent.tsx");
 var EMPTY_DATA = /** @class */ (function () {
     function EMPTY_DATA() {
@@ -933,6 +963,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Timer = void 0;
 var ExecutorParent_1 = __webpack_require__(/*! ../Extends/ExecutorParent */ "./javascript/ljs/Extends/ExecutorParent.tsx");
 var isObject_1 = __importDefault(__webpack_require__(/*! lodash/isObject */ "./node_modules/lodash/isObject.js"));
 var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
@@ -1094,6 +1125,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Tpl = void 0;
 var ExecutorParent_1 = __webpack_require__(/*! ../Extends/ExecutorParent */ "./javascript/ljs/Extends/ExecutorParent.tsx");
 var Tpl = /** @class */ (function (_super) {
     __extends(Tpl, _super);
@@ -1175,79 +1207,6 @@ exports.Tpl = Tpl;
 
 /***/ }),
 
-/***/ "./javascript/ljs/Extends/Clipboard.tsx":
-/*!**********************************************!*\
-  !*** ./javascript/ljs/Extends/Clipboard.tsx ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
-/**
- * Work with Clipboard
- */
-var Clipboard = /** @class */ (function () {
-    function Clipboard() {
-    }
-    /**
-     * Create HTML Textarea element
-     * @param text
-     */
-    Clipboard.prototype.create_text_area = function (text) {
-        this.text_area = document.createElement('textArea');
-        this.text_area.value = text;
-        document.body.appendChild(this.text_area);
-    };
-    /**
-     * Select text in HTML Textarea element
-     */
-    Clipboard.prototype.select_text = function () {
-        if (Helper_1.Helper.isIos()) {
-            var range = void 0, selection = void 0;
-            range = document.createRange();
-            range.selectNodeContents(this.text_area);
-            selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            this.text_area.setSelectionRange(0, 999999);
-        }
-        else {
-            this.text_area.select();
-        }
-    };
-    /**
-     * Execute copy with selected text
-     */
-    Clipboard.prototype.copy_to_clipboard = function () {
-        document.execCommand('copy');
-        document.body.removeChild(this.text_area);
-    };
-    /**
-     * Run copy process
-     * @param text
-     */
-    Clipboard.copy = function (text) {
-        try {
-            var clipboard = new Clipboard();
-            clipboard.create_text_area(text);
-            clipboard.select_text();
-            clipboard.copy_to_clipboard();
-            return true;
-        }
-        catch (e) {
-            return false;
-        }
-    };
-    return Clipboard;
-}());
-exports.Clipboard = Clipboard;
-
-
-/***/ }),
-
 /***/ "./javascript/ljs/Extends/ExecutorMethods.tsx":
 /*!****************************************************!*\
   !*** ./javascript/ljs/Extends/ExecutorMethods.tsx ***!
@@ -1261,6 +1220,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ExecutorMethods = void 0;
 var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
 var concat_1 = __importDefault(__webpack_require__(/*! lodash/concat */ "./node_modules/lodash/concat.js"));
 var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
@@ -1477,6 +1437,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ExecutorParent = void 0;
 var camelCase_1 = __importDefault(__webpack_require__(/*! lodash/camelCase */ "./node_modules/lodash/camelCase.js"));
 var ExecutorParent = /** @class */ (function () {
     /**
@@ -1508,7 +1469,7 @@ var ExecutorParent = /** @class */ (function () {
         get: function () {
             return this.__now_method;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "target", {
@@ -1537,7 +1498,7 @@ var ExecutorParent = /** @class */ (function () {
             }
             return obj;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "currentTarget", {
@@ -1553,7 +1514,7 @@ var ExecutorParent = /** @class */ (function () {
             }
             return document;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     ExecutorParent.prototype.data = function ($name, $default) {
@@ -1597,7 +1558,7 @@ var ExecutorParent = /** @class */ (function () {
             }
             return undefined;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "event", {
@@ -1610,7 +1571,7 @@ var ExecutorParent = /** @class */ (function () {
             }
             return this.storage;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "jq", {
@@ -1620,7 +1581,7 @@ var ExecutorParent = /** @class */ (function () {
         get: function () {
             return $(this.currentTarget);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "storage", {
@@ -1630,7 +1591,7 @@ var ExecutorParent = /** @class */ (function () {
         get: function () {
             return ExecutorParent.storage;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -1694,6 +1655,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LJSConstructor = void 0;
 var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
 var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
 var isNaN_1 = __importDefault(__webpack_require__(/*! lodash/isNaN */ "./node_modules/lodash/isNaN.js"));
@@ -2184,6 +2146,7 @@ exports.LJSConstructor = LJSConstructor;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StateWatcher = void 0;
 var StateWatcher = /** @class */ (function () {
     function StateWatcher() {
         this.path = null;
@@ -2199,7 +2162,7 @@ var StateWatcher = /** @class */ (function () {
         get: function () {
             return this.storage.data ? this.storage.data : {};
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(StateWatcher.prototype, "target", {
@@ -2210,7 +2173,7 @@ var StateWatcher = /** @class */ (function () {
         get: function () {
             return this.storage.target ? this.storage.target : null;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -2275,6 +2238,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.JaxInstance = void 0;
 var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
 var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
 var isObject_1 = __importDefault(__webpack_require__(/*! lodash/isObject */ "./node_modules/lodash/isObject.js"));
@@ -2450,6 +2414,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LJS = void 0;
 var LJSConstructor_1 = __webpack_require__(/*! ../Extends/LJSConstructor */ "./javascript/ljs/Extends/LJSConstructor.tsx");
 var LStorage_1 = __webpack_require__(/*! ./LStorage */ "./javascript/ljs/classes/LStorage.tsx");
 var StateInstance_1 = __webpack_require__(/*! ./StateInstance */ "./javascript/ljs/classes/StateInstance.tsx");
@@ -2674,6 +2639,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LStorage = void 0;
 var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
 var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
 var set_1 = __importDefault(__webpack_require__(/*! lodash/set */ "./node_modules/lodash/set.js"));
@@ -2929,6 +2895,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Model = void 0;
 var unset_1 = __importDefault(__webpack_require__(/*! lodash/unset */ "./node_modules/lodash/unset.js"));
 var merge_1 = __importDefault(__webpack_require__(/*! lodash/merge */ "./node_modules/lodash/merge.js"));
 var get_1 = __importDefault(__webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js"));
@@ -3165,6 +3132,7 @@ exports.Model = Model;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.State = void 0;
 var StateInstance_1 = __webpack_require__(/*! ./StateInstance */ "./javascript/ljs/classes/StateInstance.tsx");
 var State = /** @class */ (function () {
     function State() {
@@ -3235,6 +3203,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StateInstance = void 0;
 var Helper_1 = __webpack_require__(/*! ../../Helper */ "./javascript/Helper.tsx");
 var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
 var get_1 = __importDefault(__webpack_require__(/*! lodash/get */ "./node_modules/lodash/get.js"));
@@ -3652,6 +3621,7 @@ exports.StateInstance = StateInstance;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HTMLDataEvent = void 0;
 var HTMLDataEvent = /** @class */ (function () {
     function HTMLDataEvent(event_name, event, after) {
         if (after === void 0) { after = null; }
@@ -3700,6 +3670,7 @@ exports.HTMLDataEvent = HTMLDataEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HTMLReady = void 0;
 var HTMLDataEvent_1 = __webpack_require__(/*! ./HTMLDataEvent */ "./javascript/ljs/data/HTMLDataEvent.tsx");
 window.HTMLDataEvent = HTMLDataEvent_1.HTMLDataEvent;
 var HTMLReady = /** @class */ (function () {
@@ -3730,6 +3701,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HTMLRegisterEvents = void 0;
 var HTMLReady_1 = __webpack_require__(/*! ./HTMLReady */ "./javascript/ljs/data/HTMLReady.tsx");
 var HTMLDataEvent_1 = __webpack_require__(/*! ./HTMLDataEvent */ "./javascript/ljs/data/HTMLDataEvent.tsx");
 var map_1 = __importDefault(__webpack_require__(/*! lodash/map */ "./node_modules/lodash/map.js"));
@@ -3969,6 +3941,38 @@ var charenc = {
 };
 
 module.exports = charenc;
+
+
+/***/ }),
+
+/***/ "./node_modules/clipboard-polyfill/dist/text/clipboard-polyfill.text.esm.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/clipboard-polyfill/dist/text/clipboard-polyfill.text.esm.js ***!
+  \**********************************************************************************/
+/*! exports provided: readText, setDebugLog, writeText */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "readText", function() { return T; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setDebugLog", function() { return o; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "writeText", function() { return C; });
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+function e(e,t,n,r){return new(n||(n=Promise))((function(o,i){function a(e){try{c(r.next(e))}catch(e){i(e)}}function u(e){try{c(r.throw(e))}catch(e){i(e)}}function c(e){var t;e.done?o(e.value):(t=e.value,t instanceof n?t:new n((function(e){e(t)}))).then(a,u)}c((r=r.apply(e,t||[])).next())}))}function t(e,t){var n,r,o,i,a={label:0,sent:function(){if(1&o[0])throw o[1];return o[1]},trys:[],ops:[]};return i={next:u(0),throw:u(1),return:u(2)},"function"==typeof Symbol&&(i[Symbol.iterator]=function(){return this}),i;function u(i){return function(u){return function(i){if(n)throw new TypeError("Generator is already executing.");for(;a;)try{if(n=1,r&&(o=2&i[0]?r.return:i[0]?r.throw||((o=r.return)&&o.call(r),0):r.next)&&!(o=o.call(r,i[1])).done)return o;switch(r=0,o&&(i=[2&i[0],o.value]),i[0]){case 0:case 1:o=i;break;case 4:return a.label++,{value:i[1],done:!1};case 5:a.label++,r=i[1],i=[0];continue;case 7:i=a.ops.pop(),a.trys.pop();continue;default:if(!(o=a.trys,(o=o.length>0&&o[o.length-1])||6!==i[0]&&2!==i[0])){a=0;continue}if(3===i[0]&&(!o||i[1]>o[0]&&i[1]<o[3])){a.label=i[1];break}if(6===i[0]&&a.label<o[1]){a.label=o[1],o=i;break}if(o&&a.label<o[2]){a.label=o[2],a.ops.push(i);break}o[2]&&a.ops.pop(),a.trys.pop();continue}i=t.call(e,a)}catch(e){i=[6,e],r=0}finally{n=o=0}if(5&i[0])throw i[1];return{value:i[0]?i[1]:void 0,done:!0}}([i,u])}}}var n=function(e){};function r(e){n(e)}function o(e){n=e}(function(){(console.warn||console.log).apply(console,arguments)}).bind("[clipboard-polyfill]");var i,a,u,c,l="undefined"==typeof navigator?void 0:navigator,d=null==l?void 0:l.clipboard,s=(null===(i=null==d?void 0:d.read)||void 0===i||i.bind(d),null===(a=null==d?void 0:d.readText)||void 0===a?void 0:a.bind(d)),f=(null===(u=null==d?void 0:d.write)||void 0===u||u.bind(d),null===(c=null==d?void 0:d.writeText)||void 0===c?void 0:c.bind(d)),p="undefined"==typeof window?void 0:window,v=(null==p||p.ClipboardItem,p);function b(){return"undefined"==typeof ClipboardEvent&&void 0!==v.clipboardData&&void 0!==v.clipboardData.setData}function y(){return e(this,void 0,void 0,(function(){var e;return t(this,(function(t){if(""===(e=v.clipboardData.getData("Text")))throw new Error("Empty clipboard or could not read plain text from clipboard");return[2,e]}))}))}var m=function(){this.success=!1};function h(e,t,n){for(var o in r("listener called"),e.success=!0,t){var i=t[o],a=n.clipboardData;a.setData(o,i),"text/plain"===o&&a.getData(o)!==i&&(r("setting text/plain failed"),e.success=!1)}n.preventDefault()}function w(e){var t=new m,n=h.bind(this,t,e);document.addEventListener("copy",n);try{document.execCommand("copy")}finally{document.removeEventListener("copy",n)}return t.success}function g(e,t){x(e);var n=w(t);return E(),n}function x(e){var t=document.getSelection();if(t){var n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}}function E(){var e=document.getSelection();e&&e.removeAllRanges()}function D(n){return e(this,void 0,void 0,(function(){var e;return t(this,(function(t){if(e="text/plain"in n,b()){if(!e)throw new Error("No `text/plain` value was specified.");if(o=n["text/plain"],v.clipboardData.setData("Text",o))return[2,!0];throw new Error("Copying failed, possibly because the user rejected it.")}var o;return w(n)?(r("regular execCopy worked"),[2,!0]):navigator.userAgent.indexOf("Edge")>-1?(r('UA "Edge" => assuming success'),[2,!0]):g(document.body,n)?(r("copyUsingTempSelection worked"),[2,!0]):function(e){var t=document.createElement("div");t.setAttribute("style","-webkit-user-select: text !important"),t.textContent="temporary element",document.body.appendChild(t);var n=g(t,e);return document.body.removeChild(t),n}(n)?(r("copyUsingTempElem worked"),[2,!0]):function(e){r("copyTextUsingDOM");var t=document.createElement("div");t.setAttribute("style","-webkit-user-select: text !important");var n=t;t.attachShadow&&(r("Using shadow DOM."),n=t.attachShadow({mode:"open"}));var o=document.createElement("span");o.innerText=e,n.appendChild(o),document.body.appendChild(t),x(o);var i=document.execCommand("copy");return E(),document.body.removeChild(t),i}(n["text/plain"])?(r("copyTextUsingDOM worked"),[2,!0]):[2,!1]}))}))}function C(n){return e(this,void 0,void 0,(function(){return t(this,(function(e){if(f)return r("Using `navigator.clipboard.writeText()`."),[2,f(n)];if(!D(function(e){var t={};return t["text/plain"]=e,t}(n)))throw new Error("writeText() failed");return[2]}))}))}function T(){return e(this,void 0,void 0,(function(){return t(this,(function(e){if(s)return r("Using `navigator.clipboard.readText()`."),[2,s()];if(b())return r("Reading text using IE strategy."),[2,y()];throw new Error("Read is not supported in your browser.")}))}))}
+//# sourceMappingURL=clipboard-polyfill.text.esm.js.map
 
 
 /***/ }),
@@ -5850,8 +5854,8 @@ function baseMerge(object, source, srcIndex, customizer, stack) {
     return;
   }
   baseFor(source, function(srcValue, key) {
+    stack || (stack = new Stack);
     if (isObject(srcValue)) {
-      stack || (stack = new Stack);
       baseMergeDeep(object, source, key, srcIndex, baseMerge, customizer, stack);
     }
     else {
@@ -6119,6 +6123,10 @@ function baseSet(object, path, value, customizer) {
   while (nested != null && ++index < length) {
     var key = toKey(path[index]),
         newValue = value;
+
+    if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+      return object;
+    }
 
     if (index != lastIndex) {
       var objValue = nested[key];
@@ -6981,10 +6989,11 @@ function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
   if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
     return false;
   }
-  // Assume cyclic values are equal.
-  var stacked = stack.get(array);
-  if (stacked && stack.get(other)) {
-    return stacked == other;
+  // Check that cyclic values are equal.
+  var arrStacked = stack.get(array);
+  var othStacked = stack.get(other);
+  if (arrStacked && othStacked) {
+    return arrStacked == other && othStacked == array;
   }
   var index = -1,
       result = true,
@@ -7210,10 +7219,11 @@ function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
       return false;
     }
   }
-  // Assume cyclic values are equal.
-  var stacked = stack.get(object);
-  if (stacked && stack.get(other)) {
-    return stacked == other;
+  // Check that cyclic values are equal.
+  var objStacked = stack.get(object);
+  var othStacked = stack.get(other);
+  if (objStacked && othStacked) {
+    return objStacked == other && othStacked == object;
   }
   var result = true;
   stack.set(object, other);
@@ -8847,7 +8857,7 @@ module.exports = root;
 /***/ (function(module, exports) {
 
 /**
- * Gets the value at `key`, unless `key` is "__proto__".
+ * Gets the value at `key`, unless `key` is "__proto__" or "constructor".
  *
  * @private
  * @param {Object} object The object to query.
@@ -8855,6 +8865,10 @@ module.exports = root;
  * @returns {*} Returns the property value.
  */
 function safeGet(object, key) {
+  if (key === 'constructor' && typeof object[key] === 'function') {
+    return;
+  }
+
   if (key == '__proto__') {
     return;
   }
@@ -11309,7 +11323,7 @@ module.exports = words;
         message = utf8.stringToBytes(message);
     else if (isBuffer(message))
       message = Array.prototype.slice.call(message, 0);
-    else if (!Array.isArray(message))
+    else if (!Array.isArray(message) && message.constructor !== Uint8Array)
       message = message.toString();
     // else, assume byte array already
 

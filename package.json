@@ -41,6 +41,7 @@
     "@types/lodash": "^4.14.149",
     "@types/moment": "^2.13.0",
     "@types/node": "^13.13.4",
+    "clipboard-polyfill": "^3.0.1",
     "collect.js": "^4.27.3",
     "dotenv": "^7.0.0",
     "golden-layout": "^1.5.9",

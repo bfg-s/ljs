@@ -96,6 +96,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Conditions = void 0;
 var Conditions = /** @class */ (function () {
     function Conditions() {
     }
@@ -174,6 +175,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Helper = void 0;
 var Conditions_1 = __webpack_require__(/*! ./Conditions */ "./javascript/Conditions.tsx");
 var Helper = /** @class */ (function (_super) {
     __extends(Helper, _super);
@@ -381,6 +383,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ExecutorParent = void 0;
 var camelCase_1 = __importDefault(__webpack_require__(/*! lodash/camelCase */ "./node_modules/lodash/camelCase.js"));
 var ExecutorParent = /** @class */ (function () {
     /**
@@ -412,7 +415,7 @@ var ExecutorParent = /** @class */ (function () {
         get: function () {
             return this.__now_method;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "target", {
@@ -441,7 +444,7 @@ var ExecutorParent = /** @class */ (function () {
             }
             return obj;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "currentTarget", {
@@ -457,7 +460,7 @@ var ExecutorParent = /** @class */ (function () {
             }
             return document;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     ExecutorParent.prototype.data = function ($name, $default) {
@@ -501,7 +504,7 @@ var ExecutorParent = /** @class */ (function () {
             }
             return undefined;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "event", {
@@ -514,7 +517,7 @@ var ExecutorParent = /** @class */ (function () {
             }
             return this.storage;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "jq", {
@@ -524,7 +527,7 @@ var ExecutorParent = /** @class */ (function () {
         get: function () {
             return $(this.currentTarget);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ExecutorParent.prototype, "storage", {
@@ -534,7 +537,7 @@ var ExecutorParent = /** @class */ (function () {
         get: function () {
             return ExecutorParent.storage;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -2914,10 +2917,11 @@ function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
   if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
     return false;
   }
-  // Assume cyclic values are equal.
-  var stacked = stack.get(array);
-  if (stacked && stack.get(other)) {
-    return stacked == other;
+  // Check that cyclic values are equal.
+  var arrStacked = stack.get(array);
+  var othStacked = stack.get(other);
+  if (arrStacked && othStacked) {
+    return arrStacked == other && othStacked == array;
   }
   var index = -1,
       result = true,
@@ -3143,10 +3147,11 @@ function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
       return false;
     }
   }
-  // Assume cyclic values are equal.
-  var stacked = stack.get(object);
-  if (stacked && stack.get(other)) {
-    return stacked == other;
+  // Check that cyclic values are equal.
+  var objStacked = stack.get(object);
+  var othStacked = stack.get(other);
+  if (objStacked && othStacked) {
+    return objStacked == other && othStacked == object;
   }
   var result = true;
   stack.set(object, other);
@@ -6224,7 +6229,7 @@ module.exports = words;
         message = utf8.stringToBytes(message);
     else if (isBuffer(message))
       message = Array.prototype.slice.call(message, 0);
-    else if (!Array.isArray(message))
+    else if (!Array.isArray(message) && message.constructor !== Uint8Array)
       message = message.toString();
     // else, assume byte array already
 

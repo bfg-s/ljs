@@ -36,7 +36,7 @@ export class Conditions {
      * Check is ios device
      */
     static isIos () {
-        return window.navigator.userAgent.match(/ipad|iphone/i);
+        return window.navigator.userAgent.match(/ipad|iphone|Macintosh/i);
     }
 
     /**

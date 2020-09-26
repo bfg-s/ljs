@@ -28,15 +28,29 @@ export class Clipboard {
     select_text() {
         if (Helper.isIos()) {
 
-            let range: Range,
-                selection: Selection|any;
+            // let range: Range,
+            //     selection: Selection|any;
+            //
+            // range = document.createRange();
+            // range.selectNodeContents(this.text_area);
+            // selection = window.getSelection();
+            // selection.removeAllRanges();
+            // selection.addRange(range);
+            // this.text_area.setSelectionRange(0, 999999);
 
-            range = document.createRange();
+            let editable = this.text_area.contentEditable,
+                readOnly = this.text_area.readOnly,
+                range: Range = document.createRange(),
+                sel: Selection|any = window.getSelection();
+
+            this.text_area.contentEditable = 'true';
+            this.text_area.readOnly = 'false';
             range.selectNodeContents(this.text_area);
-            selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
+            sel.removeAllRanges();
+            sel.addRange(range);
             this.text_area.setSelectionRange(0, 999999);
+            this.text_area.contentEditable = editable;
+            this.text_area.readOnly = readOnly;
         } else {
 
             this.text_area.select();

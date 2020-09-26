@@ -1,6 +1,6 @@
 import {Helper} from "../Helper";
 import {ExecutorParent} from "../ljs/Extends/ExecutorParent";
-const Inputmask = require('inputmask');
+const Inputmask = require('inputmask').default;
 
 Helper.before_load((ljs: Ljs) => {
 

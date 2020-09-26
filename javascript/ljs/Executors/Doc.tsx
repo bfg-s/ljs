@@ -2,6 +2,7 @@ import {ExecutorParent} from "../Extends/ExecutorParent";
 import {Helper} from "../../Helper";
 import map from 'lodash/map';
 import * as clipboard from "clipboard-polyfill/text";
+import {Clipboard} from "../Extends/Clipboard";
 
 export class Doc extends ExecutorParent {
 
@@ -182,7 +183,10 @@ export class Doc extends ExecutorParent {
     pbcopy($data: string = "") {
 
         //Clipboard.copy($data);
-        clipboard.writeText($data);
+        if (Helper.isIos()) {
+
+            clipboard.writeText($data);
+        }
         return $data;
     }
 
@@ -197,7 +201,6 @@ export class Doc extends ExecutorParent {
         });
 
         // if (Clipboard.copy($data)) {
-        //
         //     "toast::success".exec("Copied to clipboard");
         // }
 

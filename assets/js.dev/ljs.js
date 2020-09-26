@@ -132,7 +132,7 @@ var Conditions = /** @class */ (function () {
      * Check is ios device
      */
     Conditions.isIos = function () {
-        return window.navigator.userAgent.match(/ipad|iphone/i);
+        return window.navigator.userAgent.match(/ipad|iphone|Macintosh/i);
     };
     /**
      * Determine if a given string matches a given pattern.
@@ -771,7 +771,9 @@ var Doc = /** @class */ (function (_super) {
     Doc.prototype.pbcopy = function ($data) {
         if ($data === void 0) { $data = ""; }
         //Clipboard.copy($data);
-        clipboard.writeText($data);
+        if (Helper_1.Helper.isIos()) {
+            clipboard.writeText($data);
+        }
         return $data;
     };
     /**
@@ -783,7 +785,6 @@ var Doc = /** @class */ (function (_super) {
             "toast::success".exec("Copied to clipboard");
         });
         // if (Clipboard.copy($data)) {
-        //
         //     "toast::success".exec("Copied to clipboard");
         // }
         return $data;

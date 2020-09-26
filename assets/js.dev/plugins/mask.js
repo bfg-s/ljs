@@ -132,7 +132,7 @@ var Conditions = /** @class */ (function () {
      * Check is ios device
      */
     Conditions.isIos = function () {
-        return window.navigator.userAgent.match(/ipad|iphone/i);
+        return window.navigator.userAgent.match(/ipad|iphone|Macintosh/i);
     };
     /**
      * Determine if a given string matches a given pattern.
@@ -593,7 +593,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Helper_1 = __webpack_require__(/*! ../Helper */ "./javascript/Helper.tsx");
 var ExecutorParent_1 = __webpack_require__(/*! ../ljs/Extends/ExecutorParent */ "./javascript/ljs/Extends/ExecutorParent.tsx");
-var Inputmask = __webpack_require__(/*! inputmask */ "./node_modules/inputmask/index.js");
+var Inputmask = __webpack_require__(/*! inputmask */ "./node_modules/inputmask/index.js").default;
 Helper_1.Helper.before_load(function (ljs) {
     var Mask = /** @class */ (function (_super) {
         __extends(Mask, _super);

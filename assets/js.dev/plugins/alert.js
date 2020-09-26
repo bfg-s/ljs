@@ -132,7 +132,7 @@ var Conditions = /** @class */ (function () {
      * Check is ios device
      */
     Conditions.isIos = function () {
-        return window.navigator.userAgent.match(/ipad|iphone/i);
+        return window.navigator.userAgent.match(/ipad|iphone|Macintosh/i);
     };
     /**
      * Determine if a given string matches a given pattern.

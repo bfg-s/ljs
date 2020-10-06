@@ -157,7 +157,7 @@ class MakeJaxExecutor extends Command
     protected function getArguments()
     {
         return [
-            ['name', InputArgument::OPTIONAL, 'The jax name of the Executor'],
+            ['name', InputArgument::REQUIRED, 'The jax name of the Executor'],
         ];
     }
 

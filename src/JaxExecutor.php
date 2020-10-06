@@ -75,6 +75,7 @@ abstract class JaxExecutor
     public function httpStatus(int $status)
     {
         if ($this->controller) {
+
             $this->controller->status($status);
         }
 

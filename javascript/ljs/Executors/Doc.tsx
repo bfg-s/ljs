@@ -183,10 +183,7 @@ export class Doc extends ExecutorParent {
     pbcopy($data: string = "") {
 
         //Clipboard.copy($data);
-        if (Helper.isIos()) {
-
-            clipboard.writeText($data);
-        }
+        clipboard.writeText($data);
         return $data;
     }
 

@@ -771,9 +771,7 @@ var Doc = /** @class */ (function (_super) {
     Doc.prototype.pbcopy = function ($data) {
         if ($data === void 0) { $data = ""; }
         //Clipboard.copy($data);
-        if (Helper_1.Helper.isIos()) {
-            clipboard.writeText($data);
-        }
+        clipboard.writeText($data);
         return $data;
     };
     /**

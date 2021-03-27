@@ -61,7 +61,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         if (app()->runningInConsole()){
 
             DumpAutoload::addToExecute(JsRouteGenerator::class);
-            DumpAutoload::addToExecute(JsLangGenerator::class);
+            //DumpAutoload::addToExecute(JsLangGenerator::class);
         }
 
         $this->publishes([__DIR__.'/../assets' => public_path('ljs')], 'ljs-assets');

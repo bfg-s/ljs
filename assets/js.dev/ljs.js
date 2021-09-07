@@ -3082,12 +3082,13 @@ var Model = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             window.ljs.switchProcess(true);
             var xhr = new XMLHttpRequest();
+            if (_progress_event) {
+                xhr.upload.addEventListener('progress', _progress_event);
+                console.log(_progress_event);
+            }
             var route = window.ljs.cfg('jax');
-            xhr.open('post', window.location.origin + "/" + route, true);
             xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            if (_progress_event)
-                xhr.upload.addEventListener('progress', _progress_event);
             xhr.onload = function (e) {
                 var target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());
@@ -3116,6 +3117,7 @@ var Model = /** @class */ (function () {
                 reject({ status: target.status, statusText: target.statusText });
                 window.ljs.switchProcess(false);
             };
+            xhr.open('post', window.location.origin + "/" + route, true);
             xhr.send(query);
         });
     };

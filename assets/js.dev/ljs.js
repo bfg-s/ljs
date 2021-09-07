@@ -3085,9 +3085,12 @@ var Model = /** @class */ (function () {
             var xhr = new XMLHttpRequest();
             var route = window.ljs.cfg('jax');
             xhr.open('post', window.location.origin + "/" + route, true);
+            xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             if (_progress_event && _progress_event[0])
-                xhr.upload.addEventListener('progress', _progress_event[0]);
-            xhr.onload = function (e) {
+                xhr.upload.addEventListener('progress', _progress_event[0], false);
+            xhr.send(query);
+            xhr.addEventListener("load", function (e) {
                 var target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());
                 if (target.status >= 200 && target.status < 300) {
@@ -3109,15 +3112,12 @@ var Model = /** @class */ (function () {
                     reject({ status: target.status, statusText: target.statusText });
                 }
                 window.ljs.switchProcess(false);
-            };
-            xhr.onerror = function (e) {
+            }, false);
+            xhr.addEventListener("error", function (e) {
                 var target = e.target;
                 reject({ status: target.status, statusText: target.statusText });
                 window.ljs.switchProcess(false);
-            };
-            xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.send(query);
+            }, false);
         });
     };
     /**

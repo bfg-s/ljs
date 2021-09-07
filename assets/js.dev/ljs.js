@@ -2925,6 +2925,7 @@ var Model = /** @class */ (function () {
      * @param _path
      * @param _params
      * @param _state
+     * @param _progress_event
      */
     function Model(_path, _params, _state, _progress_event) {
         if (_path === void 0) { _path = ""; }
@@ -2938,6 +2939,14 @@ var Model = /** @class */ (function () {
         this._prox = new Proxy(this._make.bind(this), this);
         return this._prox;
     }
+    /**
+     * Set progress event
+     * @param event
+     */
+    Model.prototype.progress = function (event) {
+        this._progress_event = event;
+        return this;
+    };
     /**
      * Model state setter
      * @param name

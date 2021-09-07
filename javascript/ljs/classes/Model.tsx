@@ -33,15 +33,25 @@ export class Model
      * @param _path
      * @param _params
      * @param _state
+     * @param _progress_event
      */
     constructor(
         private _path: string = "",
         private _params: any = {},
         private _state: any = {},
-        private _progress_event = null
+        private _progress_event: Function|null = null
     ) {
         this._prox = new Proxy(this._make.bind(this), this as any);
         return this._prox;
+    }
+
+    /**
+     * Set progress event
+     * @param event
+     */
+    progress (event: Function) {
+        this._progress_event = event;
+        return this;
     }
 
     /**

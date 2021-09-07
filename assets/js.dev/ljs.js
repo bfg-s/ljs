@@ -3088,7 +3088,6 @@ var Model = /** @class */ (function () {
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             if (_progress_event)
                 xhr.upload.addEventListener('progress', _progress_event);
-            xhr.send(query);
             xhr.onload = function (e) {
                 var target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());
@@ -3117,6 +3116,7 @@ var Model = /** @class */ (function () {
                 reject({ status: target.status, statusText: target.statusText });
                 window.ljs.switchProcess(false);
             };
+            xhr.send(query);
         });
     };
     /**

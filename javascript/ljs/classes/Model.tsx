@@ -183,7 +183,6 @@ export class Model
             xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             if (_progress_event) xhr.upload.addEventListener('progress', _progress_event);
-            xhr.send(query);
             xhr.onload = (e: any) => {
                 let target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());
@@ -207,6 +206,7 @@ export class Model
                 reject({status: target.status, statusText: target.statusText});
                 window.ljs.switchProcess(false);
             };
+            xhr.send(query);
         });
     }
 

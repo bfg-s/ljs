@@ -3082,10 +3082,8 @@ var Model = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             window.ljs.switchProcess(true);
             var xhr = new XMLHttpRequest();
-            if (_progress_event) {
-                xhr.upload.addEventListener('progress', _progress_event);
-                console.log(_progress_event);
-            }
+            console.log(_progress_event);
+            xhr.upload.addEventListener('progress', _progress_event);
             var route = window.ljs.cfg('jax');
             xhr.onload = function (e) {
                 var target = e.target;

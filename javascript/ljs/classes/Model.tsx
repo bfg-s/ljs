@@ -178,10 +178,8 @@ export class Model
         return new Promise((resolve, reject) => {
             window.ljs.switchProcess(true);
             let xhr = new XMLHttpRequest();
-            if (_progress_event) {
-                xhr.upload.addEventListener('progress', _progress_event);
-                console.log(_progress_event);
-            }
+            console.log(_progress_event);
+            xhr.upload.addEventListener('progress', _progress_event);
             let route = window.ljs.cfg('jax');
             xhr.onload = (e: any) => {
                 let target = e.target;

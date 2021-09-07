@@ -37,7 +37,8 @@ export class Model
     constructor(
         private _path: string = "",
         private _params: any = {},
-        private _state: any = {}
+        private _state: any = {},
+        private _progress_event = null
     ) {
         this._prox = new Proxy(this._make.bind(this), this as any);
         return this._prox;
@@ -140,7 +141,7 @@ export class Model
         if (prop === 'apply') prop = '';
         if (prop in this && prop !== 'get') { return (this as any)[prop]; }
         let path = prop ? ((this._path ? this._path + '.' : this._path) + prop) : this._path;
-        let model = (new Model(path, this._params, this._state));
+        let model = (new Model(path, this._params, this._state, this._progress_event));
         this._params = {};
         this._state  = {};
         return model;
@@ -161,8 +162,9 @@ export class Model
      * Make ajax request
      * @param query
      * @param state
+     * @param _progress_event
      */
-    static request (query: any, state: any) {
+    static request (query: any, state: any, _progress_event: any = null) {
         return new Promise((resolve, reject) => {
             window.ljs.switchProcess(true);
             let xhr = new XMLHttpRequest();
@@ -171,6 +173,7 @@ export class Model
             xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.send(query);
+            if (_progress_event) xhr.onprogress = _progress_event;
             xhr.onload = (e: any) => {
                 let target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());

@@ -2926,13 +2926,15 @@ var Model = /** @class */ (function () {
      * @param _params
      * @param _state
      */
-    function Model(_path, _params, _state) {
+    function Model(_path, _params, _state, _progress_event) {
         if (_path === void 0) { _path = ""; }
         if (_params === void 0) { _params = {}; }
         if (_state === void 0) { _state = {}; }
+        if (_progress_event === void 0) { _progress_event = null; }
         this._path = _path;
         this._params = _params;
         this._state = _state;
+        this._progress_event = _progress_event;
         this._prox = new Proxy(this._make.bind(this), this);
         return this._prox;
     }
@@ -3040,7 +3042,7 @@ var Model = /** @class */ (function () {
             return this[prop];
         }
         var path = prop ? ((this._path ? this._path + '.' : this._path) + prop) : this._path;
-        var model = (new Model(path, this._params, this._state));
+        var model = (new Model(path, this._params, this._state, this._progress_event));
         this._params = {};
         this._state = {};
         return model;
@@ -3063,9 +3065,11 @@ var Model = /** @class */ (function () {
      * Make ajax request
      * @param query
      * @param state
+     * @param _progress_event
      */
-    Model.request = function (query, state) {
+    Model.request = function (query, state, _progress_event) {
         var _this = this;
+        if (_progress_event === void 0) { _progress_event = null; }
         return new Promise(function (resolve, reject) {
             window.ljs.switchProcess(true);
             var xhr = new XMLHttpRequest();
@@ -3074,6 +3078,8 @@ var Model = /** @class */ (function () {
             xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.send(query);
+            if (_progress_event)
+                xhr.onprogress = _progress_event;
             xhr.onload = function (e) {
                 var target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());

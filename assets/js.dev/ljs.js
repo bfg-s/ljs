@@ -2931,7 +2931,7 @@ var Model = /** @class */ (function () {
         if (_path === void 0) { _path = ""; }
         if (_params === void 0) { _params = {}; }
         if (_state === void 0) { _state = {}; }
-        if (_progress_event === void 0) { _progress_event = null; }
+        if (_progress_event === void 0) { _progress_event = []; }
         this._path = _path;
         this._params = _params;
         this._state = _state;
@@ -2944,7 +2944,7 @@ var Model = /** @class */ (function () {
      * @param event
      */
     Model.prototype.progress = function (event) {
-        this._progress_event = event;
+        this._progress_event[0] = event;
         return this;
     };
     /**
@@ -3033,7 +3033,7 @@ var Model = /** @class */ (function () {
             }
         };
         addFormData(send_params);
-        return Model.request(form, this._state);
+        return Model.request(form, this._state, this._progress_event);
     };
     /**
      * Proxy get event
@@ -3054,6 +3054,7 @@ var Model = /** @class */ (function () {
         var model = (new Model(path, this._params, this._state, this._progress_event));
         this._params = {};
         this._state = {};
+        this._progress_event = [];
         return model;
     };
     /**
@@ -3084,9 +3085,8 @@ var Model = /** @class */ (function () {
             var xhr = new XMLHttpRequest();
             var route = window.ljs.cfg('jax');
             xhr.open('post', window.location.origin + "/" + route, true);
-            console.log(_progress_event);
-            if (_progress_event)
-                xhr.upload.addEventListener('progress', _progress_event);
+            if (_progress_event && _progress_event[0])
+                xhr.upload.addEventListener('progress', _progress_event[0]);
             xhr.onload = function (e) {
                 var target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());

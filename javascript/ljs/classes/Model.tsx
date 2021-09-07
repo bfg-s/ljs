@@ -39,7 +39,7 @@ export class Model
         private _path: string = "",
         private _params: any = {},
         private _state: any = {},
-        private _progress_event: Function|null = null
+        private _progress_event: any = []
     ) {
         this._prox = new Proxy(this._make.bind(this), this as any);
         return this._prox;
@@ -50,7 +50,7 @@ export class Model
      * @param event
      */
     progress (event: Function) {
-        this._progress_event = event;
+        this._progress_event[0] = event;
         return this;
     }
 
@@ -136,7 +136,7 @@ export class Model
             }
         }
         addFormData(send_params);
-        return Model.request(form, this._state);
+        return Model.request(form, this._state, this._progress_event);
     }
 
     /**
@@ -154,6 +154,7 @@ export class Model
         let model = (new Model(path, this._params, this._state, this._progress_event));
         this._params = {};
         this._state  = {};
+        this._progress_event  = [];
         return model;
     }
 
@@ -180,8 +181,8 @@ export class Model
             let xhr = new XMLHttpRequest();
             let route = window.ljs.cfg('jax');
             xhr.open('post', `${window.location.origin}/${route}`, true);
-            console.log(_progress_event);
-            if (_progress_event) xhr.upload.addEventListener('progress', _progress_event);
+            if (_progress_event && _progress_event[0])
+                xhr.upload.addEventListener('progress', _progress_event[0]);
             xhr.onload = (e: any) => {
                 let target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());

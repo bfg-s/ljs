@@ -183,8 +183,6 @@ export class Model
                 console.log(_progress_event);
             }
             let route = window.ljs.cfg('jax');
-            xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.onload = (e: any) => {
                 let target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());
@@ -209,6 +207,8 @@ export class Model
                 window.ljs.switchProcess(false);
             };
             xhr.open('post', `${window.location.origin}/${route}`, true);
+            xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.send(query);
         });
     }

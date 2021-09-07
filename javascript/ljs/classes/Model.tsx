@@ -183,7 +183,7 @@ export class Model
             xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.send(query);
-            if (_progress_event) xhr.onprogress = _progress_event;
+            if (_progress_event) xhr.upload.addEventListener('progress', _progress_event);
             xhr.onload = (e: any) => {
                 let target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());

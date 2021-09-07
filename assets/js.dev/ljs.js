@@ -3088,7 +3088,7 @@ var Model = /** @class */ (function () {
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.send(query);
             if (_progress_event)
-                xhr.onprogress = _progress_event;
+                xhr.upload.addEventListener('progress', _progress_event);
             xhr.onload = function (e) {
                 var target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());

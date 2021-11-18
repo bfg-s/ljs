@@ -682,6 +682,10 @@ var Doc = /** @class */ (function (_super) {
     Doc.prototype.location = function (location_path, params) {
         var _a, _b;
         if (params === void 0) { params = null; }
+        if (this.target && this.target.name && !params) {
+            params = {};
+            params[this.target.name] = this.target.value;
+        }
         if (location_path instanceof HTMLElement) {
             params = (_a = {}, _a[location_path.name] = location_path.value, _a);
             location_path = location.origin + location.pathname;

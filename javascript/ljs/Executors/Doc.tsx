@@ -77,6 +77,11 @@ export class Doc extends ExecutorParent {
      */
     location (location_path: any, params: any = null) {
 
+        if (this.target && this.target.name && !params) {
+            params = {};
+            params[this.target.name] = this.target.value;
+        }
+
         if (location_path instanceof HTMLElement) {
 
             params = {[(location_path as any).name]: (location_path as any).value};

@@ -39,11 +39,37 @@ class JaxController
     static protected $on_start = [];
 
     /**
+     * @var \Closure[]
+     */
+    static protected $on_mounted = [];
+
+    /**
+     * @var \Closure[]
+     */
+    static protected $on_finish = [];
+
+    /**
      * @param  \Closure  $closure
      */
     public static function on_start(\Closure $closure)
     {
         static::$on_start[] = $closure;
+    }
+
+    /**
+     * @param  \Closure  $closure
+     */
+    public static function on_mounted(\Closure $closure)
+    {
+        static::$on_mounted[] = $closure;
+    }
+
+    /**
+     * @param  \Closure  $closure
+     */
+    public static function on_finish(\Closure $closure)
+    {
+        static::$on_finish[] = $closure;
     }
 
     /**
@@ -61,7 +87,7 @@ class JaxController
         $param = md5(md5(config('app.url')));
 
         if (!$request->ajax() || !$request->has($param)) {
-            
+
             return response(['The request is not Ajax or there is no data or event as current.'], 406);
         }
 
@@ -112,7 +138,7 @@ class JaxController
         $executor = new $executor_class_name();
 
         if (!($executor instanceof JaxExecutor)) {
-            
+
             return response(['Object don\'t hav a parent JaxExecutor.'], 403);
         }
 
@@ -127,7 +153,17 @@ class JaxController
 
         LConfigs::makeDefaults();
 
+        foreach (static::$on_mounted as $item) {
+
+            $item($executor, $method, $params, $executor_class_name, $this);
+        }
+
         $result = $this->call($executor, $method, $params, $executor_class_name);
+
+        foreach (static::$on_finish as $item) {
+
+            $item($result, $executor, $method, $params, $executor_class_name, $this);
+        }
 
         if ($result instanceof JsonResource) {
 

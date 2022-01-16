@@ -3091,6 +3091,7 @@ var Model = /** @class */ (function () {
             xhr.open('post', window.location.origin + "/" + route, true);
             xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.responseType = 'arraybuffer';
             if (_progress_event && _progress_event[0])
                 xhr.upload.addEventListener('progress', function (i) { return _progress_event[0](i, xhr); }, false);
             xhr.send(query);
@@ -3098,19 +3099,42 @@ var Model = /** @class */ (function () {
                 var target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());
                 if (target.status >= 200 && target.status < 300) {
-                    var data = void 0;
-                    try {
-                        data = JSON.parse(target.response);
+                    var contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
+                    if (contentDispo) {
+                        var fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
+                        var blob = e.currentTarget.response;
+                        // @ts-ignore
+                        if (window.navigator.msSaveOrOpenBlob) {
+                            // @ts-ignore
+                            window.navigator.msSaveBlob(blob, fileName);
+                        }
+                        else {
+                            var downloadLink = window.document.createElement('a');
+                            var contentTypeHeader = e.currentTarget.getResponseHeader("Content-Type");
+                            downloadLink.href = window.URL.createObjectURL(new Blob([blob], { type: contentTypeHeader }));
+                            downloadLink.download = fileName;
+                            document.body.appendChild(downloadLink);
+                            downloadLink.click();
+                            document.body.removeChild(downloadLink);
+                        }
+                        resolve([]);
                     }
-                    catch (e) {
-                        data = target.response;
+                    else {
+                        var enc = new TextDecoder();
+                        // @ts-ignore
+                        var data = enc.decode(target.response);
+                        try { // @ts-ignore
+                            data = JSON.parse(data);
+                        }
+                        catch (e) { }
+                        if (typeof data === 'object' && '$exec' in data) {
+                            // @ts-ignore
+                            window.ljs.exec(data.$exec);
+                            unset_1.default(data, '$exec');
+                        }
+                        _this.applyStates(state, data);
+                        resolve(data);
                     }
-                    if (typeof data === 'object' && '$exec' in data) {
-                        window.ljs.exec(data.$exec);
-                        unset_1.default(data, '$exec');
-                    }
-                    _this.applyStates(state, data);
-                    resolve(data);
                 }
                 else {
                     reject({ status: target.status, statusText: target.statusText });

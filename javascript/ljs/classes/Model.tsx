@@ -183,6 +183,7 @@ export class Model
             xhr.open('post', `${window.location.origin}/${route}`, true);
             xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.responseType = 'arraybuffer';
             if (_progress_event && _progress_event[0])
                 xhr.upload.addEventListener('progress', (i) => _progress_event[0](i, xhr), false);
             xhr.send(query);
@@ -190,15 +191,41 @@ export class Model
                 let target = e.target;
                 window.ljs._onload_header(target.getAllResponseHeaders());
                 if (target.status >= 200 && target.status < 300) {
-                    let data;
-                    try { data = JSON.parse(target.response); }
-                    catch (e) { data = target.response; }
-                    if (typeof data === 'object' && '$exec' in data) {
-                        window.ljs.exec(data.$exec);
-                        unset(data, '$exec');
+                    let contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
+
+                    if (contentDispo) {
+                        let fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
+                        let blob = e.currentTarget.response;
+                        // @ts-ignore
+                        if(window.navigator.msSaveOrOpenBlob) {
+                            // @ts-ignore
+                            window.navigator.msSaveBlob(blob, fileName);
+                        }
+                        else{
+                            let downloadLink = window.document.createElement('a');
+                            let contentTypeHeader = e.currentTarget.getResponseHeader("Content-Type");
+                            downloadLink.href = window.URL.createObjectURL(new Blob([blob], { type: contentTypeHeader }));
+                            downloadLink.download = fileName;
+                            document.body.appendChild(downloadLink);
+                            downloadLink.click();
+                            document.body.removeChild(downloadLink);
+                        }
+                        resolve([]);
+                    } else {
+                        let enc = new TextDecoder();
+                        // @ts-ignore
+                        let data = enc.decode(target.response);
+                        try { // @ts-ignore
+                            data = JSON.parse(data); }
+                        catch (e) { }
+                        if (typeof data === 'object' && '$exec' in data) {
+                            // @ts-ignore
+                            window.ljs.exec(data.$exec);
+                            unset(data, '$exec');
+                        }
+                        this.applyStates(state, data);
+                        resolve(data);
                     }
-                    this.applyStates(state, data);
-                    resolve(data);
                 } else {
                     reject({status: target.status, statusText: target.statusText});
                 }

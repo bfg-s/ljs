@@ -7,12 +7,11 @@ use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
 
 /**
- * Class JsRouteGenerator
+ * Class JsRouteGenerator.
  * @package Lar\LJS\Core
  */
 class JsRouteGenerator implements DumpExecute
 {
-
     /**
      * @param  Command  $command
      * @return mixed|void
@@ -28,7 +27,7 @@ class JsRouteGenerator implements DumpExecute
                 $domain = $route->getDomain();
                 $routes_list[$domain ? $domain : $host][$route->getName()] = [
                     'uri' => $route->uri,
-                    'methods' => $route->methods
+                    'methods' => $route->methods,
                 ];
             }
         }
@@ -40,8 +39,8 @@ class JsRouteGenerator implements DumpExecute
      * @param  string  $path
      * @return string
      */
-    protected function rp(string $path = "")
+    protected function rp(string $path = '')
     {
-        return "/". trim(resource_path(config('layout.resource_js_path', 'js') . '/' . trim($path, '/')), '/');
+        return '/'.trim(resource_path(config('layout.resource_js_path', 'js').'/'.trim($path, '/')), '/');
     }
 }

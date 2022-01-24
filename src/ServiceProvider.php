@@ -6,12 +6,11 @@ use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Core\LConfigs;
 use Lar\LJS\Commands\MakeJaxExecutor;
-use Lar\LJS\Core\JsLangGenerator;
 use Lar\LJS\Core\JsRouteGenerator;
 use Lar\LJS\Middleware\ExecutorMiddleware;
 
 /**
- * Class ServiceProvider
+ * Class ServiceProvider.
  *
  * @package Lar\Layout
  */
@@ -21,7 +20,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @var array
      */
     protected $commands = [
-        MakeJaxExecutor::class
+        MakeJaxExecutor::class,
     ];
 
     /**
@@ -30,7 +29,7 @@ class ServiceProvider extends ServiceProviderIlluminate
      * @var array
      */
     protected $routeMiddleware = [
-        "exec" => ExecutorMiddleware::class,
+        'exec' => ExecutorMiddleware::class,
     ];
 
     /**
@@ -49,17 +48,14 @@ class ServiceProvider extends ServiceProviderIlluminate
     public function boot()
     {
         if (app()->runningInConsole() && is_link(base_path('ljs'))) {
-
-            if (!is_dir(public_path("ljs")) && !is_link(public_path("ljs"))) {
-
+            if (! is_dir(public_path('ljs')) && ! is_link(public_path('ljs'))) {
                 app()->make('files')->link(
-                    __DIR__ . "/../assets", public_path('ljs')
+                    __DIR__.'/../assets', public_path('ljs')
                 );
             }
         }
 
-        if (app()->runningInConsole()){
-
+        if (app()->runningInConsole()) {
             DumpAutoload::addToExecute(JsRouteGenerator::class);
             //DumpAutoload::addToExecute(JsLangGenerator::class);
         }
@@ -97,9 +93,7 @@ class ServiceProvider extends ServiceProviderIlluminate
     {
         // register route middleware.
         foreach ($this->routeMiddleware as $key => $middleware) {
-
             app('router')->aliasMiddleware($key, $middleware);
         }
     }
 }
-

@@ -3,16 +3,14 @@
 namespace Lar\LJS\Core;
 
 use Illuminate\Console\Command;
-use Illuminate\Translation\Translator;
 use Lar\Developer\Commands\Dump\DumpExecute;
 
 /**
- * Class JsLangGenerator
+ * Class JsLangGenerator.
  * @package Lar\LJS\Core
  */
 class JsLangGenerator implements DumpExecute
 {
-
     /**
      * @param  Command  $command
      * @return mixed|void
@@ -25,8 +23,8 @@ class JsLangGenerator implements DumpExecute
             $files = \File::allFiles($dir);
             $lang = basename($dir);
             foreach ($files as $file) {
-                $group = str_replace(".".$file->getFileInfo()->getExtension(), '', $file->getFilename());
-                $data[$lang][$group][] = "window.locales = window.locales ? window.locales : {}";
+                $group = str_replace('.'.$file->getFileInfo()->getExtension(), '', $file->getFilename());
+                $data[$lang][$group][] = 'window.locales = window.locales ? window.locales : {}';
                 $arr = include $file->getPathname();
                 if (is_array($arr)) {
                     $json = json_encode($arr, JSON_UNESCAPED_UNICODE);
@@ -38,7 +36,7 @@ class JsLangGenerator implements DumpExecute
 
         foreach ($data as $lang => $groups) {
             foreach ($groups as $group => $datum) {
-                if (!is_dir($this->rp($lang))) {
+                if (! is_dir($this->rp($lang))) {
                     mkdir($this->rp($lang), 0777, true);
                 }
                 file_put_contents($this->rp("{$lang}/{$group}.js"), $datum);
@@ -50,8 +48,8 @@ class JsLangGenerator implements DumpExecute
      * @param  string  $path
      * @return string
      */
-    protected function rp(string $path = "")
+    protected function rp(string $path = '')
     {
-        return "/". trim(public_path('/locales/' . trim($path, '/')), '/');
+        return '/'.trim(public_path('/locales/'.trim($path, '/')), '/');
     }
 }

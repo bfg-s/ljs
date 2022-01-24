@@ -1,9 +1,6 @@
 import map from 'lodash/map';
 import merge from 'lodash/merge';
-import isString from 'lodash/isString';
 import isNaN from 'lodash/isNaN';
-import isObject from 'lodash/isObject';
-import mapValues from 'lodash/mapValues';
 import {ExecutorMethods} from "./ExecutorMethods";
 
 export class LJSConstructor extends ExecutorMethods {

@@ -12,10 +12,10 @@
 
 <script>
 
-    import VueTerminal from './VueTerminal'
-    import get from 'lodash/get'
+import VueTerminal from './VueTerminal'
+import get from 'lodash/get'
 
-    export default {
+export default {
         name: 'v-terminal',
         components: {
             VueTerminal

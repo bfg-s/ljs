@@ -2,7 +2,6 @@ import {ExecutorParent} from "../Extends/ExecutorParent";
 import {Helper} from "../../Helper";
 import map from 'lodash/map';
 import * as clipboard from "clipboard-polyfill/text";
-import {Clipboard} from "../Extends/Clipboard";
 
 export class Doc extends ExecutorParent {
 

@@ -11,7 +11,7 @@ use Lar\Layout\Core\LConfigs;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class JaxController
+ * Class JaxController.
  * @package Lar\LJS
  */
 class JaxController
@@ -19,13 +19,13 @@ class JaxController
     /**
      * @var array
      */
-    static $list = [];
+    public static $list = [];
 
     /**
      * @var array
      */
-    static $namespaces = [
-        'app/Jax' => 'App\\Jax'
+    public static $namespaces = [
+        'app/Jax' => 'App\\Jax',
     ];
 
     /**
@@ -36,17 +36,17 @@ class JaxController
     /**
      * @var \Closure[]
      */
-    static protected $on_start = [];
+    protected static $on_start = [];
 
     /**
      * @var \Closure[]
      */
-    static protected $on_mounted = [];
+    protected static $on_mounted = [];
 
     /**
      * @var \Closure[]
      */
-    static protected $on_finish = [];
+    protected static $on_finish = [];
 
     /**
      * @param  \Closure  $closure
@@ -80,28 +80,24 @@ class JaxController
     public function index(Request $request)
     {
         foreach (static::$on_start as $item) {
-
             $item($this);
         }
 
         $param = md5(md5(config('app.url')));
 
-        if (!$request->ajax() || !$request->has($param)) {
-
+        if (! $request->ajax() || ! $request->has($param)) {
             return response(['The request is not Ajax or there is no data or event as current.'], 406);
         }
 
         $exec = $request->get($param);
 
-        if (!is_array($exec)) {
-
+        if (! is_array($exec)) {
             return response(['Invalid expected call event.'], 406);
         }
 
         $keys = array_keys($exec);
 
-        if (!isset($keys[0]) || !is_array($exec)) {
-
+        if (! isset($keys[0]) || ! is_array($exec)) {
             return response(['The expected call event was not found.'], 404);
         }
 
@@ -110,26 +106,22 @@ class JaxController
         $params = json_decode($exec[$event], 1);
 
         if ($params === null) {
-
             $params = $exec[$event];
         }
 
-        if (!is_array($params)) {
-
+        if (! is_array($params)) {
             $params = [$params];
         }
 
         $event = \Str::parseCallback($event, '__invoke');
 
-        if (!isset($event[0]) || !isset($event[1]) || count($event) !== 2) {
-
+        if (! isset($event[0]) || ! isset($event[1]) || count($event) !== 2) {
             return response(['Invalid call event.'], 406);
         }
 
         $executor = $this->find_executor($event[0]);
 
-        if (!$executor) {
-
+        if (! $executor) {
             return response(['Call object not found.'], 404);
         }
 
@@ -137,8 +129,7 @@ class JaxController
 
         $executor = new $executor_class_name();
 
-        if (!($executor instanceof JaxExecutor)) {
-
+        if (! ($executor instanceof JaxExecutor)) {
             return response(['Object don\'t hav a parent JaxExecutor.'], 403);
         }
 
@@ -146,33 +137,26 @@ class JaxController
 
         $method = $event[1];
 
-        if (!$method || !is_string($method)) {
-
+        if (! $method || ! is_string($method)) {
             return response(['The specified method is not acceptable.'], 405);
         }
 
         LConfigs::makeDefaults();
 
         foreach (static::$on_mounted as $item) {
-
             $item($executor, $method, $params, $executor_class_name, $this);
         }
 
         $result = $this->call($executor, $method, $params, $executor_class_name);
 
         foreach (static::$on_finish as $item) {
-
             $item($result, $executor, $method, $params, $executor_class_name, $this);
         }
 
         if ($result instanceof JsonResource) {
-
             return $result->additional(['exec' => respond()->toArray()]);
-
-        }  else if ($result instanceof Response) {
-
+        } elseif ($result instanceof Response) {
             foreach (LConfigs::$list as $key => $values) {
-
                 $result->headers->set($key, $values);
             }
 
@@ -194,33 +178,27 @@ class JaxController
      */
     protected function call(JaxExecutor $executor, string $method, array $arguments, string $executor_class_name)
     {
-        if (method_exists($executor, "{$method}_access") && !embedded_call([$executor, "{$method}_access"], $arguments)) {
-
+        if (method_exists($executor, "{$method}_access") && ! embedded_call([$executor, "{$method}_access"], $arguments)) {
             if (method_exists($executor, "{$method}_default")) {
-
                 try {
                     return embedded_call([$executor, "{$method}_default"], $arguments); //$executor->{"{$method}_default"}($arguments);
                 } catch (\Throwable $throwable) {
-                    return method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
+                    return method_exists($executor, 'failed') ? $executor->failed($throwable) : $this->failed($throwable);
                 }
             }
 
             $this->status(405);
 
             return ['Method not allowed.'];
-        }
-
-        else if (
+        } elseif (
             method_exists($executor, 'access') &&
-            !embedded_call([$executor, 'access'])
+            ! embedded_call([$executor, 'access'])
         ) {
-
             if (method_exists($executor, 'default')) {
-
                 try {
-                    return embedded_call([$executor, 'default'], $arguments); //$executor->default($arguments);
+                    return embedded_call([$executor, 'default'], $arguments);
                 } catch (\Throwable $throwable) {
-                    return method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
+                    return method_exists($executor, 'failed') ? $executor->failed($throwable) : $this->failed($throwable);
                 }
             }
 
@@ -229,35 +207,27 @@ class JaxController
             return ['Access is denied!'];
         }
 
-        if (!method_exists($executor, $method)) {
-
+        if (! method_exists($executor, $method)) {
             if (method_exists($executor, 'call')) {
-
                 try {
                     $result = $executor->call($method, $arguments);
                 } catch (\Throwable $throwable) {
-                    $result = method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
+                    $result = method_exists($executor, 'failed') ? $executor->failed($throwable) : $this->failed($throwable);
                 }
-
             } else {
-
                 $this->status(404);
 
                 return ['Method not found.'];
             }
-
-        } else if (!$executor->simple_call) {
-
+        } elseif (! $executor->simple_call) {
             $result = embedded_call([$executor, $method], $arguments, function (\Throwable $throwable) use ($executor) {
-                return method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
+                return method_exists($executor, 'failed') ? $executor->failed($throwable) : $this->failed($throwable);
             });
-
-        } else if ($executor->simple_call) {
-
+        } elseif ($executor->simple_call) {
             try {
                 $result = $executor->{$method}($arguments);
             } catch (\Throwable $throwable) {
-                $result = method_exists($executor, "failed") ? $executor->failed($throwable) : $this->failed($throwable);
+                $result = method_exists($executor, 'failed') ? $executor->failed($throwable) : $this->failed($throwable);
             }
         }
 
@@ -265,17 +235,12 @@ class JaxController
             $result instanceof JsonResource ||
             $result instanceof Response
         ) {
-
             return $result;
-
         }
 
         if ($result instanceof Htmlable) {
-
             $result = $result->toHtml();
-
-        } else if ($result instanceof Renderable) {
-
+        } elseif ($result instanceof Renderable) {
             $result = $result->render();
         }
 
@@ -284,7 +249,6 @@ class JaxController
         $return = collect($result);
 
         if (count($exec)) {
-
             $return = $return->merge(['$exec' => $exec]);
         }
 
@@ -298,7 +262,6 @@ class JaxController
     protected function find_executor(string $executor)
     {
         if (isset(static::$list[$executor])) {
-
             return static::$list[$executor];
         }
 
@@ -316,15 +279,12 @@ class JaxController
         );
 
         foreach (static::$namespaces as $namespace) {
-
             if (class_exists("{$namespace}\\{$name}")) {
-
                 return "{$namespace}\\{$name}";
             }
         }
 
         if (class_exists($name)) {
-
             return $name;
         }
 
@@ -351,10 +311,9 @@ class JaxController
         $this->status(500);
 
         if (config('app.debug')) {
-
             return $throwable;
         }
 
-        return "Internal server error";
+        return 'Internal server error';
     }
 }

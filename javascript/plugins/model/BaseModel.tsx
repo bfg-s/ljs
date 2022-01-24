@@ -1,5 +1,6 @@
 import moment from 'moment';
 import {Builder} from "./Builder";
+
 const pluralize = require('pluralize');
 
 export class BaseModel {

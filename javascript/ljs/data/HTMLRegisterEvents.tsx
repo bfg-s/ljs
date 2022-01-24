@@ -1,7 +1,6 @@
 import {HTMLReady} from './HTMLReady';
 import {HTMLDataEvent} from './HTMLDataEvent';
 import map from 'lodash/map';
-import isNaN from 'lodash/isNaN';
 import get from 'lodash/get';
 
 export class HTMLRegisterEvents {
@@ -162,7 +161,7 @@ export class HTMLRegisterEvents {
                 );
 
                 if (!Array.isArray(props)) props = [props];
-                
+
                 ja(...props).then();
             });
 

@@ -7,67 +7,67 @@ use Illuminate\Contracts\Support\Renderable;
 use Lar\Layout\Respond;
 
 /**
- * Class LJS
+ * Class LJS.
  *
  * @package Lar\LJS
  */
 class LJS implements Renderable
 {
     /**
-     * JS Global variables
+     * JS Global variables.
      *
      * @var array
      */
-    static $_global_vars = [
-        "global" => [
+    public static $_global_vars = [
+        'global' => [
 
-        ]
+        ],
     ];
 
     /**
      * @var array
      */
-    static $_global_vars_hash = [];
+    public static $_global_vars_hash = [];
 
     /**
      * @var array
      */
-    static $_lines = [];
+    public static $_lines = [];
 
     /**
      * @var array
      */
-    static $_rows = [];
+    public static $_rows = [];
 
     /**
      * @var array
      */
-    static $_lines_hash = [];
+    public static $_lines_hash = [];
 
     /**
-     * JS events
+     * JS events.
      *
      * @var array
      */
-    static $_events = [];
+    public static $_events = [];
 
     /**
      * @var array
      */
-    static $_hash = [];
+    public static $_hash = [];
 
     /**
      * @var Respond[]|array
      */
-    static $respond = [];
+    public static $respond = [];
 
     /**
      * @var string
      */
-    protected $tmp_group = "global";
+    protected $tmp_group = 'global';
 
     /**
-     * Execute mode
+     * Execute mode.
      *
      * @var bool
      */
@@ -80,14 +80,13 @@ class LJS implements Renderable
      */
     public function __construct(string $group = null)
     {
-       if ($group) {
-
-           $this->tmp_group = $group;
-       }
+        if ($group) {
+            $this->tmp_group = $group;
+        }
     }
 
     /**
-     * Insert row
+     * Insert row.
      *
      * @param $data
      * @return $this
@@ -100,7 +99,7 @@ class LJS implements Renderable
     }
 
     /**
-     * Create event
+     * Create event.
      *
      * @param $event
      * @param $selector
@@ -109,36 +108,29 @@ class LJS implements Renderable
      */
     public function on($event, $selector, $data)
     {
-        if (!isset(static::$_events[$this->tmp_group])) {
-
+        if (! isset(static::$_events[$this->tmp_group])) {
             static::$_events[$this->tmp_group] = [];
         }
 
         $var = "\$js.q(\"{$selector}\").on(\"{$event}\",function(e){";
 
         if ($data instanceof \Closure) {
-
-            $ns = new static($this->tmp_group . ":" . $event);
+            $ns = new static($this->tmp_group.':'.$event);
 
             $data($ns);
 
             $data = $ns->render();
         }
 
-        if (!preg_match('/.*\;$/', $data)) {
-
-            $data .= ";";
+        if (! preg_match('/.*\;$/', $data)) {
+            $data .= ';';
         }
 
         if (isset(static::$_events[$this->tmp_group][$var])) {
-
             if (static::$_events[$this->tmp_group][$var] != $data) {
-
                 static::$_events[$this->tmp_group][$var] .= $data;
             }
-
         } else {
-
             static::$_events[$this->tmp_group][$var] = $data;
         }
 
@@ -146,7 +138,7 @@ class LJS implements Renderable
     }
 
     /**
-     * Declare default state
+     * Declare default state.
      * @param  string  $name
      * @param $value
      * @return $this
@@ -156,19 +148,16 @@ class LJS implements Renderable
         $quotes = true;
 
         if ($value instanceof Jsonable) {
-            
             $value = $value->toJson(JSON_UNESCAPED_UNICODE);
             $quotes = false;
         }
 
         if (is_array($value)) {
-
             $value = json_encode($value, JSON_UNESCAPED_UNICODE);
             $quotes = false;
         }
 
         if ($quotes) {
-
             $value = "\"{$value}\"";
         }
 
@@ -178,55 +167,39 @@ class LJS implements Renderable
     }
 
     /**
-     * Add variable in to list
+     * Add variable in to list.
      *
      * @param $static
      * @param $name
      * @param null $value
      * @return LJS
      */
-    public function var($name, $value=null)
+    public function var($name, $value = null)
     {
-        if (!isset(static::$_global_vars[$this->tmp_group])) {
-
+        if (! isset(static::$_global_vars[$this->tmp_group])) {
             static::$_global_vars[$this->tmp_group] = [];
         }
 
         if (is_array($name)) {
-
             foreach ($name as $key => $item) {
-
                 $this->var($key, $item);
             }
-
-        } else if (is_string($name)) {
-
+        } elseif (is_string($name)) {
             if (preg_match('/^\.([a-zA-Z0-9\_\.\@]*)$/', $name, $m)) {
-
                 $k = $m[1];
 
-                if (!isset(static::$_global_vars[$this->tmp_group][$k])) {
-
+                if (! isset(static::$_global_vars[$this->tmp_group][$k])) {
                     static::$_global_vars[$this->tmp_group][$k] = $value;
-
                 } else {
-
                     if (is_array($value) && is_array(static::$_global_vars[$this->tmp_group][$k])) {
-
                         static::$_global_vars[$this->tmp_group][$k] = array_merge(static::$_global_vars[$this->tmp_group][$k], $value);
-
-                    } else if (is_array(static::$_global_vars[$this->tmp_group][$k])) {
-
+                    } elseif (is_array(static::$_global_vars[$this->tmp_group][$k])) {
                         static::$_global_vars[$this->tmp_group][$k][] = $value;
-
                     } else {
-
                         static::$_global_vars[$this->tmp_group][$k] .= $value;
                     }
                 }
-
-            } else if (preg_match('/^([a-zA-Z0-9\_\.\@]*)$/', $name)) {
-
+            } elseif (preg_match('/^([a-zA-Z0-9\_\.\@]*)$/', $name)) {
                 static::$_global_vars[$this->tmp_group][$name] = $value;
             }
         }
@@ -235,7 +208,7 @@ class LJS implements Renderable
     }
 
     /**
-     * Set group
+     * Set group.
      *
      * @param string $static
      * @return $this
@@ -248,49 +221,37 @@ class LJS implements Renderable
     }
 
     /**
-     * Add line JS core
+     * Add line JS core.
      *
      * @param string $data
      * @param null $key
      * @return $this
      */
-    public function line($data = "", string $key = null)
+    public function line($data = '', string $key = null)
     {
         if (preg_match('/^\!\s(.*)/', $data, $m)) {
-
             if (request()->ajax()) {
-
                 return $this;
-
             } else {
-
                 $data = $m[1];
             }
         }
 
-        if (!preg_match('/.*\;$/', $data)) {
-
-            $data .= ";";
+        if (! preg_match('/.*\;$/', $data)) {
+            $data .= ';';
         }
 
-        if (!isset(static::$_lines[$this->tmp_group])) {
-
+        if (! isset(static::$_lines[$this->tmp_group])) {
             static::$_lines[$this->tmp_group] = [];
         }
 
-        if (!is_null($key)) {
-
-            if (!isset(static::$_lines[$this->tmp_group][$key])) {
-
+        if (! is_null($key)) {
+            if (! isset(static::$_lines[$this->tmp_group][$key])) {
                 static::$_lines[$this->tmp_group][$key] = $data;
-
             } else {
-
                 static::$_lines[$this->tmp_group][$key] .= $data;
             }
-
         } else {
-
             static::$_lines[$this->tmp_group][] = $data;
         }
 
@@ -304,7 +265,6 @@ class LJS implements Renderable
     public function removeLine(string $key)
     {
         if (isset(static::$_lines[$this->tmp_group][$key])) {
-
             unset(static::$_lines[$this->tmp_group][$key]);
 
             return true;
@@ -314,7 +274,7 @@ class LJS implements Renderable
     }
 
     /**
-     * Create exec
+     * Create exec.
      *
      * @param array|string $data
      * @param null $params
@@ -323,11 +283,10 @@ class LJS implements Renderable
     public function exec($data, $params = null)
     {
         if (is_string($data)) {
-
             $data = [$data => $params];
         }
 
-        $this->line("ljs.exec(" . json_encode($data) . ")");
+        $this->line('ljs.exec('.json_encode($data).')');
 
         return $this;
     }
@@ -345,7 +304,7 @@ class LJS implements Renderable
     }
 
     /**
-     * Created declare
+     * Created declare.
      *
      * @param $tag
      * @param $name
@@ -362,60 +321,47 @@ class LJS implements Renderable
     }
 
     /**
-     * Render variables
+     * Render variables.
      *
      * @return string
      */
     public function renderVariables()
     {
-        $data = "";
+        $data = '';
 
         foreach (static::$_global_vars as $class => $variables) {
-
-            if (request()->ajax() && $class == "global") {
-
+            if (request()->ajax() && $class == 'global') {
                 continue;
             }
 
             if (\App::isLocal() && count($variables)) {
-
                 $data .= "\n/**\n * Variables {$class}\n */\n";
             }
 
             foreach ($variables as $key => $variable) {
-
-                if (strpos($key, "@") === false) {
-
-                    $key = "var " . $key;
-
+                if (strpos($key, '@') === false) {
+                    $key = 'var '.$key;
                 } else {
-
-                    $key = str_replace("@", "window.", $key);
+                    $key = str_replace('@', 'window.', $key);
                 }
 
                 if (is_array($variable)) {
-
                     $variable = json_encode($variable);
                 }
 
                 if (preg_match('/^\@(.*)/', $variable, $m)) {
-
                     $variable = $m[1];
-
                 } else {
-
                     $variable = $this->paramEntity($variable);
                 }
 
-                if (!preg_match('/.*\;$/', $variable)) {
-
-                    $variable .= ";";
+                if (! preg_match('/.*\;$/', $variable)) {
+                    $variable .= ';';
                 }
 
                 $data .= "{$key}={$variable}";
             }
         }
-
 
         return $data;
     }
@@ -427,36 +373,31 @@ class LJS implements Renderable
     public function paramEntity($variable)
     {
         if (is_null($variable)) {
-
-            $variable = "null";
+            $variable = 'null';
         }
 
         if ($variable === true) {
-
-            $variable = "true";
+            $variable = 'true';
         }
 
         if ($variable === false) {
-
-            $variable = "false";
+            $variable = 'false';
         }
 
         if (is_array($variable)) {
-
             $variable = json_encode($variable);
         }
 
         if (
-            !preg_match('/^\{.*\}$/', $variable) &&
-            !preg_match('/^\[.*\]$/', $variable)  &&
-            !preg_match('/^\".*\"$/', $variable)  &&
-            !preg_match('/^\\\'.*\\\'$/', $variable) &&
-            strtolower($variable) !== "true" &&
-            strtolower($variable) !== "false" &&
-            !is_numeric($variable) &&
-            strtolower($variable) != "null"
+            ! preg_match('/^\{.*\}$/', $variable) &&
+            ! preg_match('/^\[.*\]$/', $variable) &&
+            ! preg_match('/^\".*\"$/', $variable) &&
+            ! preg_match('/^\\\'.*\\\'$/', $variable) &&
+            strtolower($variable) !== 'true' &&
+            strtolower($variable) !== 'false' &&
+            ! is_numeric($variable) &&
+            strtolower($variable) != 'null'
         ) {
-
             $variable = "\"{$variable}\"";
         }
 
@@ -464,98 +405,79 @@ class LJS implements Renderable
     }
 
     /**
-     * Render Events
+     * Render Events.
      *
      * @return string
      */
     public function renderEvents()
     {
-        $data = "";
+        $data = '';
 
         foreach (static::$_events as $class => $events) {
-
-            $data_n = "";
+            $data_n = '';
 
             if (\App::isLocal()) {
-
                 $data_n .= "\n/**\n * Events {$class}\n */\n";
             }
 
             if (request()->ajax() || $this->execute) {
-
-                $data_n .= "\$(function (e) {";
-            }
-
-            else {
-
-                $data_n .= "document.addEventListener(\"ljs:load\", function (e) {";
+                $data_n .= '$(function (e) {';
+            } else {
+                $data_n .= 'document.addEventListener("ljs:load", function (e) {';
             }
 
             $empty = true;
 
             foreach ($events as $key => $event) {
-
-                $data_n .= $key.$event."});";
+                $data_n .= $key.$event.'});';
 
                 $empty = false;
             }
 
-            $data_n .= "});";
+            $data_n .= '});';
 
-            if (!$empty) {
-
+            if (! $empty) {
                 $data .= $data_n;
             }
         }
-
 
         return $data;
     }
 
     /**
-     * Render lines
+     * Render lines.
      *
      * @return string
      */
     public function renderLines()
     {
         foreach (static::$respond as $item) {
-
-            static::$_lines['\Lar\Layout\Respond'][] = "ljs.exec(" . $item->toJson() . ");";
+            static::$_lines['\Lar\Layout\Respond'][] = 'ljs.exec('.$item->toJson().');';
         }
 
-        $data = "";
+        $data = '';
 
         foreach (static::$_lines as $class => $lines) {
-
             if (\App::isLocal()) {
-
                 $data .= "\n/**\n * Lines {$class}\n */\n";
             }
 
             if (request()->ajax()) {
-
-                $data .= "\$(function (e) {";
-            }
-
-            else {
-
-                $data .= "document.addEventListener(\"ljs:load\", function (e) {";
+                $data .= '$(function (e) {';
+            } else {
+                $data .= 'document.addEventListener("ljs:load", function (e) {';
             }
 
             foreach ($lines as $line) {
-
                 $data .= $line;
             }
 
-            $data .= "});";
+            $data .= '});';
         }
 
         foreach (static::$_rows as $row) {
-
             $data .= $row;
         }
-
 
         return $data;
     }
@@ -567,10 +489,9 @@ class LJS implements Renderable
      */
     public function render()
     {
-        $return = $this->renderVariables() . $this->renderLines() . $this->renderEvents();
+        $return = $this->renderVariables().$this->renderLines().$this->renderEvents();
 
         if (request()->ajax()) {
-
             $this->clear();
         }
 
@@ -578,13 +499,13 @@ class LJS implements Renderable
     }
 
     /**
-     * Clear global instance
+     * Clear global instance.
      *
      * @return $this
      */
     public function clear()
     {
-        static::$_global_vars = ["global" => []];
+        static::$_global_vars = ['global' => []];
         static::$_global_vars_hash = [];
         static::$_rows = [];
         static::$_lines = [];

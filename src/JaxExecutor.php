@@ -5,7 +5,7 @@ namespace Lar\LJS;
 use Illuminate\Support\Collection;
 
 /**
- * Class AjaxExecutor
+ * Class AjaxExecutor.
  *
  * @package Lar\Layout
  * @mixin \Lar\Layout\RespondDoc
@@ -31,7 +31,7 @@ abstract class JaxExecutor
     }
 
     /**
-     * Put rule
+     * Put rule.
      *
      * @param $key
      * @param mixed $value
@@ -45,7 +45,7 @@ abstract class JaxExecutor
     }
 
     /**
-     * Put rule alias
+     * Put rule alias.
      *
      * @param $key
      * @param null $value
@@ -75,7 +75,6 @@ abstract class JaxExecutor
     public function httpStatus(int $status)
     {
         if ($this->controller) {
-
             $this->controller->status($status);
         }
 
@@ -83,7 +82,7 @@ abstract class JaxExecutor
     }
 
     /**
-     * Close Request
+     * Close Request.
      * @return null
      */
     public function stop()
@@ -112,17 +111,16 @@ abstract class JaxExecutor
      */
     public static function register(string $class = null, string $name = null)
     {
-        if (!$class) {
+        if (! $class) {
             $class = static::class;
         }
 
         /** @var JaxExecutor $class */
-        if (!$name) {
+        if (! $name) {
             $name = $class::$name;
         }
 
         if ($name) {
-
             JaxController::$list[$name] = $class;
         }
     }
@@ -133,7 +131,6 @@ abstract class JaxExecutor
     public static function registerCollection($collection)
     {
         if (is_array($collection) || $collection instanceof Collection) {
-
             JaxController::$list = array_merge(JaxController::$list, $collection);
         }
     }
@@ -149,24 +146,16 @@ abstract class JaxExecutor
         $translation = null;
 
         if (isset($rules['>>']) && is_string($rules['>>'])) {
-
             $translation = $rules['>>'];
             unset($rules['>>']);
         }
 
         if ($result = quick_validate($subject, $rules, $messages)) {
-
             foreach ($result->errors()->messages() as $key => $message) {
-
                 foreach ($message as $item) {
-
                     if ($translation) {
-
                         $this->put($translation, [$key, $item]);
-                    }
-
-                    else {
-
+                    } else {
                         $this->toast_error($item);
                     }
                 }
@@ -174,7 +163,7 @@ abstract class JaxExecutor
 
             return false;
         }
-        
+
         return $subject;
     }
 

@@ -5,7 +5,7 @@ namespace Lar\LJS\Traits;
 use Lar\LJS\LJS;
 
 /**
- * Trait JSable
+ * Trait JSable.
  *
  * @package Lar\LJS\Traits
  */
@@ -14,17 +14,16 @@ trait JSable
     /**
      * @var LJS
      */
-    static $store;
+    public static $store;
 
     /**
-     * JS Core
+     * JS Core.
      *
      * @return LJS
      */
     public function js()
     {
-        if (!JSable::$store) {
-
+        if (! JSable::$store) {
             JSable::$store = new LJS();
         }
 

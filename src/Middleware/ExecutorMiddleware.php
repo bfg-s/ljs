@@ -23,8 +23,7 @@ class ExecutorMiddleware
     {
         $param = md5(md5(config('app.url')));
 
-        if ($request->ajax() && !$request->pjax() && $request->has($param)) {
-
+        if ($request->ajax() && ! $request->pjax() && $request->has($param)) {
             $executor = new JaxController();
 
             $this->makeConfigs();
@@ -36,16 +35,15 @@ class ExecutorMiddleware
     }
 
     /**
-     * Make configs in header
+     * Make configs in header.
      */
-    private function makeConfigs() {
-
+    private function makeConfigs()
+    {
         LConfigs::makeDefaults();
 
         LConfigs::add('last_executed', time());
 
         foreach (LConfigs::$list as $key => $item) {
-
             header("{$key}: {$item}");
         }
     }

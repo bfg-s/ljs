@@ -1,5 +1,4 @@
 import {BaseModel} from "./BaseModel";
-import {Builder} from "./Builder";
 
 //window.Model =
     class Model extends BaseModel {
@@ -21,7 +20,7 @@ import {Builder} from "./Builder";
     stringify () {
         return JSON.stringify(this.toJson());
     }
-    
+
     query () {
 
         return (this as any)._super.builder;

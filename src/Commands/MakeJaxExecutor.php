@@ -3,9 +3,7 @@
 namespace Lar\LJS\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Str;
-use Lar\Layout\CfgFile;
 use Lar\LJS\JaxExecutor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -49,9 +47,7 @@ class MakeJaxExecutor extends Command
         $namespace = $this->jax_namespace();
 
         foreach ($this->jax_segments() as $component_segment) {
-
             if ($component_segment !== $this->jax_name()) {
-
                 $normal_part = ucfirst(Str::camel(Str::snake($component_segment)));
 
                 $namespace .= "\\{$normal_part}";
@@ -60,18 +56,17 @@ class MakeJaxExecutor extends Command
             }
         }
 
-        $file = $dir . "/" . $this->class_name() . ".php";
+        $file = $dir.'/'.$this->class_name().'.php';
 
         $class_namespace = "{$namespace}\\{$this->class_name()}";
 
-        if (!is_dir($dir)) {
-
+        if (! is_dir($dir)) {
             mkdir($dir, 0777, 1);
         }
 
         if (is_file($file)) {
-
-            $this->error("The component [{$this->class_name()}] already exists!"); return ;
+            $this->error("The component [{$this->class_name()}] already exists!");
+            return;
         }
 
         $obj = class_entity($this->class_name())->wrap('php')
@@ -81,20 +76,18 @@ class MakeJaxExecutor extends Command
         $obj->method('access')->line()->dataReturn('true')->docReturnType('bool');
 
         if ($this->option('demo')) {
-
-            $obj->method("test")
+            $obj->method('test')
                 ->param('name')
                 ->line()
-                ->line("/**")
-                ->line(" * JS Example")
+                ->line('/**')
+                ->line(' * JS Example')
                 ->line(" * jax.{$this->name()}.test('you_name');")
-                ->line(" */")
+                ->line(' */')
                 ->line()
-                ->line("\$this->toast_success(\"Hello, {\$name}\");");
+                ->line('$this->toast_success("Hello, {$name}");');
         }
 
         if (file_put_contents($file, $obj->render())) {
-
             $this->info("Executor [{$class_namespace}] created!");
         }
 
@@ -102,7 +95,7 @@ class MakeJaxExecutor extends Command
     }
 
     /**
-     * Get class name
+     * Get class name.
      *
      * @return string|string[]|null
      */
@@ -114,8 +107,8 @@ class MakeJaxExecutor extends Command
     /**
      * @return string
      */
-    protected function name () {
-
+    protected function name()
+    {
         return Str::slug(implode('_', $this->jax_segments()), '_');
     }
 
@@ -132,7 +125,7 @@ class MakeJaxExecutor extends Command
      */
     protected function jax_segments()
     {
-        return array_map("Str::snake", explode("/", $this->input->getArgument('name')));
+        return array_map('Str::snake', explode('/', $this->input->getArgument('name')));
     }
 
     /**
@@ -140,13 +133,13 @@ class MakeJaxExecutor extends Command
      */
     protected function jax_namespace()
     {
-        return $this->option('dir') ? implode("\\",
-            array_map("ucfirst",
-                array_map("Str::camel",
-                    explode("/", $this->option('dir'))
+        return $this->option('dir') ? implode('\\',
+            array_map('ucfirst',
+                array_map('Str::camel',
+                    explode('/', $this->option('dir'))
                 )
             )
-        ) : "App\\Jax";
+        ) : 'App\\Jax';
     }
 
     /**
@@ -178,12 +171,12 @@ class MakeJaxExecutor extends Command
      * @param  string  $path
      * @return string
      */
-    protected function rp(string $path = "")
+    protected function rp(string $path = '')
     {
         if ($this->option('dir')) {
-
-            return "/". trim(base_path($this->option('dir') . '/' . trim($path, '/')), '/');
+            return '/'.trim(base_path($this->option('dir').'/'.trim($path, '/')), '/');
         }
-        return "/". trim(app_path('Jax/' . trim($path, '/')), '/');
+
+        return '/'.trim(app_path('Jax/'.trim($path, '/')), '/');
     }
 }

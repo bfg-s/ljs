@@ -729,7 +729,7 @@ var Swal = /** @class */ (function (_super) {
         if (success === void 0) { success = ""; }
         if (cancel === void 0) { cancel = ""; }
         if (options === void 0) { options = {}; }
-        return window.ljs.swal.fire(__assign({ text: title, showCancelButton: true, confirmButtonText: 'Yes' }, options)).then(function (result) {
+        return window.ljs.swal.fire(__assign({ text: title, type: 'question', showCancelButton: true, confirmButtonText: 'Yes' }, options)).then(function (result) {
             if (result.value) {
                 if (typeof success === 'string') {
                     window.ljs.exec(success, null, _this.storage);

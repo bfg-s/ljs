@@ -638,6 +638,7 @@ Helper_1.Helper.before_load(function (ljs) {
         Select2.prototype.ajax = function () {
             var target = this.target;
             return this.init(merge_1.default({
+                theme: target.dataset.theme ? target.dataset.theme : 'default',
                 ajax: {
                     transport: function (params, success, failure) {
                         var _a;

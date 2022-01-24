@@ -27,6 +27,7 @@ export class Swal extends ExecutorParent {
 
         return window.ljs.swal.fire({
             text: title,
+            type: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes',
             ...options

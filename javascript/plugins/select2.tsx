@@ -48,6 +48,7 @@ Helper.before_load((ljs: Ljs) => {
             let target = this.target;
 
             return this.init(merge({
+                theme: target.dataset.theme ? target.dataset.theme : 'default',
                 ajax: {
                     transport: (params: any, success: any, failure: any) => {
 

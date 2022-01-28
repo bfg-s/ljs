@@ -669,7 +669,7 @@ Helper_1.Helper.before_load(function (ljs) {
                                 new_params[name] = value;
                             }
                         });
-                        window.$jax.get(window.location.href, new_params)
+                        window.$jax.head(window.location.href, new_params)
                             .then(function (data) {
                             success(data);
                         }).catch(function () { return failure(); });
@@ -5992,7 +5992,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/select2.tsx */"./javascript/plugins/select2.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/select2.tsx */"./javascript/plugins/select2.tsx");
 
 
 /***/ })

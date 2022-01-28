@@ -12097,10 +12097,10 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/ljs.tsx */"./javascript/ljs.tsx");
-__webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/scss/ljs.scss */"./javascript/scss/ljs.scss");
-__webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/scss/plugins/select2.scss */"./javascript/scss/plugins/select2.scss");
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/scss/plugins/fancy.scss */"./javascript/scss/plugins/fancy.scss");
+__webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/ljs.tsx */"./javascript/ljs.tsx");
+__webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/scss/ljs.scss */"./javascript/scss/ljs.scss");
+__webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/scss/plugins/select2.scss */"./javascript/scss/plugins/select2.scss");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/scss/plugins/fancy.scss */"./javascript/scss/plugins/fancy.scss");
 
 
 /***/ })

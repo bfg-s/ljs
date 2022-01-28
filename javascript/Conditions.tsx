@@ -4,7 +4,7 @@ export class Conditions {
      * Is Array or Object
      * @param val
      */
-    static isArrayOrObject (val: any) {
+    static isArrayOrObject(val: any) {
         return Object(val) === val
     }
 
@@ -12,7 +12,7 @@ export class Conditions {
      * Is Object
      * @param val
      */
-    static isObject (val: any) {
+    static isObject(val: any) {
         return Object.prototype.toString.call(val) === '[object Object]'
     }
 
@@ -28,14 +28,14 @@ export class Conditions {
      * Check is number
      * @param num
      */
-    static isNumber (num: any) {
+    static isNumber(num: any) {
         return !isNaN(Number(num))
     }
 
     /**
      * Check is ios device
      */
-    static isIos () {
+    static isIos() {
         return window.navigator.userAgent.match(/ipad|iphone|Macintosh/i);
     }
 
@@ -44,7 +44,7 @@ export class Conditions {
      * @param pattern
      * @param text
      */
-    static string_is (pattern: string, text: string) {
+    static string_is(pattern: string, text: string) {
 
         pattern = pattern
             .replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\#-]', 'g'), '\\$&')

@@ -17,68 +17,11 @@ export class Builder {
         (this as any).constructor.related = related;
     }
 
-    find (id: number, fields: any = null) {
-
-        return this.directive('id',id).setSingular().get(fields);
-    }
-
-    get (fields: any = null) {
-
-        return this.setMany().makeRequest(this.buildQuery(fields));
-    }
-
-    paginate (limit: number = 10, page: number = 1, fields: any = null) {
-
-        return this.directive('first',limit).directive('page', page).get(fields);
-    }
-
-    endpoint () {
-        let model: any = (this as any).constructor.model;
-        return window.location.origin + '/' + model.endpoint.trim('/');
-    }
-
-    directive (key: string, value: any) {
-        (this as any).constructor.directives[key] = value;
-        return this;
-    }
-
-    setSingular () {
-        (this as any).constructor.singular = true;
-        return this;
-    }
-
-    setMany () {
-        (this as any).constructor.singular = false;
-        return this;
-    }
-
-    get buildQuery () {
+    get buildQuery() {
         return (this as any).constructor.buildQuery;
     }
 
-    makeRequest (query: any) {
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-            xhr.open((this as any).constructor.method, this.endpoint(), true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.token);
-            xhr.send(JSON.stringify(query));
-            xhr.onload = (e: any) => {
-                let target = e.target;
-                if (target.status >= 200 && target.status < 300) {
-                    resolve((this as any).constructor.makeResult(JSON.parse(target.response)));
-                } else {
-                    reject({status: target.status, statusText: target.statusText});
-                }
-            };
-            xhr.onerror = (e: any) => {
-                let target = e.target;
-                reject({status: target.status, statusText: target.statusText});
-            };
-        });
-    }
-
-    static makeResult (data: any) {
+    static makeResult(data: any) {
 
         if ('data' in data) {
 
@@ -102,7 +45,7 @@ export class Builder {
         return collect([]);
     }
 
-    static buildQuery (fields: any = null) {
+    static buildQuery(fields: any = null) {
 
         let model: any = (this as any).constructor.model;
         let directives: any = (this as any).constructor.directives;
@@ -113,7 +56,9 @@ export class Builder {
         fields = singular ? `{${fields}}` : `{data{${fields}}}`;
 
         let dirs: any = [];
-        Object.keys(directives).map((key: string) => { dirs.push(`${key}:${directives[key]}`); });
+        Object.keys(directives).map((key: string) => {
+            dirs.push(`${key}:${directives[key]}`);
+        });
         dirs = dirs.join(',');
         dirs = dirs ? `(${dirs})` : dirs;
 
@@ -124,5 +69,62 @@ export class Builder {
             query: query,
             variables: {}
         }
+    }
+
+    find(id: number, fields: any = null) {
+
+        return this.directive('id', id).setSingular().get(fields);
+    }
+
+    get(fields: any = null) {
+
+        return this.setMany().makeRequest(this.buildQuery(fields));
+    }
+
+    paginate(limit: number = 10, page: number = 1, fields: any = null) {
+
+        return this.directive('first', limit).directive('page', page).get(fields);
+    }
+
+    endpoint() {
+        let model: any = (this as any).constructor.model;
+        return window.location.origin + '/' + model.endpoint.trim('/');
+    }
+
+    directive(key: string, value: any) {
+        (this as any).constructor.directives[key] = value;
+        return this;
+    }
+
+    setSingular() {
+        (this as any).constructor.singular = true;
+        return this;
+    }
+
+    setMany() {
+        (this as any).constructor.singular = false;
+        return this;
+    }
+
+    makeRequest(query: any) {
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            xhr.open((this as any).constructor.method, this.endpoint(), true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.token);
+            xhr.send(JSON.stringify(query));
+            xhr.onload = (e: any) => {
+                let target = e.target;
+                if (target.status >= 200 && target.status < 300) {
+                    resolve((this as any).constructor.makeResult(JSON.parse(target.response)));
+                } else {
+                    reject({status: target.status, statusText: target.statusText});
+                }
+            };
+            xhr.onerror = (e: any) => {
+                let target = e.target;
+                reject({status: target.status, statusText: target.statusText});
+            };
+        });
     }
 }

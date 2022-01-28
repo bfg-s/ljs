@@ -1,9 +1,9 @@
 <?php
 
-if (! function_exists('ljs_asset')) {
+if (!function_exists('ljs_asset')) {
     function ljs_asset($uri)
     {
-        if (! empty($uri)) {
+        if (!empty($uri)) {
             $uri = '/'.trim($uri, '/');
         }
 

@@ -7,7 +7,7 @@ export class Nav {
     public cancelContext: boolean
     public tmpGroup: any
 
-    constructor (ljs: Ljs) {
+    constructor(ljs: Ljs) {
 
         this.ljs = ljs;
 
@@ -33,9 +33,7 @@ export class Nav {
         if (this.ljs.cfg("pjax-container")) {
 
             ($ as any).pjax({url: path, container: this.ljs.cfg("pjax-container")});
-        }
-
-        else {
+        } else {
 
             window.location = (path as any);
         }
@@ -46,7 +44,7 @@ export class Nav {
         this.goTo(window.location.href);
     }
 
-    change_url (url: any, title: any = null, data: any = null) {
+    change_url(url: any, title: any = null, data: any = null) {
 
         if (typeof url === 'object') {
 
@@ -68,9 +66,7 @@ export class Nav {
         if (data) {
 
             dataState = merge(data, window.$state.all())
-        }
-
-        else {
+        } else {
 
             dataState = window.$state.all();
         }
@@ -78,7 +74,7 @@ export class Nav {
         return window.history.pushState(dataState, title, url);
     }
 
-    _configure () {
+    _configure() {
 
         ($ as any).pjax.defaults.timeout = 5000;
 
@@ -87,11 +83,11 @@ export class Nav {
         return this;
     }
 
-    _set_events () {
+    _set_events() {
 
         if (!('$' in window)) {
 
-            return ;
+            return;
         }
 
         ($(document) as any).pjax('a:not([target]):not([href^="#"]):not([data-href])', {
@@ -142,7 +138,7 @@ export class Nav {
             this.ljs._dispatch_event("ljs:nav:send", {nav: this, xhr});
         });
 
-        $(document).on('pjax:beforeReplace', (a: any,b: any,c: any,d: any) => {
+        $(document).on('pjax:beforeReplace', (a: any, b: any, c: any, d: any) => {
 
             if (!this.cancelContext && this.ljs.$vue && this.tmpGroup) {
 
@@ -170,14 +166,15 @@ export class Nav {
 
                 window.location.reload();
 
-                return ;
+                return;
             }
 
             try {
 
                 this.ljs.executor.doc.counters = {};
 
-            }catch (e) {}
+            } catch (e) {
+            }
 
             let obj = document.querySelector(this.ljs.cfg("pjax-container"));
 

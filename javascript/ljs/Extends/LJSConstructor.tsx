@@ -15,7 +15,7 @@ export class LJSConstructor extends ExecutorMethods {
     /**
      * LJSConstructor
      */
-    constructor () {
+    constructor() {
 
         super();
 
@@ -45,17 +45,23 @@ export class LJSConstructor extends ExecutorMethods {
      *
      * @private
      */
-    instance () {
+    instance() {
 
         document.querySelectorAll("meta[name^=lar-]").forEach((item) => {
 
             let name = item.getAttribute('name');
             let content: any = item.getAttribute('content');
-            if (content === 'true') { content = true; }
-            else if (content === 'false') { content = false; }
-            else if (content === 'null') { content = null; }
+            if (content === 'true') {
+                content = true;
+            } else if (content === 'false') {
+                content = false;
+            } else if (content === 'null') {
+                content = null;
+            }
 
-            if (name) { this._configs[name] = content; }
+            if (name) {
+                this._configs[name] = content;
+            }
         });
 
         this._get_save_configs();
@@ -82,7 +88,7 @@ export class LJSConstructor extends ExecutorMethods {
      *
      * @private
      */
-    _get_save_configs () {
+    _get_save_configs() {
 
         if ((this as any).$storage.hasGroup("config")) {
 
@@ -103,7 +109,7 @@ export class LJSConstructor extends ExecutorMethods {
      * @param headers
      * @private
      */
-    _onload_header (headers: string) {
+    _onload_header(headers: string) {
 
         let a_headers = headers.split('\n');
 
@@ -117,26 +123,31 @@ export class LJSConstructor extends ExecutorMethods {
 
                     items[1] = String(items[1]).replace("\r", "");
 
-                    if (/^[\{\[].*[\]\}]$/g.test(items[1])) { try { items[1] = JSON.parse(items[1]); } catch (e) {} }
-                    else if (!isNaN(Number(items[1]))) { items[1] = Number(items[1]); }
-                    else if (items[1] === 'true') { items[1] = true; }
-                    else if (items[1] === 'false') { items[1] = false; }
-                    else if (items[1] === 'null') { items[1] = null; }
+                    if (/^[\{\[].*[\]\}]$/g.test(items[1])) {
+                        try {
+                            items[1] = JSON.parse(items[1]);
+                        } catch (e) {
+                        }
+                    } else if (!isNaN(Number(items[1]))) {
+                        items[1] = Number(items[1]);
+                    } else if (items[1] === 'true') {
+                        items[1] = true;
+                    } else if (items[1] === 'false') {
+                        items[1] = false;
+                    } else if (items[1] === 'null') {
+                        items[1] = null;
+                    }
 
                     if (this._configs[items[0]] !== undefined) {
 
                         if (typeof this._configs[items[0]] === "object") {
 
                             this._configs[items[0]] = merge(this._configs[items[0]], items[1]);
-                        }
-
-                        else {
+                        } else {
 
                             this._configs[items[0]] = items[1];
                         }
-                    }
-
-                    else {
+                    } else {
 
                         this._configs[items[0]] = items[1];
                     }
@@ -153,11 +164,11 @@ export class LJSConstructor extends ExecutorMethods {
      *
      * @private
      */
-    _local () {
+    _local() {
 
         this.isLocal = !this.isLocal;
 
-        return (this as any).cfg("env",  this.isLocal ? "local" : "production")
+        return (this as any).cfg("env", this.isLocal ? "local" : "production")
     }
 
     /**
@@ -167,7 +178,7 @@ export class LJSConstructor extends ExecutorMethods {
      * @returns {LJSConstructor}
      * @private
      */
-    _dispatch_event (name: string, detail: any = this) {
+    _dispatch_event(name: string, detail: any = this) {
 
         document.dispatchEvent(new CustomEvent(name, {detail}));
 
@@ -181,11 +192,11 @@ export class LJSConstructor extends ExecutorMethods {
      * @param type
      * @private
      */
-    _log (data: any, type: string = "log") {
+    _log(data: any, type: string = "log") {
 
         if (this.isLocal) {
 
-            let time = `[${(new Date()).toLocaleTimeString('en-US', { hour12: false })}]:`;
+            let time = `[${(new Date()).toLocaleTimeString('en-US', {hour12: false})}]:`;
 
             if (data instanceof Array) {
 
@@ -203,7 +214,7 @@ export class LJSConstructor extends ExecutorMethods {
      *
      * @private
      */
-    _error (...args: any[]) {
+    _error(...args: any[]) {
 
         this._log([...args], "error");
     }
@@ -213,7 +224,7 @@ export class LJSConstructor extends ExecutorMethods {
      *
      * @private
      */
-    _info (...args: any[]) {
+    _info(...args: any[]) {
 
         [...args].map(item => this._log(item, "info"));
     }
@@ -223,7 +234,7 @@ export class LJSConstructor extends ExecutorMethods {
      *
      * @private
      */
-    _detail (...args: any[]) {
+    _detail(...args: any[]) {
 
         if ((this as any).cfg("apply_info")) this._log([...args], "info");
     }
@@ -233,7 +244,7 @@ export class LJSConstructor extends ExecutorMethods {
      *
      * @private
      */
-    _warn (...args: any[]) {
+    _warn(...args: any[]) {
 
         [...args].map(item => this._log(item, "warn"));
     }
@@ -247,7 +258,7 @@ export class LJSConstructor extends ExecutorMethods {
      * @returns
      * @private
      */
-    _find_and_execute_command (key: any, item: any, storage_data: any = {}) {
+    _find_and_execute_command(key: any, item: any, storage_data: any = {}) {
 
         if (!Array.isArray(item)) {
 
@@ -280,9 +291,7 @@ export class LJSConstructor extends ExecutorMethods {
         else if ((window as any)[key] !== undefined) {
 
             return this._force_object(window, key, item, true, storage_data);
-        }
-
-        else {
+        } else {
 
             /**
              * Public call method
@@ -325,7 +334,7 @@ export class LJSConstructor extends ExecutorMethods {
 
                 let _tmp_link = null;
 
-                let last_key = Object.keys(key).length-1;
+                let last_key = Object.keys(key).length - 1;
 
                 if (window[key[0]] !== undefined) {
 
@@ -359,9 +368,7 @@ export class LJSConstructor extends ExecutorMethods {
                         }
                     }
 
-                }
-
-                else if (this.executor[key[0]] !== undefined) {
+                } else if (this.executor[key[0]] !== undefined) {
 
                     /**
                      * Pipe executor call
@@ -399,7 +406,7 @@ export class LJSConstructor extends ExecutorMethods {
      * @param storage
      * @private
      */
-    _force_object (obj: any, fool_method: any, params: any = null, call: boolean = false, storage: any = {}) {
+    _force_object(obj: any, fool_method: any, params: any = null, call: boolean = false, storage: any = {}) {
 
         if (process.env.NODE_ENV === 'development') {
             this._detail('Forced object:', obj, "Method:", fool_method, "Params:", params, "Call:", call);
@@ -423,9 +430,7 @@ export class LJSConstructor extends ExecutorMethods {
 
                 tmp = tmp[item];
 
-            }
-
-            else if (tmp && tmp['__call'] !== undefined) {
+            } else if (tmp && tmp['__call'] !== undefined) {
 
                 tmp.__now_method = '__call';
 
@@ -434,9 +439,7 @@ export class LJSConstructor extends ExecutorMethods {
                 tmp = false;
 
                 called = true;
-            }
-
-            else {
+            } else {
 
                 if (process.env.NODE_ENV === 'development') {
                     this._error(`No method found by name [${item}]. In:`, obj);
@@ -464,8 +467,12 @@ export class LJSConstructor extends ExecutorMethods {
 
                     adds.split('||').map((i) => {
 
-                        if (!Array.isArray(params)) { params = [params]; }
-                        if (params.length === 1 && !params[0]) { params = []; }
+                        if (!Array.isArray(params)) {
+                            params = [params];
+                        }
+                        if (params.length === 1 && !params[0]) {
+                            params = [];
+                        }
 
                         params.push(i.trim().parse(storage));
                     });
@@ -474,34 +481,24 @@ export class LJSConstructor extends ExecutorMethods {
                 if (Array.isArray(params)) {
 
                     return_data = tmp[method](...params);
-                }
-
-                else {
+                } else {
 
                     return_data = tmp[method](params);
                 }
-            }
-
-            else {
+            } else {
 
                 return_data = tmp[method];
 
             }
-        }
-
-        else if (tmp && tmp['__call'] !== undefined) {
+        } else if (tmp && tmp['__call'] !== undefined) {
 
             tmp.__now_method = '__call';
 
             return_data = tmp['__call'](fool_method, params);
-        }
-
-        else if (called) {
+        } else if (called) {
 
             return return_data;
-        }
-
-        else {
+        } else {
 
             if (process.env.NODE_ENV === 'development') {
                 this._error(`No method call by name [${method}]. In:`, tmp);
@@ -520,7 +517,7 @@ export class LJSConstructor extends ExecutorMethods {
      * @returns
      * @private
      */
-    _get_force_object (name: any, return_static: any, storage: any = {}) {
+    _get_force_object(name: any, return_static: any, storage: any = {}) {
 
         let obj = this.executor[name];
 
@@ -550,7 +547,7 @@ export class LJSConstructor extends ExecutorMethods {
      * @param name
      * @private
      */
-    _jqueryed (obj: any, name: string) {
+    _jqueryed(obj: any, name: string) {
 
         if ((window as any).jQuery !== undefined) {
 
@@ -575,9 +572,7 @@ export class LJSConstructor extends ExecutorMethods {
             });
 
             jQuery.fn.extend(extend);
-        }
-
-        else {
+        } else {
 
             if (process.env.NODE_ENV === 'development') {
                 this._error("Required jquery for:", obj);
@@ -590,7 +585,7 @@ export class LJSConstructor extends ExecutorMethods {
      * @param name
      * @private
      */
-    _query (name: string) {
+    _query(name: string) {
 
         let urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(name);

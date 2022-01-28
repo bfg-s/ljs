@@ -13,7 +13,7 @@ export class Timer extends ExecutorParent {
      *
      * @param ljs
      */
-    constructor (ljs: Ljs) {
+    constructor(ljs: Ljs) {
 
         super(ljs);
 
@@ -22,11 +22,22 @@ export class Timer extends ExecutorParent {
     }
 
     /**
+     * Class call name
+     *
+     * @returns {string}
+     * @private
+     */
+    static __name() {
+
+        return "timer"
+    }
+
+    /**
      * Clear any registry interval
      *
      * @param name
      */
-    clear (name: string|number) {
+    clear(name: string | number) {
 
         if (this.registered_intervals[name] !== undefined) {
 
@@ -41,7 +52,7 @@ export class Timer extends ExecutorParent {
      * @param data
      * @param ms
      */
-    interval (name: string|number, data: any, ms: number = 1000) {
+    interval(name: string | number, data: any, ms: number = 1000) {
 
         if (this.registered_intervals[name] !== undefined) {
 
@@ -60,7 +71,7 @@ export class Timer extends ExecutorParent {
      * @param $execute
      * @param $ms
      */
-    onetime ($name: string|number, $execute: any, $ms: number = 100) {
+    onetime($name: string | number, $execute: any, $ms: number = 100) {
 
         if (this.registered_onetime[$name]) {
 
@@ -72,9 +83,7 @@ export class Timer extends ExecutorParent {
             if (typeof $execute === 'function') {
 
                 $execute();
-            }
-
-            else {
+            } else {
 
 
                 window.ljs.exec($execute, null, this.storage);
@@ -91,7 +100,7 @@ export class Timer extends ExecutorParent {
      * @param livedMs
      * @param interval
      */
-    temp (exec: any, livedMs = 1000, interval = 1000) {
+    temp(exec: any, livedMs = 1000, interval = 1000) {
 
         if (interval < 0) {
 
@@ -121,11 +130,11 @@ export class Timer extends ExecutorParent {
      *
      * @param data
      */
-    out (data: any) {
+    out(data: any) {
 
         if (isObject(data)) {
 
-            map(data, (i,k) => {
+            map(data, (i, k) => {
 
                 let ms = Number(k);
 
@@ -149,7 +158,7 @@ export class Timer extends ExecutorParent {
      * @param data
      * @private
      */
-    _exec_data (data: any) {
+    _exec_data(data: any) {
 
         if (typeof data === 'string' || typeof data === 'object') {
 
@@ -159,16 +168,5 @@ export class Timer extends ExecutorParent {
 
             data();
         }
-    }
-
-    /**
-     * Class call name
-     *
-     * @returns {string}
-     * @private
-     */
-    static __name () {
-
-        return "timer"
     }
 }

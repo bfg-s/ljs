@@ -2,7 +2,18 @@ import {ExecutorParent} from "../../ljs/Extends/ExecutorParent";
 
 export class VueExecutor extends ExecutorParent {
 
-    init () {
+    /**
+     * Class name for call
+     *
+     * @returns {string}
+     * @private
+     */
+    static __name() {
+
+        return "vue";
+    }
+
+    init() {
 
         if (this.target) {
 
@@ -10,9 +21,14 @@ export class VueExecutor extends ExecutorParent {
             let parents = pjax ? this.target.closest(pjax) : 0;
             let default_group = window.ljs.$vue.group();
             let group = default_group;
-            if (!pjax && !parents) { group = 'components'; }
-            else if (pjax && !parents) { group = 'outside'; }
-            if (this.target.closest('[data-live]')) { group = default_group; }
+            if (!pjax && !parents) {
+                group = 'components';
+            } else if (pjax && !parents) {
+                group = 'outside';
+            }
+            if (this.target.closest('[data-live]')) {
+                group = default_group;
+            }
 
             let name = this.target.tagName.toLowerCase() + (window.ljs.$vue[group] !== undefined ? Object.keys(window.ljs.$vue[group]).length : 0);
 
@@ -23,7 +39,7 @@ export class VueExecutor extends ExecutorParent {
 
             let vue = new window.ljs.vue({
                 el: this.target,
-                data () {
+                data() {
 
                     return {
                         ljs: window.ljs,
@@ -32,50 +48,37 @@ export class VueExecutor extends ExecutorParent {
                         pjax: !!(pjax && parents)
                     }
                 },
-                methods: {
-
-                },
-                mounted () {
+                methods: {},
+                mounted() {
 
                     if (process.env.NODE_ENV === 'development') {
                         window.ljs._detail(`Vue component [${this.name}] mounted!`);
                     }
                 },
-                destroyed () {
+                destroyed() {
                     if (process.env.NODE_ENV === 'development') {
                         window.ljs._detail(`Vue component [${this.name}] destroyed!`);
                     }
                     window.ljs.$vue.drop(this.name, this.group);
                     window.ljs.$vue.drop(this.name, 'components');
                 },
-                errorCaptured (err: any, vm: any, info: any) {
+                errorCaptured(err: any, vm: any, info: any) {
 
                     if (err) {
 
                         window.ljs._error(info);
-                    }
-
-                    else {
+                    } else {
 
                         window.ljs._info(info);
                     }
                 }
             });
 
-            if (window.ljs.$vue[group] === undefined) { window.ljs.$vue[group] = {}; }
+            if (window.ljs.$vue[group] === undefined) {
+                window.ljs.$vue[group] = {};
+            }
 
             window.ljs.$vue[group][name] = vue;
         }
-    }
-
-    /**
-     * Class name for call
-     *
-     * @returns {string}
-     * @private
-     */
-    static __name () {
-
-        return "vue";
     }
 }

@@ -1,8 +1,18 @@
 import {ExecutorParent} from "../Extends/ExecutorParent";
 
-class EMPTY_DATA {}
+class EMPTY_DATA {
+}
 
 export class StateExec extends ExecutorParent {
+
+    /**
+     * Executor name
+     * @private
+     */
+    static __name() {
+
+        return "state";
+    }
 
     /**
      * Magic call
@@ -10,7 +20,7 @@ export class StateExec extends ExecutorParent {
      * @param $args
      * @private
      */
-    __call ($name: any, $args: any) {
+    __call($name: any, $args: any) {
 
         let $value = EMPTY_DATA;
 
@@ -34,7 +44,7 @@ export class StateExec extends ExecutorParent {
      * @param $name
      * @param $value
      */
-    set ($name: string, $value: any) {
+    set($name: string, $value: any) {
 
         return window.ljs.$state.set($name, $value);
     }
@@ -44,17 +54,8 @@ export class StateExec extends ExecutorParent {
      * @param $name
      * @param $default
      */
-    switch_bool ($name: string, $default: any = false) {
+    switch_bool($name: string, $default: any = false) {
 
         return window.ljs.$state.set($name, !window.ljs.$state.get($name, $default));
-    }
-
-    /**
-     * Executor name
-     * @private
-     */
-    static __name () {
-
-        return "state";
     }
 }

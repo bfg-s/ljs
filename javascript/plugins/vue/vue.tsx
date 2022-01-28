@@ -45,9 +45,7 @@ Helper.before_load((ljs: Ljs) => {
             if ($group === 'auto') {
 
                 $group = ljs.$vue.group();
-            }
-
-            else if ($group === null || $group === false) {
+            } else if ($group === null || $group === false) {
 
                 $group = "components";
             }
@@ -82,9 +80,7 @@ Helper.before_load((ljs: Ljs) => {
             if ($group === 'auto') {
 
                 $group = ljs.$vue.group();
-            }
-
-            else if ($group === null || $group === false) {
+            } else if ($group === null || $group === false) {
 
                 $group = "components";
             }
@@ -102,7 +98,7 @@ Helper.before_load((ljs: Ljs) => {
 
     ljs.vue.mixin({
 
-        data () {
+        data() {
 
             return {
                 _id: this.$vnode && this.$vnode.key ? this.$vnode.key : this.$options._componentTag,
@@ -117,7 +113,7 @@ Helper.before_load((ljs: Ljs) => {
         $remember: [],
         namespace: 'app',
 
-        beforeMount () {
+        beforeMount() {
 
             let obj_name = this.$options.name + (this.$vnode && this.$vnode.key ? '_' + this.$vnode.key : '');
 
@@ -149,7 +145,9 @@ Helper.before_load((ljs: Ljs) => {
 
             Object.keys(this.$options.$sync).map((global_var: string) => {
                 let inner_var = this.$options.$sync[global_var];
-                if (!isNaN(Number(global_var))) { global_var = inner_var; }
+                if (!isNaN(Number(global_var))) {
+                    global_var = inner_var;
+                }
                 if (!window.$state.has(global_var)) {
                     window.$state.set(global_var, get(this, inner_var));
                 } else {
@@ -166,7 +164,7 @@ Helper.before_load((ljs: Ljs) => {
             }
         },
 
-        beforeDestroy () {
+        beforeDestroy() {
 
             if (this.echo) {
                 this.echo.leaveRegistered();
@@ -194,24 +192,28 @@ Helper.before_load((ljs: Ljs) => {
         },
 
         computed: {
-           echo (): LjsEcho {
-               // @ts-ignore
-               return window.EchoWrapper ? new window.EchoWrapper({namespace: this.$options.namespace, bind: this}) : null;
-           },
-           jax (): any {
-               // @ts-ignore
-               return new window.JaxWrapper(this.$options.namespace);
-           }
+            echo(): LjsEcho {
+                // @ts-ignore
+                return window.EchoWrapper ? new window.EchoWrapper({
+                    // @ts-ignore
+                    namespace: this.$options.namespace,
+                    bind: this
+                }) : null;
+            },
+            jax(): any {
+                // @ts-ignore
+                return new window.JaxWrapper(this.$options.namespace);
+            }
         },
 
         methods: {
 
-            exec (name: any, event: any = null) {
+            exec(name: any, event: any = null) {
 
                 ljs.exec(name, null, {object: (this as any).$el, event: event})
             },
 
-            __inner_sync_state_method (inner_var: string) {
+            __inner_sync_state_method(inner_var: string) {
                 return (val: any) => {
                     set(this, inner_var, val);
                 };

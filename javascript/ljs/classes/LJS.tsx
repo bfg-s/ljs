@@ -7,24 +7,22 @@ import merge from "lodash/merge";
 
 export class LJS extends LJSConstructor implements Ljs {
 
+    static $route_collection: any = {};
     public process: boolean = false;
     public $state: StateInterface
     public $jax: JaxInterface
     public $storage: LStorageInterface
     public progress: NProgress
-    public toast: Toastr|any
+    public toast: Toastr | any
     public $nav: any
     public $vue: any
     public help: any
     public vue: any
     public swal: any
     public method: any
-    public echo: Echo|null
+    public echo: Echo | null
 
-    static $route_collection: any = {};
-
-
-    constructor () {
+    constructor() {
 
         super();
 
@@ -51,7 +49,7 @@ export class LJS extends LJSConstructor implements Ljs {
      * Switch process
      * @param data
      */
-    switchProcess (data:any = null) {
+    switchProcess(data: any = null) {
 
         this.process = data !== null ? !!data : !this.process;
 
@@ -61,7 +59,7 @@ export class LJS extends LJSConstructor implements Ljs {
     /**
      * Is process status
      */
-    isProcess () {
+    isProcess() {
 
         return this.process;
     }
@@ -71,7 +69,7 @@ export class LJS extends LJSConstructor implements Ljs {
      * @param name
      * @param extendClass
      */
-    extend (name: string, extendClass: any) {
+    extend(name: string, extendClass: any) {
 
         (this as any)[name] = new extendClass(this);
 
@@ -82,7 +80,7 @@ export class LJS extends LJSConstructor implements Ljs {
      * Register state watcher
      * @param watchClass
      */
-    stateWatcher (watchClass: StateWatcherInterface) {
+    stateWatcher(watchClass: StateWatcherInterface) {
 
         if (!('call' in watchClass)) {
 
@@ -103,7 +101,7 @@ export class LJS extends LJSConstructor implements Ljs {
      * @param name
      * @param value
      */
-    cfg (name: string, value: any = null) {
+    cfg(name: string, value: any = null) {
 
         name = "lar-" + name;
 
@@ -124,7 +122,7 @@ export class LJS extends LJSConstructor implements Ljs {
      * @param name
      * @param default_data
      */
-    config (name: string, default_data: any = null) {
+    config(name: string, default_data: any = null) {
 
         let data = this.cfg(name);
 
@@ -143,7 +141,7 @@ export class LJS extends LJSConstructor implements Ljs {
      * @param value
      * @param save
      */
-    setCfg (name: string, value: any, save: boolean = true) {
+    setCfg(name: string, value: any, save: boolean = true) {
 
         this.cfg(name, value);
 
@@ -158,7 +156,7 @@ export class LJS extends LJSConstructor implements Ljs {
     /**
      * Apply info for show details
      */
-    applyInfo () {
+    applyInfo() {
 
         this.setCfg("apply_info", !this.cfg("apply_info"));
 
@@ -168,7 +166,7 @@ export class LJS extends LJSConstructor implements Ljs {
     /**
      * Apply clear console on load
      */
-    applyCleared () {
+    applyCleared() {
 
         this.setCfg("console_clear", !this.cfg("console_clear"));
 
@@ -179,7 +177,7 @@ export class LJS extends LJSConstructor implements Ljs {
      * Make event on element
      * @param $selector
      */
-    element ($selector: any) {
+    element($selector: any) {
 
         return {
             on: (events: string, selector: any, data: any = undefined, handler: any = undefined) => $($selector).on(events, selector, data, handler)
@@ -193,7 +191,7 @@ export class LJS extends LJSConstructor implements Ljs {
      * @param data
      * @param handler
      */
-    on (events: string, selector: any, data: any = undefined, handler: any = undefined) {
+    on(events: string, selector: any, data: any = undefined, handler: any = undefined) {
 
         //return require('jquery/src/event')(document).on(events, selector, data, handler);
         return $(document).on(events, selector, data, handler);
@@ -204,7 +202,7 @@ export class LJS extends LJSConstructor implements Ljs {
      * @param action
      * @param ms
      */
-    onetime (action: any, ms: number = 100) {
+    onetime(action: any, ms: number = 100) {
         return "timer::onetime".exec(`ljs:${ms}:inner`, action, ms);
     }
 
@@ -212,7 +210,7 @@ export class LJS extends LJSConstructor implements Ljs {
      * Replenish route collection
      * @param $collection
      */
-    routeCollection ($collection: any) {
+    routeCollection($collection: any) {
 
         LJS.$route_collection = merge(LJS.$route_collection, $collection);
 
@@ -223,7 +221,7 @@ export class LJS extends LJSConstructor implements Ljs {
      * Get route methods
      * @param $name
      */
-    routeMethods ($name: string) {
+    routeMethods($name: string) {
 
         let host = window.location.host,
             protocol = window.location.protocol,
@@ -242,7 +240,7 @@ export class LJS extends LJSConstructor implements Ljs {
      * @param $name
      * @param $params
      */
-    route ($name: string, $params: any = {}) {
+    route($name: string, $params: any = {}) {
 
         let host = window.location.host,
             protocol = window.location.protocol,
@@ -278,6 +276,6 @@ export class LJS extends LJSConstructor implements Ljs {
 
         let queries = this.help.http_build_query($params);
 
-        return `${protocol}//${host}/${uri.replace(/\/\//g, '/').replace(/\/$/, '')}${queries ? `?${queries}`:''}`;
+        return `${protocol}//${host}/${uri.replace(/\/\//g, '/').replace(/\/$/, '')}${queries ? `?${queries}` : ''}`;
     }
 }

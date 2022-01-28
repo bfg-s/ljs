@@ -15,7 +15,11 @@ Helper.before_load((ljs: Ljs) => {
             this.ins = null;
         }
 
-        __call ($name: string, $args: any = []) {
+        static __name() {
+            return 'load_modal';
+        }
+
+        __call($name: string, $args: any = []) {
 
             let closable = this.target ? (this.target.dataset.closable !== undefined ? true : false) : false;
 
@@ -32,42 +36,43 @@ Helper.before_load((ljs: Ljs) => {
             });
         }
 
-        close () {
+        close() {
 
             if (this.ins) {
 
                 this.ins.close();
             }
         }
-
-        static __name () {
-            return 'load_modal';
-        }
     });
 
     ljs.regExec(class extends ExecutorParent {
-        mess (items: any, opts: any, index: any) {
+        static __name() {
+
+            return 'fancy';
+        }
+
+        mess(items: any, opts: any, index: any) {
 
             return ($ as any).fancybox.open(items, opts, index);
         }
 
-        img (img: any, opts: any = null) {
+        img(img: any, opts: any = null) {
 
             return ($ as any).fancybox.open({
-                src  : img,
+                src: img,
             }, opts);
         }
 
-        imgs (...args: any[]) {
+        imgs(...args: any[]) {
 
             let imgs: any = [];
 
             args.map((i) => {
 
                 imgs.push({
-                    src  : i,
-                    opts : {
-                        thumb : i
+                    src: i,
+                    opts: {
+                        thumb: i
                     }
                 });
             });
@@ -75,14 +80,9 @@ Helper.before_load((ljs: Ljs) => {
             return ($ as any).fancybox.open(imgs);
         }
 
-        help () {
+        help() {
 
             return window.open('https://fancyapps.com/fancybox/3/docs', '_blank')
-        }
-
-        static __name () {
-
-            return 'fancy';
         }
     });
 });

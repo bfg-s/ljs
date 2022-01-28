@@ -16,7 +16,7 @@ export class EchoPresenceChannel extends EchoChannel implements LjsPresenceChann
      * Register a callback to be called anytime the member list changes.
      * @param callback
      */
-    here(callback: Function|string|null = null) {
+    here(callback: Function | string | null = null) {
         this.connector.here(EchoHelp.cb_formatter(this.options, callback, this.connector));
         return this;
     }
@@ -25,7 +25,7 @@ export class EchoPresenceChannel extends EchoChannel implements LjsPresenceChann
      * Listen for someone joining the channel.
      * @param callback
      */
-    joining(callback: Function|string|null = null) {
+    joining(callback: Function | string | null = null) {
         this.connector.joining(EchoHelp.cb_formatter(this.options, callback, this.connector));
         return this;
     }
@@ -34,7 +34,7 @@ export class EchoPresenceChannel extends EchoChannel implements LjsPresenceChann
      * Listen for someone leaving the channel.
      * @param callback
      */
-    leaving(callback: Function|string|null = null) {
+    leaving(callback: Function | string | null = null) {
         this.connector.leaving(EchoHelp.cb_formatter(this.options, callback, this.connector));
         return this;
     }
@@ -45,7 +45,7 @@ export class EchoPresenceChannel extends EchoChannel implements LjsPresenceChann
      * @param joining
      * @param leaving
      */
-    presence(here: Function|string|null = null, joining: Function|string|null = null, leaving: Function|string|null = null) {
+    presence(here: Function | string | null = null, joining: Function | string | null = null, leaving: Function | string | null = null) {
         if (here) {
             this.here(here);
         }

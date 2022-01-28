@@ -548,7 +548,9 @@ Helper_1.Helper.before_load(function (ljs) {
                 var body = this.$el;
                 body.css({ padding: 0, width: '100%', height: '100%', 'background-color': '#101010' });
                 body.append('<debug-terminal name="debug_terminal" id="debug_terminal" />');
-                body.click(function () { body.find('#debug_terminal [contenteditable]').focus(); });
+                body.click(function () {
+                    body.find('#debug_terminal [contenteditable]').focus();
+                });
                 window.ljs.exec("vue::init", null, {
                     target: body.find('#debug_terminal')[0]
                 });
@@ -846,6 +848,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'VueTerminal',
   data: function data() {
@@ -1082,7 +1085,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* hight settings */\n#terminal.default-height { max-height: 250px;}\n#terminal.fullscreen-height { height: 100vh;}\n\n/* basic bw theme */\n.boring, .boring .prompt, .boring .content{ font-family: \"Courier New\", Courier, monospace; background-color: #111; color: #ddd;\n}\n.boring .content{ padding: 15px 15px 0 15px;\n}\n.boring .prompt{ padding: 0 15px 15px 15px;\n}\n.boring .loading span::after{content: \"\\2699\"; color: #ddd; font-size: 10em; border-radius: 10em; opacity: 0.4;}\n.boring .content ul{ margin: 0;\n}\n.boring .prompt .input.show-caret{ color: #ddd; opacity: .85;\n}\n.boring .prompt .input, .boring .prompt .input::before, .boring .prompt .input::after{ color: transparent; text-shadow:0 0 0 #ddd;\n}\n.boring .content div .cmd_in .cmd_ps, .boring .prompt .input::before{ padding-right: 10px;\n}\n.boring .content ul li{ list-style-type: none;\n}\n.boring div.prompt div.input::after{ font-size: 2em;\n}\n.boring div.prompt div.input, .boring div.content div div.cmd_in, .boring div.prompt div.input::before{ line-height: 2em;\n}\n\n/* other styles */\n#terminal{ position: relative; display: block; overflow-X: hidden; height: 100%;text-align: left;\n}\n#terminal div.content div p{ margin: 0;\n}\n#terminal div.content div{ clear: both;  word-wrap:break-word;\n}\n#terminal div.content div ul{ padding: 0; white-space: normal\n}\n#terminal div.content div ul li{ list-style: none;\n}\n#terminal div.content div ul.sq-li li{ display: inline-block; text-align: center; padding: 10px; min-width: 5%;\n}\n#terminal div.prompt div.input{ width: 100%; white-space:pre-wrap; word-wrap:break-word; cursor: default; outline: none;}\n#terminal div.prompt div.input::before{ vertical-align: middle; content: attr(data-ps);\n}\n#terminal div.prompt div.input::after{ visibility : visible; vertical-align: middle; content: attr(data-caret);\n}\n#terminal div.prompt div.input.blink::after{ visibility : hidden;\n}\n#terminal div.prompt .hide{ position:absolute; top: -9999em;\n}\n#terminal div.loading{ display: none;\n}\n#terminal div.loading.working{ display: block; display:flex; justify-content: center; align-items: center;position: fixed;  width: inherit; height: inherit;\n}\n#terminal div.loading span{ -webkit-animation: spin 4s linear infinite; animation: spin 4s linear infinite;\n}@-webkit-keyframes spin {\n100% { -webkit-transform: rotate(360deg);\n}\n}@keyframes spin {\n100% { transform: rotate(360deg);\n}\n}\n\n/* loader */\n@keyframes lds-rolling {\n0% {\n    transform: translate(-50%, -50%) rotate(0deg);\n}\n100% {\n    transform: translate(-50%, -50%) rotate(360deg);\n}\n}\n@-webkit-keyframes lds-rolling {\n0% {\n    transform: translate(-50%, -50%) rotate(0deg);\n}\n100% {\n    transform: translate(-50%, -50%) rotate(360deg);\n}\n}\n.lds-css {\n  position: absolute;\n}\n.lds-rolling {\n   position: fixed;\n    top: 30px;\n    z-index: 1000;\n    right: 10px;\n}\n.lds-rolling div,\n.lds-rolling div:after {\n  position: absolute;\n  width: 160px;\n  height: 160px;\n  border: 20px solid #ffffff;\n  border-top-color: transparent;\n  border-radius: 50%;\n}\n.lds-rolling div {\n  -webkit-animation: lds-rolling 1s linear infinite;\n  animation: lds-rolling 1s linear infinite;\n  top: 100px;\n  left: 100px;\n}\n.lds-rolling div:after {\n  transform: rotate(90deg);\n}\n.lds-rolling {\n  width: 36px !important;\n  height: 36px !important;\n  transform: translate(-18px, -18px) scale(0.18) translate(18px, 18px);\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* hight settings */\n#terminal.default-height {\n    max-height: 250px;\n}\n#terminal.fullscreen-height {\n    height: 100vh;\n}\n\n/* basic bw theme */\n.boring, .boring .prompt, .boring .content {\n    font-family: \"Courier New\", Courier, monospace;\n    background-color: #111;\n    color: #ddd;\n}\n.boring .content {\n    padding: 15px 15px 0 15px;\n}\n.boring .prompt {\n    padding: 0 15px 15px 15px;\n}\n.boring .loading span::after {\n    content: \"\\2699\";\n    color: #ddd;\n    font-size: 10em;\n    border-radius: 10em;\n    opacity: 0.4;\n}\n.boring .content ul {\n    margin: 0;\n}\n.boring .prompt .input.show-caret {\n    color: #ddd;\n    opacity: .85;\n}\n.boring .prompt .input, .boring .prompt .input::before, .boring .prompt .input::after {\n    color: transparent;\n    text-shadow: 0 0 0 #ddd;\n}\n.boring .content div .cmd_in .cmd_ps, .boring .prompt .input::before {\n    padding-right: 10px;\n}\n.boring .content ul li {\n    list-style-type: none;\n}\n.boring div.prompt div.input::after {\n    font-size: 2em;\n}\n.boring div.prompt div.input, .boring div.content div div.cmd_in, .boring div.prompt div.input::before {\n    line-height: 2em;\n}\n\n/* other styles */\n#terminal {\n    position: relative;\n    display: block;\n    overflow-X: hidden;\n    height: 100%;\n    text-align: left;\n}\n#terminal div.content div p {\n    margin: 0;\n}\n#terminal div.content div {\n    clear: both;\n    word-wrap: break-word;\n}\n#terminal div.content div ul {\n    padding: 0;\n    white-space: normal\n}\n#terminal div.content div ul li {\n    list-style: none;\n}\n#terminal div.content div ul.sq-li li {\n    display: inline-block;\n    text-align: center;\n    padding: 10px;\n    min-width: 5%;\n}\n#terminal div.prompt div.input {\n    width: 100%;\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    cursor: default;\n    outline: none;\n}\n#terminal div.prompt div.input::before {\n    vertical-align: middle;\n    content: attr(data-ps);\n}\n#terminal div.prompt div.input::after {\n    visibility: visible;\n    vertical-align: middle;\n    content: attr(data-caret);\n}\n#terminal div.prompt div.input.blink::after {\n    visibility: hidden;\n}\n#terminal div.prompt .hide {\n    position: absolute;\n    top: -9999em;\n}\n#terminal div.loading {\n    display: none;\n}\n#terminal div.loading.working {\n    display: block;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    position: fixed;\n    width: inherit;\n    height: inherit;\n}\n#terminal div.loading span {\n    -webkit-animation: spin 4s linear infinite;\n    animation: spin 4s linear infinite;\n}\n@-webkit-keyframes spin {\n100% {\n        -webkit-transform: rotate(360deg);\n}\n}\n@keyframes spin {\n100% {\n        transform: rotate(360deg);\n}\n}\n\n/* loader */\n@keyframes lds-rolling {\n0% {\n        transform: translate(-50%, -50%) rotate(0deg);\n}\n100% {\n        transform: translate(-50%, -50%) rotate(360deg);\n}\n}\n@-webkit-keyframes lds-rolling {\n0% {\n        transform: translate(-50%, -50%) rotate(0deg);\n}\n100% {\n        transform: translate(-50%, -50%) rotate(360deg);\n}\n}\n.lds-css {\n    position: absolute;\n}\n.lds-rolling {\n    position: fixed;\n    top: 30px;\n    z-index: 1000;\n    right: 10px;\n}\n.lds-rolling div,\n.lds-rolling div:after {\n    position: absolute;\n    width: 160px;\n    height: 160px;\n    border: 20px solid #ffffff;\n    border-top-color: transparent;\n    border-radius: 50%;\n}\n.lds-rolling div {\n    -webkit-animation: lds-rolling 1s linear infinite;\n    animation: lds-rolling 1s linear infinite;\n    top: 100px;\n    left: 100px;\n}\n.lds-rolling div:after {\n    transform: rotate(90deg);\n}\n.lds-rolling {\n    width: 36px !important;\n    height: 36px !important;\n    transform: translate(-18px, -18px) scale(0.18) translate(18px, 18px);\n}\n", ""]);
 
 // exports
 
@@ -3758,10 +3761,10 @@ var render = function() {
       _c("VueTerminal", {
         ref: "terminal",
         attrs: {
-          "console-sign": _vm.prompt,
-          height: "300px",
           command: _vm.cmd,
-          completion: _vm.completion
+          completion: _vm.completion,
+          "console-sign": _vm.prompt,
+          height: "300px"
         }
       })
     ],
@@ -3978,7 +3981,7 @@ module.exports = g;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/debug/debug.tsx */"./javascript/plugins/debug/debug.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/debug/debug.tsx */"./javascript/plugins/debug/debug.tsx");
 
 
 /***/ })

@@ -5,7 +5,7 @@ import setWith from 'lodash/setWith';
 import unset from 'lodash/unset';
 import has from 'lodash/has';
 
-export class StateInstance implements StateInterface{
+export class StateInstance implements StateInterface {
 
     static state: any = {}
     static binds: any = {}
@@ -28,11 +28,11 @@ export class StateInstance implements StateInterface{
     /**
      * Get state
      */
-    all () {
+    all() {
 
         let state: StateInstance;
         if (!window.ljs.$state) return;
-        else  state = window.ljs.$state;
+        else state = window.ljs.$state;
 
         map(
             StateInstance.state,
@@ -49,11 +49,11 @@ export class StateInstance implements StateInterface{
      * @param path
      * @param defaults
      */
-    get (path: string, defaults: any = undefined) {
+    get(path: string, defaults: any = undefined) {
 
         let state: StateInstance;
         if (!window.ljs.$state) return;
-        else  state = window.ljs.$state;
+        else state = window.ljs.$state;
 
         path = state._correctPath(path);
 
@@ -74,7 +74,7 @@ export class StateInstance implements StateInterface{
      * @param path
      * @param value
      */
-    set (path: string, value: any) {
+    set(path: string, value: any) {
 
         let state = window.ljs.$state;
 
@@ -107,16 +107,12 @@ export class StateInstance implements StateInterface{
 
                 state._callEvent('create', path, value, old);
                 state._callEvent('changed', path, value, old);
-            }
-
-            else if (old !== value) {
+            } else if (old !== value) {
 
                 state._callEvent('change', path, value, old);
                 state._callEvent('changed', path, value, old);
             }
-        }
-
-        else {
+        } else {
 
             if (process.env.NODE_ENV === 'development') {
                 window.ljs._error(`Error name [${path}] is reserved!`);
@@ -130,11 +126,11 @@ export class StateInstance implements StateInterface{
      * Delete state
      * @param path
      */
-    delete (path: string) {
+    delete(path: string) {
 
         let state: StateInstance;
         if (!window.ljs.$state) return false;
-        else  state = window.ljs.$state;
+        else state = window.ljs.$state;
 
         path = state._correctPath(path);
 
@@ -157,11 +153,11 @@ export class StateInstance implements StateInterface{
      * Delete many keys
      * @param paths
      */
-    deleted (paths: any = []) {
+    deleted(paths: any = []) {
 
         let state: StateInstance;
         if (!window.ljs.$state) return;
-        else  state = window.ljs.$state;
+        else state = window.ljs.$state;
 
         map(paths, (k) => {
 
@@ -175,11 +171,11 @@ export class StateInstance implements StateInterface{
      * Has data on state
      * @param path
      */
-    has (path: string) {
+    has(path: string) {
 
         let state: StateInstance;
         if (!window.ljs.$state) return false;
-        else  state = window.ljs.$state;
+        else state = window.ljs.$state;
 
 
         path = state._correctPath(path);
@@ -191,11 +187,11 @@ export class StateInstance implements StateInterface{
      * Save selected path
      * @param path
      */
-    save (path: string) {
+    save(path: string) {
 
         let state: StateInstance;
         if (!window.ljs.$state) return false;
-        else  state = window.ljs.$state as StateInstance;
+        else state = window.ljs.$state as StateInstance;
 
         if (path && this.has(path)) {
 
@@ -214,7 +210,7 @@ export class StateInstance implements StateInterface{
      * @param path
      * @param storage
      */
-    make_storage (path: string, storage: any = {}) {
+    make_storage(path: string, storage: any = {}) {
 
         StateInstance.storage[path] = storage;
 
@@ -225,11 +221,11 @@ export class StateInstance implements StateInterface{
      * Merge state
      * @param set_state
      */
-    merge (set_state: object) {
+    merge(set_state: object) {
 
         let state: StateInstance;
         if (!window.ljs.$state) return;
-        else  state = window.ljs.$state;
+        else state = window.ljs.$state;
 
         let dotes = Helper.dot(set_state);
 
@@ -244,11 +240,11 @@ export class StateInstance implements StateInterface{
     /**
      * Remove state
      */
-    delete_all () {
+    delete_all() {
 
         let state: StateInstance;
         if (!window.ljs.$state) return;
-        else  state = window.ljs.$state;
+        else state = window.ljs.$state;
 
         let dotes = Helper.dot(StateInstance.state);
 
@@ -264,11 +260,11 @@ export class StateInstance implements StateInterface{
      * Clear all data state
      * @param defaults
      */
-    clear_all (defaults: any = {}) {
+    clear_all(defaults: any = {}) {
 
         let state: StateInstance;
         if (!window.ljs.$state) return;
-        else  state = window.ljs.$state;
+        else state = window.ljs.$state;
 
         let dotes = Helper.dot(StateInstance.state);
 
@@ -277,24 +273,16 @@ export class StateInstance implements StateInterface{
             if (k in defaults) {
 
                 state.set(k, defaults[k]);
-            }
-
-            else if (typeof i === 'boolean') {
+            } else if (typeof i === 'boolean') {
 
                 state.set(k, false);
-            }
-
-            else if (typeof i === 'string') {
+            } else if (typeof i === 'string') {
 
                 state.set(k, "");
-            }
-
-            else if (typeof i === 'object') {
+            } else if (typeof i === 'object') {
 
                 state.set(k, []);
-            }
-
-            else if (typeof i === 'number') {
+            } else if (typeof i === 'number') {
 
                 state.set(k, 0);
             }
@@ -307,7 +295,7 @@ export class StateInstance implements StateInterface{
      * Event methods
      */
 
-    watcher (watchClass: any) {
+    watcher(watchClass: any) {
 
         StateInstance.watchers.push(
             new watchClass()
@@ -331,8 +319,11 @@ export class StateInstance implements StateInterface{
 
             state_name.split('.').map(($new_name) => {
 
-                if (!path) { path = $new_name; }
-                else { path = `${path}.${$new_name}`; }
+                if (!path) {
+                    path = $new_name;
+                } else {
+                    path = `${path}.${$new_name}`;
+                }
 
                 if (path !== state_name) {
 
@@ -341,7 +332,11 @@ export class StateInstance implements StateInterface{
                     attr.push(attrs[0]);
                     attr.push(attrs[1]);
                     attr.push(state_name.replace(`${path}.`, ''));
-                    attrs.map((i, k) => { if (k > 1) { attr.push(i); }});
+                    attrs.map((i, k) => {
+                        if (k > 1) {
+                            attr.push(i);
+                        }
+                    });
 
                     this._onceCallEvent(event_name, path, attr);
                 }
@@ -358,7 +353,7 @@ export class StateInstance implements StateInterface{
      * @param attrs
      * @private
      */
-    _onceCallEvent (event_name: string, state_name: string, attrs: any) {
+    _onceCallEvent(event_name: string, state_name: string, attrs: any) {
 
         let storage = StateInstance.storage[state_name] !== undefined ? StateInstance.storage[state_name] : {},
             inner_params = [...attrs, state_name, event_name, storage];
@@ -368,7 +363,8 @@ export class StateInstance implements StateInterface{
         let doc_data = {
             value: attrs[0],
             old_value: attrs[1] !== undefined ? attrs[1] : undefined,
-            state_name, event_name, storage};
+            state_name, event_name, storage
+        };
 
         window.ljs._dispatch_event(`state:${event_name}:${state_name}`, doc_data)
             ._dispatch_event(`state:${event_name}`, doc_data)
@@ -413,11 +409,17 @@ export class StateInstance implements StateInterface{
      * @param closure
      * @param bind
      */
-    on (event: any, closure: any = null, bind: any = null) {
+    on(event: any, closure: any = null, bind: any = null) {
 
-        if (typeof event === 'function') { bind = closure; closure = event; event = "*"; }
+        if (typeof event === 'function') {
+            bind = closure;
+            closure = event;
+            event = "*";
+        }
 
-        if (typeof closure !== 'function') { return window.ljs.$state; }
+        if (typeof closure !== 'function') {
+            return window.ljs.$state;
+        }
 
         let push: boolean = true;
 
@@ -429,9 +431,7 @@ export class StateInstance implements StateInterface{
         if (!(event in StateInstance.events)) {
 
             StateInstance.events[event] = [];
-        }
-
-        else {
+        } else {
 
             StateInstance.events[event].map((cl: () => void, key: number) => {
 
@@ -459,10 +459,15 @@ export class StateInstance implements StateInterface{
      * @param event
      * @param closure
      */
-    off (event: any = null, closure: any = null) {
+    off(event: any = null, closure: any = null) {
 
-        if (typeof event === 'function') { closure = event; event = "*"; }
-        if (event === null) { event = "*"; }
+        if (typeof event === 'function') {
+            closure = event;
+            event = "*";
+        }
+        if (event === null) {
+            event = "*";
+        }
 
         if (event in StateInstance.events) {
 
@@ -482,9 +487,7 @@ export class StateInstance implements StateInterface{
                     delete StateInstance.events[event];
                     delete StateInstance.binds[event];
                 }
-            }
-
-            else {
+            } else {
 
                 delete StateInstance.events[event];
                 delete StateInstance.binds[event];
@@ -500,7 +503,7 @@ export class StateInstance implements StateInterface{
      * @returns {string}
      * @private
      */
-    _correctPath (path: string) {
+    _correctPath(path: string) {
 
         return String(path).replace(/\[/g, '.').replace(/\]/g, '').replace(/[\.]+$/g, '');
     }

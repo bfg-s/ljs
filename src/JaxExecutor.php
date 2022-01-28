@@ -3,12 +3,14 @@
 namespace Lar\LJS;
 
 use Illuminate\Support\Collection;
+use Lar\Layout\RespondDoc;
+use Throwable;
 
 /**
  * Class AjaxExecutor.
  *
  * @package Lar\Layout
- * @mixin \Lar\Layout\RespondDoc
+ * @mixin RespondDoc
  */
 abstract class JaxExecutor
 {
@@ -23,6 +25,47 @@ abstract class JaxExecutor
     private $controller;
 
     /**
+     * @param  string  $class
+     * @param  string|null  $name
+     */
+    public static function register(string $class = null, string $name = null)
+    {
+        if (!$class) {
+            $class = static::class;
+        }
+
+        /** @var JaxExecutor $class */
+        if (!$name) {
+            $name = $class::$name;
+        }
+
+        if ($name) {
+            JaxController::$list[$name] = $class;
+        }
+    }
+
+    /**
+     * @param $collection
+     */
+    public static function registerCollection($collection)
+    {
+        if (is_array($collection) || $collection instanceof Collection) {
+            JaxController::$list = array_merge(JaxController::$list, $collection);
+        }
+    }
+
+    /**
+     * @param  string  $dir
+     * @param  string  $namespace
+     */
+    public static function addNamespace(string $dir, string $namespace)
+    {
+        $dir = realpath($dir);
+        $dir = str_replace(base_path().'/', '', $dir);
+        JaxController::$namespaces[$dir] = $namespace;
+    }
+
+    /**
      * @param  JaxController  $controller
      */
     public function setParent(JaxController $controller)
@@ -31,24 +74,10 @@ abstract class JaxExecutor
     }
 
     /**
-     * Put rule.
-     *
-     * @param $key
-     * @param mixed $value
-     * @return $this
-     */
-    public function put($key, $value = null)
-    {
-        respond()->put($key, $value);
-
-        return $this;
-    }
-
-    /**
      * Put rule alias.
      *
      * @param $key
-     * @param null $value
+     * @param  null  $value
      * @return $this
      */
     public function insert($key, $value = null)
@@ -69,6 +98,17 @@ abstract class JaxExecutor
     }
 
     /**
+     * Close Request.
+     * @return null
+     */
+    public function stop()
+    {
+        $this->httpStatus(499);
+
+        return null;
+    }
+
+    /**
      * @param  int  $status
      * @return $this
      */
@@ -82,57 +122,16 @@ abstract class JaxExecutor
     }
 
     /**
-     * Close Request.
-     * @return null
+     * @param  Throwable  $throwable
+     * @return string|Throwable
      */
-    public function stop()
-    {
-        $this->httpStatus(499);
-
-        return null;
-    }
-
-    /**
-     * @param  \Throwable  $throwable
-     * @return string|\Throwable
-     */
-    public function controllerFailed(\Throwable $throwable)
+    public function controllerFailed(Throwable $throwable)
     {
         if ($this->controller) {
             return $this->controller->failed($throwable);
         }
 
         return null;
-    }
-
-    /**
-     * @param  string  $class
-     * @param  string|null  $name
-     */
-    public static function register(string $class = null, string $name = null)
-    {
-        if (! $class) {
-            $class = static::class;
-        }
-
-        /** @var JaxExecutor $class */
-        if (! $name) {
-            $name = $class::$name;
-        }
-
-        if ($name) {
-            JaxController::$list[$name] = $class;
-        }
-    }
-
-    /**
-     * @param $collection
-     */
-    public static function registerCollection($collection)
-    {
-        if (is_array($collection) || $collection instanceof Collection) {
-            JaxController::$list = array_merge(JaxController::$list, $collection);
-        }
     }
 
     /**
@@ -168,13 +167,16 @@ abstract class JaxExecutor
     }
 
     /**
-     * @param  string  $dir
-     * @param  string  $namespace
+     * Put rule.
+     *
+     * @param $key
+     * @param  mixed  $value
+     * @return $this
      */
-    public static function addNamespace(string $dir, string $namespace)
+    public function put($key, $value = null)
     {
-        $dir = realpath($dir);
-        $dir = str_replace(base_path().'/', '', $dir);
-        JaxController::$namespaces[$dir] = $namespace;
+        respond()->put($key, $value);
+
+        return $this;
     }
 }

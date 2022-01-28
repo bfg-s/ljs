@@ -3,6 +3,7 @@
 ## Execute modes
 
 ### Mode "exec"
+
 ```javascript
 /**
  * Method for one or multiple call.
@@ -52,6 +53,7 @@ exec(command, ...params);
 #### Examples
 
 ##### One execute
+
 ```javascript
 ljs.exec('toast::success', 'User successful auth!');
 ljs.exec('toast::success', ['Success auth!', 'User']);
@@ -59,7 +61,9 @@ ljs.exec('toast::success', ['Success auth!', 'User']);
 exec('toast::success', 'User success auth!');
 exec('toast::success', 'Success auth!', 'User');
 ```
+
 ##### Multiple execute
+
 ```javascript
 ljs.exec({
     'toast::success': 'User successful auth!',
@@ -70,6 +74,7 @@ exec({...})
 ```
 
 ### Mode "call" single string line
+
 ```javascript
 /**
  * Call mode
@@ -101,12 +106,15 @@ call(command, storage = {});
 ```
 
 Call single line syntax:
+
 ```
 toast:error(Some error text, Error title, {"progressBar": true})
 // or
 location.pathname
 ```
-In brackets is the body for the parameters. Separate parameters with commas, be careful not to use the `,` symbol in the parameters only if you need to add the following parameter.
+
+In brackets is the body for the parameters. Separate parameters with commas, be careful not to use the `,` symbol in the
+parameters only if you need to add the following parameter.
 
 #### Examples
 
@@ -138,10 +146,13 @@ ljs.parse(str, storage = {});
  */
 ["toast:success(Success auth)", "toast:warning(Enter a phone number, Profile)"].call()
 ```
+
 To indicate a call to a string format function, you must specify the input character `>>` before calling it.
 
 # Executor extends
-1 - Create you js executor file 'resources/js/executors/Root.js' 
+
+1 - Create you js executor file 'resources/js/executors/Root.js'
+
 ```javascript
 'use strict';
 
@@ -214,12 +225,15 @@ class Root extends Executor {
 
 module.exports = Message;
 ```
+
 2 - Inject extend in LJS
+
 ```javascript
 ljs.regExec(require('./executors/Root'));
 ```
 
 3 - Call a new extension
+
 ```javascript
 call('root');
 call('root', 'I Love Shaurma');
@@ -227,6 +241,7 @@ call('root', 'I Love Shaurma');
 ```
 
 # Pipelines
+
 1. `&&` - Send globally passed parameters to the next call.
 2. `&` - Send undefined to the next call.
 3. `#`  - Send null to the next call.
@@ -236,6 +251,7 @@ call('root', 'I Love Shaurma');
 7. `[0-9]>>` - Send the result number from the end of the line.
 
 ### Example
+
 ```javascript
 "location.origin & location.pathname > toast".exec();
 // or
@@ -254,6 +270,7 @@ message [msg]
 ```
 
 Show success message:
+
 ```
 toast:success [message]
 toast:success [message, title = null, options = {}]
@@ -261,7 +278,9 @@ toast:success [{'text': 'message text', 'title': 'message title', 'options': {}}
 //or
 toast::success //public method
 ```
+
 Show error message:
+
 ```
 toast:error [message]
 toast:error [message, title = null, options = {}]
@@ -269,7 +288,9 @@ toast:error [{'text': 'message text', 'title': 'message title', 'options': {}}]
 //or
 toast::error //public method
 ```
+
 Show info message:
+
 ```
 toast:info [message]
 toast:info [message, title = null, options = {}]
@@ -277,7 +298,9 @@ toast:info [{'text': 'message text', 'title': 'message title', 'options': {}}]
 //or
 toast::info //public method
 ```
+
 Show warning message:
+
 ```
 toast:warning [message]
 toast:warning [message, title = null, options = {}]
@@ -285,7 +308,9 @@ toast:warning [{'text': 'message text', 'title': 'message title', 'options': {}}
 //or
 toast::warning //public method
 ```
+
 Show toast message:
+
 ```
 toast [message]
 toast [message, title = null, options = {}, type = "info"]
@@ -293,6 +318,7 @@ toast [{'text': 'message text', 'title': 'message title', 'options': {}}]
 ```
 
 ##### Examples
+
 ```javascript
 ljs.exec('errors', ['error1', 'error2']);
 ljs.exec('message', 'message text');
@@ -305,55 +331,72 @@ ljs.exec('toast::success', {'text': 'message', 'title': 'title', 'options': {'pr
 ## Document
 
 #### Public methods
+
 LJS Event dispatch:
+
 ```
 doc::dispatch_event [event]
 ```
+
 Set document title
+
 ```
 doc::title [title]
 ```
+
 Set document location:
+
 ```
 doc::location [location]
 doc::set_location [location]
 ```
+
 Reload document:
+
 ```
 doc::reload [null]
 ```
 
 ## JQuery decorator
+
 Equivalent to `$('$element').show()`
+
 ```
 jq::show [$element]
 ```
 
 Equivalent to `$('$element').hide()`
+
 ```
 jq::hide [$element]
 ```
 
 Equivalent to `$('$element').html($data)`
+
 ```
 jq::html [$element, $data = '']
 ```
 
 Equivalent to `$('$element').replaceWith($data)`
+
 ```
 jq::replace [$element, $data = '']
 ```
 
 Equivalent to `$('$element').append($data)`
+
 ```
 jq::append [$element, $data = '']
 ```
 
 Equivalent to `$('$element').submit()`
+
 ```
 jq::submit [$element]
 ```
+
 Set attributes
+
 ```
 jq::attribute [$element, $attribute_name, $attribute_value]
 jq::attribute [$element, {'attribute_name': 'attribute_value',...}]
@@ -364,6 +407,7 @@ jq::attribute [{'attribute_name': 'attribute_value',...}]
 ```
 
 Global eval:
+
 ```
 jq::eval [data]
 jq::globalEval [data]
@@ -372,6 +416,7 @@ jq::globalEval [data]
 ## Alert Swal
 
 Alert success
+
 ```
 swal::success [text]
 swal::success [title, text]
@@ -380,6 +425,7 @@ alert::success [title, text]
 ```
 
 Alert warning
+
 ```
 swal::warning [text]
 swal::warning [title, text]
@@ -388,6 +434,7 @@ alert::warning [title, text]
 ```
 
 Alert error
+
 ```
 swal::error [text]
 swal::error [title, text]
@@ -396,6 +443,7 @@ alert::error [title, text]
 ```
 
 Alert info
+
 ```
 swal [text]
 swal [title, text]
@@ -408,6 +456,7 @@ alert::info [title, text]
 ```
 
 Alert question
+
 ```
 swal::question [text]
 swal::question [title, text]
@@ -416,22 +465,29 @@ alert::question [title, text]
 ```
 
 ## Timer
+
 Create timeout timer
+
 ```
 timer::out {1000: ExecutedData, 2000: ExecutedData,...}
 1000 - ms
 2000 - ms
 ```
+
 Create timer interval
+
 ```
 timer::interval [name, ExecutedData, ms = 1000]
 ```
+
 Clear timer interval
+
 ```
 timer::clear [name]
 ```
 
 ##### Examples
+
 ```javascript
 //Create interval in 2 second and clear him by timeout 6 sec
 ljs.exec({
@@ -445,31 +501,45 @@ ljs.exec({
 ```
 
 ## Global variables
+
 Set variable
+
 ```
 var::set [path, value, save = false]
 ```
+
 Merge global variables
+
 ```
 var::merge [{path: value,...}, save = false]
 ```
+
 Set and save variable (save on localstorage)
+
 ```
 var::save [path, value]
 ```
+
 Only forgot variable (delete from localstorage)
+
 ```
 var::forgot [path, value]
 ```
+
 Unset variable
+
 ```
 var::unset [path]
 ```
+
 Get variable
+
 ```
 var::get [path = null]
 ```
+
 Get variable names (keys)
+
 ```
 var::keys [null]
 ```

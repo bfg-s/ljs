@@ -5,7 +5,7 @@ const pluralize = require('pluralize');
 
 export class BaseModel {
 
-    static table: string|null = null;
+    static table: string | null = null;
     static endpoint: string = 'graphql'
     static attributes: any = {};
     static guarded: any = [];
@@ -36,18 +36,24 @@ export class BaseModel {
         });
     }
 
-    static __getTable (singular: boolean) {
-        if (!this.table) { throw new Error("Set table in Model"); }
+    static __getTable(singular: boolean) {
+        if (!this.table) {
+            throw new Error("Set table in Model");
+        }
         return pluralize(this.table, singular ? 1 : 0);
     }
 
-    static __get (target: any, prop: any) {
+    static __get(target: any, prop: any) {
 
         let constructor: any = target.constructor;
 
-        if (prop === '_target') { return target; }
+        if (prop === '_target') {
+            return target;
+        }
 
-        if (prop === '_super') { return constructor; }
+        if (prop === '_super') {
+            return constructor;
+        }
 
         let mutatorName = window.ljs.help.camelize(`get_${prop}_attribute`);
 
@@ -67,7 +73,7 @@ export class BaseModel {
         }
     }
 
-    static __make_cast (name: string, value: any) {
+    static __make_cast(name: string, value: any) {
 
         let cast = null;
 
@@ -103,7 +109,7 @@ export class BaseModel {
         return value;
     }
 
-    static __set (target: any, prop: any, value: any, proxy: any) {
+    static __set(target: any, prop: any, value: any, proxy: any) {
 
         let mutatorName = window.ljs.help.camelize(`set_${prop}_attribute`);
 

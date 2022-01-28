@@ -632,6 +632,9 @@ var Doc = /** @class */ (function (_super) {
         _this.counters = {};
         return _this;
     }
+    Doc.__name = function () {
+        return "doc";
+    };
     /**
      * Include many scripts
      */
@@ -791,9 +794,6 @@ var Doc = /** @class */ (function (_super) {
         // }
         return $data;
     };
-    Doc.__name = function () {
-        return "doc";
-    };
     return Doc;
 }(ExecutorParent_1.ExecutorParent));
 exports.Doc = Doc;
@@ -831,11 +831,14 @@ var Script = /** @class */ (function (_super) {
     function Script() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Script.prototype.__call = function ($name, $args) {
-        return this.call($name, $args);
-    };
     Script.__call = function ($name, $args) {
         return this.prototype.call($name, $args);
+    };
+    Script.__name = function () {
+        return "script";
+    };
+    Script.prototype.__call = function ($name, $args) {
+        return this.call($name, $args);
     };
     Script.prototype.call = function ($name, $args) {
         var _this = this;
@@ -846,9 +849,6 @@ var Script = /** @class */ (function (_super) {
             }).call(_this);
             return exec_script;
         });
-    };
-    Script.__name = function () {
-        return "script";
     };
     return Script;
 }(ExecutorParent_1.ExecutorParent));
@@ -893,6 +893,13 @@ var StateExec = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     /**
+     * Executor name
+     * @private
+     */
+    StateExec.__name = function () {
+        return "state";
+    };
+    /**
      * Magic call
      * @param $name
      * @param $args
@@ -925,13 +932,6 @@ var StateExec = /** @class */ (function (_super) {
     StateExec.prototype.switch_bool = function ($name, $default) {
         if ($default === void 0) { $default = false; }
         return window.ljs.$state.set($name, !window.ljs.$state.get($name, $default));
-    };
-    /**
-     * Executor name
-     * @private
-     */
-    StateExec.__name = function () {
-        return "state";
     };
     return StateExec;
 }(ExecutorParent_1.ExecutorParent));
@@ -984,6 +984,15 @@ var Timer = /** @class */ (function (_super) {
         _this.registered_onetime = {};
         return _this;
     }
+    /**
+     * Class call name
+     *
+     * @returns {string}
+     * @private
+     */
+    Timer.__name = function () {
+        return "timer";
+    };
     /**
      * Clear any registry interval
      *
@@ -1089,15 +1098,6 @@ var Timer = /** @class */ (function (_super) {
             data();
         }
     };
-    /**
-     * Class call name
-     *
-     * @returns {string}
-     * @private
-     */
-    Timer.__name = function () {
-        return "timer";
-    };
     return Timer;
 }(ExecutorParent_1.ExecutorParent));
 exports.Timer = Timer;
@@ -1135,6 +1135,9 @@ var Tpl = /** @class */ (function (_super) {
     function Tpl() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    Tpl.__name = function () {
+        return "tpl";
+    };
     Tpl.prototype.clearArea = function ($to) {
         var area = document.querySelector("span[data-tpl=\"" + $to + "\"]");
         if (area) {
@@ -1160,7 +1163,9 @@ var Tpl = /** @class */ (function (_super) {
                 var cloned_1 = template.content.cloneNode(true);
                 var scripts = cloned_1.querySelectorAll('script');
                 if (scripts.length) {
-                    var pull = function (func) { return typeof func === 'function' ? func(cloned_1) : function () { return ""; }; };
+                    var pull = function (func) {
+                        return typeof func === 'function' ? func(cloned_1) : function () { return ""; };
+                    };
                     var call_pull = "";
                     Object.values(scripts).map(function (script) {
                         var tpl_script = script.innerText.trim();
@@ -1199,9 +1204,6 @@ var Tpl = /** @class */ (function (_super) {
             return template.content.cloneNode(true);
         }
         return "";
-    };
-    Tpl.__name = function () {
-        return "tpl";
     };
     return Tpl;
 }(ExecutorParent_1.ExecutorParent));
@@ -1302,7 +1304,10 @@ var ExecutorMethods = /** @class */ (function () {
                             if (true) {
                                 _this._detail("Execute data:", key.trim(), "Params:", send_now, "Storage:", storage_data);
                             }
-                            returns.push(_this._find_and_execute_command(key.trim(), send_now, merge_1.default(storage_data, { trace: returns, last: returns[i] })));
+                            returns.push(_this._find_and_execute_command(key.trim(), send_now, merge_1.default(storage_data, {
+                                trace: returns,
+                                last: returns[i]
+                            })));
                             i++;
                         }
                 }
@@ -1455,16 +1460,6 @@ var ExecutorParent = /** @class */ (function () {
         this.__now_method = null;
         this.jquery = false;
     }
-    /**
-     * preventDefault on event
-     */
-    ExecutorParent.prototype.preventDefault = function () {
-        if (this.event.preventDefault !== undefined) {
-            this.event.preventDefault();
-            return true;
-        }
-        return false;
-    };
     Object.defineProperty(ExecutorParent.prototype, "now_method", {
         /**
          * Now call method
@@ -1520,37 +1515,6 @@ var ExecutorParent = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    ExecutorParent.prototype.data = function ($name, $default) {
-        if ($default === void 0) { $default = null; }
-        if (this.currentTarget && this.currentTarget.dataset) {
-            var varName = camelCase_1.default($name);
-            if (varName in this.currentTarget.dataset) {
-                var data = this.currentTarget.dataset[varName];
-                if (data === 'true') {
-                    return true;
-                }
-                else if (data === 'false' || data === undefined) {
-                    return false;
-                }
-                else if (data === 'null') {
-                    return null;
-                }
-                else if (data === 'undefined') {
-                    return undefined;
-                }
-                else if (data === '') {
-                    return true;
-                }
-                else {
-                    return data;
-                }
-            }
-            else {
-                return $default;
-            }
-        }
-        return $default;
-    };
     Object.defineProperty(ExecutorParent.prototype, "trace", {
         /**
          * Get trace execute results commands pipeline
@@ -1617,6 +1581,47 @@ var ExecutorParent = /** @class */ (function () {
      */
     ExecutorParent.__individual_method = function () {
         return "__invoke";
+    };
+    /**
+     * preventDefault on event
+     */
+    ExecutorParent.prototype.preventDefault = function () {
+        if (this.event.preventDefault !== undefined) {
+            this.event.preventDefault();
+            return true;
+        }
+        return false;
+    };
+    ExecutorParent.prototype.data = function ($name, $default) {
+        if ($default === void 0) { $default = null; }
+        if (this.currentTarget && this.currentTarget.dataset) {
+            var varName = camelCase_1.default($name);
+            if (varName in this.currentTarget.dataset) {
+                var data = this.currentTarget.dataset[varName];
+                if (data === 'true') {
+                    return true;
+                }
+                else if (data === 'false' || data === undefined) {
+                    return false;
+                }
+                else if (data === 'null') {
+                    return null;
+                }
+                else if (data === 'undefined') {
+                    return undefined;
+                }
+                else if (data === '') {
+                    return true;
+                }
+                else {
+                    return data;
+                }
+            }
+            else {
+                return $default;
+            }
+        }
+        return $default;
     };
     return ExecutorParent;
 }());
@@ -1757,7 +1762,8 @@ var LJSConstructor = /** @class */ (function (_super) {
                         try {
                             items[1] = JSON.parse(items[1]);
                         }
-                        catch (e) { }
+                        catch (e) {
+                        }
                     }
                     else if (!isNaN_1.default(Number(items[1]))) {
                         items[1] = Number(items[1]);
@@ -2376,7 +2382,13 @@ var JaxInstance = /** @class */ (function () {
                             if (/^([0-9\:]+)\:/.test(k))
                                 data_1[k] = i;
                         });
-                        window.ljs.exec(data_1, null, merge_1.default({ response: response, status: textStatus, method: method, path: path, params: params }, storage));
+                        window.ljs.exec(data_1, null, merge_1.default({
+                            response: response,
+                            status: textStatus,
+                            method: method,
+                            path: path,
+                            params: params
+                        }, storage));
                     }
                     window.ljs.switchProcess(false);
                 }
@@ -2677,7 +2689,8 @@ var LStorage = /** @class */ (function () {
         try {
             item = JSON.parse(item);
         }
-        catch (e) { }
+        catch (e) {
+        }
         return item ? item : defaultData;
     };
     /**
@@ -2944,6 +2957,90 @@ var Model = /** @class */ (function () {
         return this._prox;
     }
     /**
+     * Make ajax request
+     * @param query
+     * @param state
+     * @param _progress_event
+     */
+    Model.request = function (query, state, _progress_event) {
+        var _this = this;
+        if (_progress_event === void 0) { _progress_event = null; }
+        return new Promise(function (resolve, reject) {
+            window.ljs.switchProcess(true);
+            var xhr = new XMLHttpRequest();
+            var route = window.ljs.cfg('jax');
+            xhr.open('post', window.location.origin + "/" + route, true);
+            xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.responseType = 'arraybuffer';
+            if (_progress_event && _progress_event[0])
+                xhr.upload.addEventListener('progress', function (i) { return _progress_event[0](i, xhr); }, false);
+            xhr.send(query);
+            xhr.addEventListener("load", function (e) {
+                var target = e.target;
+                window.ljs._onload_header(target.getAllResponseHeaders());
+                if (target.status >= 200 && target.status < 300) {
+                    var contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
+                    if (contentDispo) {
+                        var fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
+                        var blob = e.currentTarget.response;
+                        // @ts-ignore
+                        if (window.navigator.msSaveOrOpenBlob) {
+                            // @ts-ignore
+                            window.navigator.msSaveBlob(blob, fileName);
+                        }
+                        else {
+                            var downloadLink = window.document.createElement('a');
+                            var contentTypeHeader = e.currentTarget.getResponseHeader("Content-Type");
+                            downloadLink.href = window.URL.createObjectURL(new Blob([blob], { type: contentTypeHeader }));
+                            downloadLink.download = fileName;
+                            document.body.appendChild(downloadLink);
+                            downloadLink.click();
+                            document.body.removeChild(downloadLink);
+                        }
+                        resolve([]);
+                    }
+                    else {
+                        var enc = new TextDecoder();
+                        // @ts-ignore
+                        var data = enc.decode(target.response);
+                        try { // @ts-ignore
+                            data = JSON.parse(data);
+                        }
+                        catch (e) {
+                        }
+                        if (typeof data === 'object' && '$exec' in data) {
+                            // @ts-ignore
+                            window.ljs.exec(data.$exec);
+                            unset_1.default(data, '$exec');
+                        }
+                        _this.applyStates(state, data);
+                        resolve(data);
+                    }
+                }
+                else {
+                    reject({ status: target.status, statusText: target.statusText });
+                }
+                window.ljs.switchProcess(false);
+            }, false);
+            xhr.addEventListener("error", function (e) {
+                var target = e.target;
+                reject({ status: target.status, statusText: target.statusText });
+                window.ljs.switchProcess(false);
+            }, false);
+        });
+    };
+    /**
+     * Apply state requests
+     * @param state
+     * @param data
+     */
+    Model.applyStates = function (state, data) {
+        Object.keys(state).map(function (key) {
+            window.state.set(key, get_1.default(data, state[key]));
+        });
+    };
+    /**
      * Set progress event
      * @param event
      */
@@ -3074,89 +3171,6 @@ var Model = /** @class */ (function () {
             params = params[1];
         }
         return this.path.apply(this, __spreadArrays([this._path], params));
-    };
-    /**
-     * Make ajax request
-     * @param query
-     * @param state
-     * @param _progress_event
-     */
-    Model.request = function (query, state, _progress_event) {
-        var _this = this;
-        if (_progress_event === void 0) { _progress_event = null; }
-        return new Promise(function (resolve, reject) {
-            window.ljs.switchProcess(true);
-            var xhr = new XMLHttpRequest();
-            var route = window.ljs.cfg('jax');
-            xhr.open('post', window.location.origin + "/" + route, true);
-            xhr.setRequestHeader('X-CSRF-TOKEN', window.ljs.cfg('token'));
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.responseType = 'arraybuffer';
-            if (_progress_event && _progress_event[0])
-                xhr.upload.addEventListener('progress', function (i) { return _progress_event[0](i, xhr); }, false);
-            xhr.send(query);
-            xhr.addEventListener("load", function (e) {
-                var target = e.target;
-                window.ljs._onload_header(target.getAllResponseHeaders());
-                if (target.status >= 200 && target.status < 300) {
-                    var contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
-                    if (contentDispo) {
-                        var fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
-                        var blob = e.currentTarget.response;
-                        // @ts-ignore
-                        if (window.navigator.msSaveOrOpenBlob) {
-                            // @ts-ignore
-                            window.navigator.msSaveBlob(blob, fileName);
-                        }
-                        else {
-                            var downloadLink = window.document.createElement('a');
-                            var contentTypeHeader = e.currentTarget.getResponseHeader("Content-Type");
-                            downloadLink.href = window.URL.createObjectURL(new Blob([blob], { type: contentTypeHeader }));
-                            downloadLink.download = fileName;
-                            document.body.appendChild(downloadLink);
-                            downloadLink.click();
-                            document.body.removeChild(downloadLink);
-                        }
-                        resolve([]);
-                    }
-                    else {
-                        var enc = new TextDecoder();
-                        // @ts-ignore
-                        var data = enc.decode(target.response);
-                        try { // @ts-ignore
-                            data = JSON.parse(data);
-                        }
-                        catch (e) { }
-                        if (typeof data === 'object' && '$exec' in data) {
-                            // @ts-ignore
-                            window.ljs.exec(data.$exec);
-                            unset_1.default(data, '$exec');
-                        }
-                        _this.applyStates(state, data);
-                        resolve(data);
-                    }
-                }
-                else {
-                    reject({ status: target.status, statusText: target.statusText });
-                }
-                window.ljs.switchProcess(false);
-            }, false);
-            xhr.addEventListener("error", function (e) {
-                var target = e.target;
-                reject({ status: target.status, statusText: target.statusText });
-                window.ljs.switchProcess(false);
-            }, false);
-        });
-    };
-    /**
-     * Apply state requests
-     * @param state
-     * @param data
-     */
-    Model.applyStates = function (state, data) {
-        Object.keys(state).map(function (key) {
-            window.state.set(key, get_1.default(data, state[key]));
-        });
     };
     return Model;
 }());
@@ -3508,9 +3522,11 @@ var StateInstance = /** @class */ (function () {
                     attr_1.push(attrs[0]);
                     attr_1.push(attrs[1]);
                     attr_1.push(state_name.replace(path_1 + ".", ''));
-                    attrs.map(function (i, k) { if (k > 1) {
-                        attr_1.push(i);
-                    } });
+                    attrs.map(function (i, k) {
+                        if (k > 1) {
+                            attr_1.push(i);
+                        }
+                    });
                     _this._onceCallEvent(event_name, path_1, attr_1);
                 }
             });
@@ -3675,7 +3691,8 @@ var HTMLDataEvent = /** @class */ (function () {
         try {
             exec = JSON.parse(exec);
         }
-        catch (e) { }
+        catch (e) {
+        }
         try {
             params = JSON.parse(params);
         }
@@ -3686,7 +3703,8 @@ var HTMLDataEvent = /** @class */ (function () {
                     try {
                         i = JSON.parse(i);
                     }
-                    catch (e) { }
+                    catch (e) {
+                    }
                     return i;
                 });
             }
@@ -3889,7 +3907,14 @@ var HTMLRegisterEvents = /** @class */ (function () {
     HTMLRegisterEvents.prototype.makeJaxMethods = function (on_eve, event_name, method) {
         window.ljs.on(on_eve, "[data-" + event_name + "-" + method + "]", function (event) {
             var m = method[0].toUpperCase() + method.slice(1);
-            var paramsName = event_name + "Params", paramName = event_name + "Param", paramsMethodName = "" + event_name + m + "Params", obj = event.currentTarget, data = obj.dataset, jaxUrl = data["" + event_name + m], storage = { object: obj, target: event.target, event: event, eventName: event_name, request_method: method, request_url: jaxUrl }, params = data[paramsName] ? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : {})));
+            var paramsName = event_name + "Params", paramName = event_name + "Param", paramsMethodName = "" + event_name + m + "Params", obj = event.currentTarget, data = obj.dataset, jaxUrl = data["" + event_name + m], storage = {
+                object: obj,
+                target: event.target,
+                event: event,
+                eventName: event_name,
+                request_method: method,
+                request_url: jaxUrl
+            }, params = data[paramsName] ? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : {})));
             if (data[paramsMethodName]) {
                 params = data[paramsMethodName];
             }
@@ -12072,10 +12097,10 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/ljs.tsx */"./javascript/ljs.tsx");
-__webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/scss/ljs.scss */"./javascript/scss/ljs.scss");
-__webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/scss/plugins/select2.scss */"./javascript/scss/plugins/select2.scss");
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/scss/plugins/fancy.scss */"./javascript/scss/plugins/fancy.scss");
+__webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/ljs.tsx */"./javascript/ljs.tsx");
+__webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/scss/ljs.scss */"./javascript/scss/ljs.scss");
+__webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/scss/plugins/select2.scss */"./javascript/scss/plugins/select2.scss");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/scss/plugins/fancy.scss */"./javascript/scss/plugins/fancy.scss");
 
 
 /***/ })

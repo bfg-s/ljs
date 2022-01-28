@@ -21,7 +21,7 @@ export class HTMLRegisterEvents {
     /**
      * Make pop state navigation
      */
-    makePopState () {
+    makePopState() {
 
         window.onpopstate = (event: any) => {
 
@@ -37,7 +37,7 @@ export class HTMLRegisterEvents {
     /**
      * Watcher on load event
      */
-    watcher () {
+    watcher() {
         window.ljs.on('ljs:on_watch', () => {
 
             document.querySelectorAll('[data-live] [data-load]').forEach((obj: any) => {
@@ -55,7 +55,7 @@ export class HTMLRegisterEvents {
     /**
      * Make data href click
      */
-    dataHref () {
+    dataHref() {
 
         window.ljs.on('click', '[data-href]', (event: any) => {
 
@@ -79,7 +79,7 @@ export class HTMLRegisterEvents {
     /**
      * Watcher on dynamic elements
      */
-    dynamicElements () {
+    dynamicElements() {
 
         setTimeout(() => {
 
@@ -110,7 +110,7 @@ export class HTMLRegisterEvents {
     /**
      * MakeEvents on datasets
      */
-    makeEvents () {
+    makeEvents() {
 
         map([
             'click', 'submit', 'dblclick', 'change', 'blur', 'focus',
@@ -139,21 +139,41 @@ export class HTMLRegisterEvents {
                     obj = event.currentTarget,
                     data = obj.dataset,
                     storage = {object: obj, target: event.target, event, eventName: event_name},
-                    params = data[paramsName]? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : null))),
-                    props = data[propsName]? data[propsName] : (data[propName] ? data[propName] : data.props ? data.props : (data.prop ? data.prop : [])),
+                    params = data[paramsName] ? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : null))),
+                    props = data[propsName] ? data[propsName] : (data[propName] ? data[propName] : data.props ? data.props : (data.prop ? data.prop : [])),
                     withs = data.with ? data.with : {};
 
                 if (data[propsJaxName]) {
                     props = data[propsJaxName];
                 }
 
-                try { params = JSON.parse(params); }catch (e) { if (typeof params === "string") { params = params.split('&&').map(i => i.trim().call(storage)); } }
-                try { withs = JSON.parse(withs); }catch (e) { if (typeof withs === "string") { withs = withs.split('&&').map(i => i.trim()); } }
-                try { props = JSON.parse(props); }catch (e) { if (typeof props === "string") { props = props.split('&&').map(i => i.trim().call(storage)); } }
+                try {
+                    params = JSON.parse(params);
+                } catch (e) {
+                    if (typeof params === "string") {
+                        params = params.split('&&').map(i => i.trim().call(storage));
+                    }
+                }
+                try {
+                    withs = JSON.parse(withs);
+                } catch (e) {
+                    if (typeof withs === "string") {
+                        withs = withs.split('&&').map(i => i.trim());
+                    }
+                }
+                try {
+                    props = JSON.parse(props);
+                } catch (e) {
+                    if (typeof props === "string") {
+                        props = props.split('&&').map(i => i.trim().call(storage));
+                    }
+                }
 
                 let jax = window.jax.with(withs).storage(storage);
 
-                if (params) { jax = jax.params(params); }
+                if (params) {
+                    jax = jax.params(params);
+                }
 
                 let ja = get(
                     jax,
@@ -165,7 +185,7 @@ export class HTMLRegisterEvents {
                 ja(...props).then();
             });
 
-            let $methods: any = ["delete","get","post","put","head"];
+            let $methods: any = ["delete", "get", "post", "put", "head"];
 
             $methods.map((meth: string) => this.makeJaxMethods(eve, event_name, meth))
         });
@@ -179,7 +199,7 @@ export class HTMLRegisterEvents {
      * @param event_name
      * @param method
      */
-    makeJaxMethods (on_eve: string, event_name: string, method: string) {
+    makeJaxMethods(on_eve: string, event_name: string, method: string) {
 
         window.ljs.on(on_eve, `[data-${event_name}-${method}]`, (event: any) => {
 
@@ -191,14 +211,27 @@ export class HTMLRegisterEvents {
                 obj = event.currentTarget,
                 data = obj.dataset,
                 jaxUrl = data[`${event_name}${m}`],
-                storage = {object: obj, target: event.target, event, eventName: event_name, request_method: method, request_url: jaxUrl},
-                params = data[paramsName]? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : {})));
+                storage = {
+                    object: obj,
+                    target: event.target,
+                    event,
+                    eventName: event_name,
+                    request_method: method,
+                    request_url: jaxUrl
+                },
+                params = data[paramsName] ? data[paramsName] : (data[paramName] ? data[paramName] : (data.params ? data.params : (data.param ? data.param : {})));
 
             if (data[paramsMethodName]) {
                 params = data[paramsMethodName];
             }
 
-            try { params = JSON.parse(params); }catch (e) { if (typeof params === "string") { params = {data: params}; } }
+            try {
+                params = JSON.parse(params);
+            } catch (e) {
+                if (typeof params === "string") {
+                    params = {data: params};
+                }
+            }
 
             (window.$jax as any)[method](jaxUrl, params, storage);
         });

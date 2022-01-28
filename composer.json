@@ -2,7 +2,12 @@
     "name": "lar/ljs",
     "description": "Laravel Application JS core",
     "type": "lar-library",
-    "keywords": ["laravel", "application", "js", "core"],
+    "keywords": [
+        "laravel",
+        "application",
+        "js",
+        "core"
+    ],
     "homepage": "https://bitbucket.org/lar-repo/ljs",
     "license": "MIT",
     "authors": [

@@ -4,19 +4,6 @@ import {ExecutorParent} from "../../../ljs/Extends/ExecutorParent";
 export class Toast extends ExecutorParent {
 
     /**
-     * Public call
-     * @param $name
-     * @param message
-     * @param title
-     * @param options
-     * @private
-     */
-    __call ($name: string, [message, title = null, options = {}]: any[]) {
-
-        return Toast._send(message, title, options, $name);
-    }
-
-    /**
      * Static call
      * @param $name
      * @param message
@@ -24,23 +11,9 @@ export class Toast extends ExecutorParent {
      * @param options
      * @private
      */
-    static __call ($name: string, [message, title = null, options = {}]: any) {
+    static __call($name: string, [message, title = null, options = {}]: any) {
 
         return Toast._send(message, title, options, $name);
-    }
-
-    /**
-     * Executor invoke
-     *
-     * @param message
-     * @param title
-     * @param options
-     * @param type
-     * @private
-     */
-    __invoke (message: any, title: any = null, options: any = {}, type: string = "info") {
-
-        Toast._send(message, title, options, type);
     }
 
     /**
@@ -52,7 +25,7 @@ export class Toast extends ExecutorParent {
      * @param type
      * @private
      */
-    static _send (message: any, title: any = null, options: any = {}, type: string = "info") {
+    static _send(message: any, title: any = null, options: any = {}, type: string = "info") {
 
         if (typeof message === 'string') {
 
@@ -71,12 +44,15 @@ export class Toast extends ExecutorParent {
                     key = message["type"];
                 }
 
-                window.ljs._dispatch_event("ljs:alert_system", {type: key, text: message["text"], title: message["title"], options: message["options"] !== undefined ? message["options"] : {}});
+                window.ljs._dispatch_event("ljs:alert_system", {
+                    type: key,
+                    text: message["text"],
+                    title: message["title"],
+                    options: message["options"] !== undefined ? message["options"] : {}
+                });
 
                 (window.ljs.toast as any)[key](message["text"], message["title"], message["options"] !== undefined ? message["options"] : {});
-            }
-
-            else {
+            } else {
 
                 map(message, (item, key) => {
 
@@ -89,14 +65,24 @@ export class Toast extends ExecutorParent {
 
                         (window.ljs.toast as any)[key](item);
 
-                        window.ljs._dispatch_event("ljs:alert_system", {type: key, text: item, title: null, options: {} });
+                        window.ljs._dispatch_event("ljs:alert_system", {
+                            type: key,
+                            text: item,
+                            title: null,
+                            options: {}
+                        });
                     }
 
                     if (typeof item === 'object') {
 
                         (window.ljs.toast as any)[key](...item);
 
-                        window.ljs._dispatch_event("ljs:alert_system", {type: key, text: item[0], title: item[1], options: item[2]!==undefined ? item[2] : {} });
+                        window.ljs._dispatch_event("ljs:alert_system", {
+                            type: key,
+                            text: item[0],
+                            title: item[1],
+                            options: item[2] !== undefined ? item[2] : {}
+                        });
                     }
                 });
             }
@@ -107,7 +93,7 @@ export class Toast extends ExecutorParent {
      * Registration class name
      * @private
      */
-    static __name () {
+    static __name() {
 
         return "toastr";
     }
@@ -115,8 +101,35 @@ export class Toast extends ExecutorParent {
     /**
      * Alert systems aliases
      */
-    static __aliases () {
+    static __aliases() {
 
         return ["toast"] as any;
+    }
+
+    /**
+     * Public call
+     * @param $name
+     * @param message
+     * @param title
+     * @param options
+     * @private
+     */
+    __call($name: string, [message, title = null, options = {}]: any[]) {
+
+        return Toast._send(message, title, options, $name);
+    }
+
+    /**
+     * Executor invoke
+     *
+     * @param message
+     * @param title
+     * @param options
+     * @param type
+     * @private
+     */
+    __invoke(message: any, title: any = null, options: any = {}, type: string = "info") {
+
+        Toast._send(message, title, options, type);
     }
 }

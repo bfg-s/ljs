@@ -4,7 +4,7 @@
  * https://github.com/defunkt/jquery-pjax
  */
 
-(function($){
+(function ($) {
 
 // When called on a container with a selector, fetches the href with
 // ajax into the container or with the data-pjax attribute on the link
@@ -29,7 +29,7 @@
 // Returns the jQuery object
     function fnPjax(selector, container, options) {
         options = optionsFor(container, options)
-        return this.on('click.pjax', selector, function(event) {
+        return this.on('click.pjax', selector, function (event) {
             var opts = options
             if (!opts.container) {
                 opts = $.extend({}, options)
@@ -64,15 +64,15 @@
 
         // Middle click, cmd click, and ctrl click should open
         // links in a new tab as normal.
-        if ( event.which > 1 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey )
+        if (event.which > 1 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
             return
 
         // Ignore cross origin links
-        if ( location.protocol !== link.protocol || location.hostname !== link.hostname )
+        if (location.protocol !== link.protocol || location.hostname !== link.hostname)
             return
 
         // Ignore case when a hash is being tacked on the current URL
-        if ( link.href.indexOf('#') > -1 && stripHash(link) == stripHash(location) )
+        if (link.href.indexOf('#') > -1 && stripHash(link) == stripHash(location))
             return
 
         // Ignore event with default prevented
@@ -202,7 +202,7 @@
 
         var timeoutTimer
 
-        options.beforeSend = function(xhr, settings) {
+        options.beforeSend = function (xhr, settings) {
             // No timeout for non-GET requests
             // Its not safe to request the resource again with a fallback method.
             if (settings.type !== 'GET') {
@@ -216,7 +216,7 @@
                 return false
 
             if (settings.timeout > 0) {
-                timeoutTimer = setTimeout(function() {
+                timeoutTimer = setTimeout(function () {
                     if (fire('pjax:timeout', [xhr, options]))
                         xhr.abort('timeout')
                 }, settings.timeout)
@@ -230,7 +230,7 @@
             options.requestUrl = stripInternalParams(url)
         }
 
-        options.complete = function(xhr, textStatus) {
+        options.complete = function (xhr, textStatus) {
             if (timeoutTimer)
                 clearTimeout(timeoutTimer)
 
@@ -239,7 +239,7 @@
             fire('pjax:end', [xhr, options])
         }
 
-        options.error = function(xhr, textStatus, errorThrown) {
+        options.error = function (xhr, textStatus, errorThrown) {
             var container = extractContainer("", xhr, options)
 
             var allowed = fire('pjax:error', [xhr, textStatus, errorThrown, options])
@@ -248,7 +248,7 @@
             }
         }
 
-        options.success = function(data, status, xhr) {
+        options.success = function (data, status, xhr) {
             var previousState = pjax.state
 
             // If $.pjax.defaults.version is a function, invoke it first.
@@ -299,7 +299,8 @@
             if (blurFocus) {
                 try {
                     document.activeElement.blur()
-                } catch (e) { /* ignore */ }
+                } catch (e) { /* ignore */
+                }
             }
 
             if (container.title) document.title = container.title
@@ -326,9 +327,7 @@
             if (!this.cancel_context) {
 
                 context.html(container.contents);
-            }
-
-            else {
+            } else {
 
                 this.cancel_context = true;
             }
@@ -547,12 +546,12 @@
 
         var data = options.data
         if (typeof data === 'string') {
-            $.each(data.split('&'), function(index, value) {
+            $.each(data.split('&'), function (index, value) {
                 var pair = value.split('=')
                 form.append($('<input>', {type: 'hidden', name: pair[0], value: pair[1]}))
             })
         } else if (Array.isArray(data)) {
-            $.each(data, function(index, value) {
+            $.each(data, function (index, value) {
                 form.append($('<input>', {type: 'hidden', name: value.name, value: value.value}))
             })
         } else if (typeof data === 'object') {
@@ -568,7 +567,7 @@
 // Internal: Abort an XmlHttpRequest if it hasn't been completed,
 // also removing its event handlers.
     function abortXHR(xhr) {
-        if ( xhr && xhr.readyState < 4) {
+        if (xhr && xhr.readyState < 4) {
             xhr.onreadystatechange = $.noop
             xhr.abort()
         }
@@ -588,7 +587,7 @@
         var cloned = container.clone()
         // Unmark script tags as already being eval'd so they can get executed again
         // when restored from cache. HAXX: Uses jQuery internal method.
-        cloned.find('script').each(function(){
+        cloned.find('script').each(function () {
             if (!this.src) $._data(this, 'globalEval', false)
         })
         return cloned.contents()
@@ -730,7 +729,9 @@
         // Clean up any <title> tags
         if (obj.contents) {
             // Remove any parent title elements
-            obj.contents = obj.contents.not(function() { return $(this).is('title') })
+            obj.contents = obj.contents.not(function () {
+                return $(this).is('title')
+            })
 
             // Then scrub any titles from their descendants
             obj.contents.find('title').remove()
@@ -759,9 +760,9 @@
 
         var existingScripts = $('script[src]')
 
-        scripts.each(function() {
+        scripts.each(function () {
             var src = this.src
-            var matchedScripts = existingScripts.filter(function() {
+            var matchedScripts = existingScripts.filter(function () {
                 return this.src === src
             })
             if (matchedScripts.length) return
@@ -775,9 +776,9 @@
     }
 
 // Internal: History DOM caching class.
-    var cacheMapping      = {}
+    var cacheMapping = {}
     var cacheForwardStack = []
-    var cacheBackStack    = []
+    var cacheBackStack = []
 
 // Push previous state id and container contents into the history
 // cache. Should be called in conjunction with `pushState` to save the
@@ -813,10 +814,10 @@
 
         if (direction === 'forward') {
             pushStack = cacheBackStack
-            popStack  = cacheForwardStack
+            popStack = cacheForwardStack
         } else {
             pushStack = cacheForwardStack
-            popStack  = cacheBackStack
+            popStack = cacheBackStack
         }
 
         pushStack.push(id)
@@ -843,7 +844,7 @@
 //
 // Returns String version or undefined.
     function findVersion() {
-        return $('meta').filter(function() {
+        return $('meta').filter(function () {
             var name = $(this).attr('http-equiv')
             return name && name.toUpperCase() === 'X-PJAX-VERSION'
         }).attr('content')
@@ -891,13 +892,17 @@
 //
 // Returns nothing.
     function disable() {
-        $.fn.pjax = function() { return this }
+        $.fn.pjax = function () {
+            return this
+        }
         $.pjax = fallbackPjax
         $.pjax.enable = enable
         $.pjax.disable = $.noop
         $.pjax.click = $.noop
         $.pjax.submit = $.noop
-        $.pjax.reload = function() { window.location.reload() }
+        $.pjax.reload = function () {
+            window.location.reload()
+        }
 
         $(window).off('popstate.pjax', onPjaxPopstate)
     }

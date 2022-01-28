@@ -1,9 +1,9 @@
 import {BaseModel} from "./BaseModel";
 
 //window.Model =
-    class Model extends BaseModel {
+class Model extends BaseModel {
 
-    toJson () {
+    toJson() {
         let result: any = {};
         let constructor: any = (this as any)._super;
         Object.keys(constructor.attributes).map((key: string) => {
@@ -17,26 +17,26 @@ import {BaseModel} from "./BaseModel";
         return result;
     }
 
-    stringify () {
+    stringify() {
         return JSON.stringify(this.toJson());
     }
 
-    query () {
+    query() {
 
         return (this as any)._super.builder;
     }
 
-    find (id: number, fields: any = null) {
+    find(id: number, fields: any = null) {
 
         return this.query().find(id, fields);
     }
 
-    get (fields: any = null) {
+    get(fields: any = null) {
 
         return this.query().get(fields);
     }
 
-    paginate (limit: number = 10, page: number = 1, fields: any = null) {
+    paginate(limit: number = 10, page: number = 1, fields: any = null) {
 
         return this.query().paginate(limit, page, fields);
     }
@@ -44,30 +44,30 @@ import {BaseModel} from "./BaseModel";
 
 //window.User = class User extends window.Model {
 
-    /*static table = "user";
+/*static table = "user";
 
-    static fillable: any = [
-        'id', 'name', 'email', 'created_at', 'updated_at'
-    ];
+static fillable: any = [
+    'id', 'name', 'email', 'created_at', 'updated_at'
+];
 
-    static casts = {
-        id: 'int'
-    };*/
+static casts = {
+    id: 'int'
+};*/
 
-    // static appends = [
-    //     'test'
-    // ];
+// static appends = [
+//     'test'
+// ];
 
-    // static attributes: object = {
-    //     id: 1,
-    //     name: 'User name',
-    //     email: 'xsaven@gmail.com',
-    //     created_at: "2020-05-18 16:54:33",
-    //     updated_at: "2020-06-09 01:15:12"
-    // };
+// static attributes: object = {
+//     id: 1,
+//     name: 'User name',
+//     email: 'xsaven@gmail.com',
+//     created_at: "2020-05-18 16:54:33",
+//     updated_at: "2020-06-09 01:15:12"
+// };
 
-    // getTestAttribute () {
-    //
-    //     return this.created_at.format('DD.MM.YYYY');
-    // }
+// getTestAttribute () {
+//
+//     return this.created_at.format('DD.MM.YYYY');
+// }
 //}

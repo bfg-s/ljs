@@ -398,16 +398,6 @@ var ExecutorParent = /** @class */ (function () {
         this.__now_method = null;
         this.jquery = false;
     }
-    /**
-     * preventDefault on event
-     */
-    ExecutorParent.prototype.preventDefault = function () {
-        if (this.event.preventDefault !== undefined) {
-            this.event.preventDefault();
-            return true;
-        }
-        return false;
-    };
     Object.defineProperty(ExecutorParent.prototype, "now_method", {
         /**
          * Now call method
@@ -463,37 +453,6 @@ var ExecutorParent = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    ExecutorParent.prototype.data = function ($name, $default) {
-        if ($default === void 0) { $default = null; }
-        if (this.currentTarget && this.currentTarget.dataset) {
-            var varName = camelCase_1.default($name);
-            if (varName in this.currentTarget.dataset) {
-                var data = this.currentTarget.dataset[varName];
-                if (data === 'true') {
-                    return true;
-                }
-                else if (data === 'false' || data === undefined) {
-                    return false;
-                }
-                else if (data === 'null') {
-                    return null;
-                }
-                else if (data === 'undefined') {
-                    return undefined;
-                }
-                else if (data === '') {
-                    return true;
-                }
-                else {
-                    return data;
-                }
-            }
-            else {
-                return $default;
-            }
-        }
-        return $default;
-    };
     Object.defineProperty(ExecutorParent.prototype, "trace", {
         /**
          * Get trace execute results commands pipeline
@@ -561,6 +520,47 @@ var ExecutorParent = /** @class */ (function () {
     ExecutorParent.__individual_method = function () {
         return "__invoke";
     };
+    /**
+     * preventDefault on event
+     */
+    ExecutorParent.prototype.preventDefault = function () {
+        if (this.event.preventDefault !== undefined) {
+            this.event.preventDefault();
+            return true;
+        }
+        return false;
+    };
+    ExecutorParent.prototype.data = function ($name, $default) {
+        if ($default === void 0) { $default = null; }
+        if (this.currentTarget && this.currentTarget.dataset) {
+            var varName = camelCase_1.default($name);
+            if (varName in this.currentTarget.dataset) {
+                var data = this.currentTarget.dataset[varName];
+                if (data === 'true') {
+                    return true;
+                }
+                else if (data === 'false' || data === undefined) {
+                    return false;
+                }
+                else if (data === 'null') {
+                    return null;
+                }
+                else if (data === 'undefined') {
+                    return undefined;
+                }
+                else if (data === '') {
+                    return true;
+                }
+                else {
+                    return data;
+                }
+            }
+            else {
+                return $default;
+            }
+        }
+        return $default;
+    };
     return ExecutorParent;
 }());
 exports.ExecutorParent = ExecutorParent;
@@ -602,13 +602,13 @@ var Errors = /** @class */ (function (_super) {
     function Errors() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    Errors.__name = function () {
+        return "errors";
+    };
     Errors.prototype.__invoke = function (texts) {
         map_1.default(texts, function (item, key) {
             window.ljs.exec("toast:error", item);
         });
-    };
-    Errors.__name = function () {
-        return "errors";
     };
     return Errors;
 }(ExecutorParent_1.ExecutorParent));
@@ -647,6 +647,9 @@ var Message = /** @class */ (function (_super) {
     function Message() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    Message.__name = function () {
+        return "message";
+    };
     Message.prototype.__invoke = function (text) {
         if (text === "CSRF token mismatch.") {
             location.reload();
@@ -654,9 +657,6 @@ var Message = /** @class */ (function (_super) {
         else {
             window.ljs.exec("toast:info", text);
         }
-    };
-    Message.__name = function () {
-        return "message";
     };
     return Message;
 }(ExecutorParent_1.ExecutorParent));
@@ -706,6 +706,15 @@ var Swal = /** @class */ (function (_super) {
     function Swal() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    Swal.__name = function () {
+        return 'swal';
+    };
+    /**
+     * Alert systems aliases
+     */
+    Swal.__aliases = function () {
+        return ["alert"];
+    };
     Swal.prototype.input = function (title, exec) {
         var _this = this;
         if (exec === void 0) { exec = null; }
@@ -777,15 +786,6 @@ var Swal = /** @class */ (function (_super) {
     Swal.prototype.__invoke = function (config) {
         return window.ljs.swal.fire(config);
     };
-    Swal.__name = function () {
-        return 'swal';
-    };
-    /**
-     * Alert systems aliases
-     */
-    Swal.__aliases = function () {
-        return ["alert"];
-    };
     return Swal;
 }(ExecutorParent_1.ExecutorParent));
 exports.Swal = Swal;
@@ -828,18 +828,6 @@ var Toast = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     /**
-     * Public call
-     * @param $name
-     * @param message
-     * @param title
-     * @param options
-     * @private
-     */
-    Toast.prototype.__call = function ($name, _a) {
-        var message = _a[0], _b = _a[1], title = _b === void 0 ? null : _b, _c = _a[2], options = _c === void 0 ? {} : _c;
-        return Toast._send(message, title, options, $name);
-    };
-    /**
      * Static call
      * @param $name
      * @param message
@@ -850,21 +838,6 @@ var Toast = /** @class */ (function (_super) {
     Toast.__call = function ($name, _a) {
         var message = _a[0], _b = _a[1], title = _b === void 0 ? null : _b, _c = _a[2], options = _c === void 0 ? {} : _c;
         return Toast._send(message, title, options, $name);
-    };
-    /**
-     * Executor invoke
-     *
-     * @param message
-     * @param title
-     * @param options
-     * @param type
-     * @private
-     */
-    Toast.prototype.__invoke = function (message, title, options, type) {
-        if (title === void 0) { title = null; }
-        if (options === void 0) { options = {}; }
-        if (type === void 0) { type = "info"; }
-        Toast._send(message, title, options, type);
     };
     /**
      * Private Toast sender
@@ -889,7 +862,12 @@ var Toast = /** @class */ (function (_super) {
                 if (message["type"] !== undefined && window.ljs.toast[message["type"]] !== undefined) {
                     key = message["type"];
                 }
-                window.ljs._dispatch_event("ljs:alert_system", { type: key, text: message["text"], title: message["title"], options: message["options"] !== undefined ? message["options"] : {} });
+                window.ljs._dispatch_event("ljs:alert_system", {
+                    type: key,
+                    text: message["text"],
+                    title: message["title"],
+                    options: message["options"] !== undefined ? message["options"] : {}
+                });
                 window.ljs.toast[key](message["text"], message["title"], message["options"] !== undefined ? message["options"] : {});
             }
             else {
@@ -900,11 +878,21 @@ var Toast = /** @class */ (function (_super) {
                     }
                     if (typeof item === 'string') {
                         window.ljs.toast[key](item);
-                        window.ljs._dispatch_event("ljs:alert_system", { type: key, text: item, title: null, options: {} });
+                        window.ljs._dispatch_event("ljs:alert_system", {
+                            type: key,
+                            text: item,
+                            title: null,
+                            options: {}
+                        });
                     }
                     if (typeof item === 'object') {
                         (_a = window.ljs.toast)[key].apply(_a, item);
-                        window.ljs._dispatch_event("ljs:alert_system", { type: key, text: item[0], title: item[1], options: item[2] !== undefined ? item[2] : {} });
+                        window.ljs._dispatch_event("ljs:alert_system", {
+                            type: key,
+                            text: item[0],
+                            title: item[1],
+                            options: item[2] !== undefined ? item[2] : {}
+                        });
                     }
                 });
             }
@@ -922,6 +910,33 @@ var Toast = /** @class */ (function (_super) {
      */
     Toast.__aliases = function () {
         return ["toast"];
+    };
+    /**
+     * Public call
+     * @param $name
+     * @param message
+     * @param title
+     * @param options
+     * @private
+     */
+    Toast.prototype.__call = function ($name, _a) {
+        var message = _a[0], _b = _a[1], title = _b === void 0 ? null : _b, _c = _a[2], options = _c === void 0 ? {} : _c;
+        return Toast._send(message, title, options, $name);
+    };
+    /**
+     * Executor invoke
+     *
+     * @param message
+     * @param title
+     * @param options
+     * @param type
+     * @private
+     */
+    Toast.prototype.__invoke = function (message, title, options, type) {
+        if (title === void 0) { title = null; }
+        if (options === void 0) { options = {}; }
+        if (type === void 0) { type = "info"; }
+        Toast._send(message, title, options, type);
     };
     return Toast;
 }(ExecutorParent_1.ExecutorParent));
@@ -20982,7 +20997,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/alert/alert.tsx */"./javascript/plugins/alert/alert.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/alert/alert.tsx */"./javascript/plugins/alert/alert.tsx");
 
 
 /***/ })

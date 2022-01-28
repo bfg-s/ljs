@@ -9,7 +9,24 @@ export class Clipboard {
      * HTML Textarea element
      * @private
      */
-    private text_area: HTMLElement|any;
+    private text_area: HTMLElement | any;
+
+    /**
+     * Run copy process
+     * @param text
+     */
+    static copy(text: string) {
+
+        try {
+            let clipboard = new Clipboard();
+            clipboard.create_text_area(text);
+            clipboard.select_text();
+            clipboard.copy_to_clipboard();
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
 
     /**
      * Create HTML Textarea element
@@ -41,7 +58,7 @@ export class Clipboard {
             let editable = this.text_area.contentEditable,
                 readOnly = this.text_area.readOnly,
                 range: Range = document.createRange(),
-                sel: Selection|any = window.getSelection();
+                sel: Selection | any = window.getSelection();
 
             this.text_area.contentEditable = 'true';
             this.text_area.readOnly = 'false';
@@ -64,22 +81,5 @@ export class Clipboard {
 
         document.execCommand('copy');
         document.body.removeChild(this.text_area);
-    }
-
-    /**
-     * Run copy process
-     * @param text
-     */
-    static copy (text: string) {
-
-        try {
-            let clipboard = new Clipboard();
-            clipboard.create_text_area(text);
-            clipboard.select_text();
-            clipboard.copy_to_clipboard();
-            return true;
-        } catch (e) {
-            return false;
-        }
     }
 }

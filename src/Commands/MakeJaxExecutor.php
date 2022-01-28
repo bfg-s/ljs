@@ -2,6 +2,8 @@
 
 namespace Lar\LJS\Commands;
 
+use Arr;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Lar\LJS\JaxExecutor;
@@ -38,7 +40,7 @@ class MakeJaxExecutor extends Command
      * Execute the console command.
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle()
     {
@@ -60,7 +62,7 @@ class MakeJaxExecutor extends Command
 
         $class_namespace = "{$namespace}\\{$this->class_name()}";
 
-        if (! is_dir($dir)) {
+        if (!is_dir($dir)) {
             mkdir($dir, 0777, 1);
         }
 
@@ -95,6 +97,49 @@ class MakeJaxExecutor extends Command
     }
 
     /**
+     * @param  string  $path
+     * @return string
+     */
+    protected function rp(string $path = '')
+    {
+        if ($this->option('dir')) {
+            return '/'.trim(base_path($this->option('dir').'/'.trim($path, '/')), '/');
+        }
+
+        return '/'.trim(app_path('Jax/'.trim($path, '/')), '/');
+    }
+
+    /**
+     * @return string
+     */
+    protected function jax_namespace()
+    {
+        return $this->option('dir') ? implode('\\',
+            array_map('ucfirst',
+                array_map('Str::camel',
+                    explode('/', $this->option('dir'))
+                )
+            )
+        ) : 'App\\Jax';
+    }
+
+    /**
+     * @return array
+     */
+    protected function jax_segments()
+    {
+        return array_map('Str::snake', explode('/', $this->input->getArgument('name')));
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function jax_name()
+    {
+        return Arr::last($this->jax_segments());
+    }
+
+    /**
      * Get class name.
      *
      * @return string|string[]|null
@@ -110,36 +155,6 @@ class MakeJaxExecutor extends Command
     protected function name()
     {
         return Str::slug(implode('_', $this->jax_segments()), '_');
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function jax_name()
-    {
-        return \Arr::last($this->jax_segments());
-    }
-
-    /**
-     * @return array
-     */
-    protected function jax_segments()
-    {
-        return array_map('Str::snake', explode('/', $this->input->getArgument('name')));
-    }
-
-    /**
-     * @return string
-     */
-    protected function jax_namespace()
-    {
-        return $this->option('dir') ? implode('\\',
-            array_map('ucfirst',
-                array_map('Str::camel',
-                    explode('/', $this->option('dir'))
-                )
-            )
-        ) : 'App\\Jax';
     }
 
     /**
@@ -165,18 +180,5 @@ class MakeJaxExecutor extends Command
             ['dir', 'd', InputOption::VALUE_OPTIONAL, 'Directory of creation'],
             ['demo', '', InputOption::VALUE_NONE, 'Create demo methods'],
         ];
-    }
-
-    /**
-     * @param  string  $path
-     * @return string
-     */
-    protected function rp(string $path = '')
-    {
-        if ($this->option('dir')) {
-            return '/'.trim(base_path($this->option('dir').'/'.trim($path, '/')), '/');
-        }
-
-        return '/'.trim(app_path('Jax/'.trim($path, '/')), '/');
     }
 }

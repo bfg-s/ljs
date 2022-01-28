@@ -398,16 +398,6 @@ var ExecutorParent = /** @class */ (function () {
         this.__now_method = null;
         this.jquery = false;
     }
-    /**
-     * preventDefault on event
-     */
-    ExecutorParent.prototype.preventDefault = function () {
-        if (this.event.preventDefault !== undefined) {
-            this.event.preventDefault();
-            return true;
-        }
-        return false;
-    };
     Object.defineProperty(ExecutorParent.prototype, "now_method", {
         /**
          * Now call method
@@ -463,37 +453,6 @@ var ExecutorParent = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    ExecutorParent.prototype.data = function ($name, $default) {
-        if ($default === void 0) { $default = null; }
-        if (this.currentTarget && this.currentTarget.dataset) {
-            var varName = camelCase_1.default($name);
-            if (varName in this.currentTarget.dataset) {
-                var data = this.currentTarget.dataset[varName];
-                if (data === 'true') {
-                    return true;
-                }
-                else if (data === 'false' || data === undefined) {
-                    return false;
-                }
-                else if (data === 'null') {
-                    return null;
-                }
-                else if (data === 'undefined') {
-                    return undefined;
-                }
-                else if (data === '') {
-                    return true;
-                }
-                else {
-                    return data;
-                }
-            }
-            else {
-                return $default;
-            }
-        }
-        return $default;
-    };
     Object.defineProperty(ExecutorParent.prototype, "trace", {
         /**
          * Get trace execute results commands pipeline
@@ -561,6 +520,47 @@ var ExecutorParent = /** @class */ (function () {
     ExecutorParent.__individual_method = function () {
         return "__invoke";
     };
+    /**
+     * preventDefault on event
+     */
+    ExecutorParent.prototype.preventDefault = function () {
+        if (this.event.preventDefault !== undefined) {
+            this.event.preventDefault();
+            return true;
+        }
+        return false;
+    };
+    ExecutorParent.prototype.data = function ($name, $default) {
+        if ($default === void 0) { $default = null; }
+        if (this.currentTarget && this.currentTarget.dataset) {
+            var varName = camelCase_1.default($name);
+            if (varName in this.currentTarget.dataset) {
+                var data = this.currentTarget.dataset[varName];
+                if (data === 'true') {
+                    return true;
+                }
+                else if (data === 'false' || data === undefined) {
+                    return false;
+                }
+                else if (data === 'null') {
+                    return null;
+                }
+                else if (data === 'undefined') {
+                    return undefined;
+                }
+                else if (data === '') {
+                    return true;
+                }
+                else {
+                    return data;
+                }
+            }
+            else {
+                return $default;
+            }
+        }
+        return $default;
+    };
     return ExecutorParent;
 }());
 exports.ExecutorParent = ExecutorParent;
@@ -600,6 +600,9 @@ Helper_1.Helper.before_load(function (ljs) {
         function Mask() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        Mask.__name = function () {
+            return "mask";
+        };
         Mask.prototype.__invoke = function ($mask) {
             if (this.target && $mask) {
                 return Inputmask($mask).mask(this.target);
@@ -612,9 +615,6 @@ Helper_1.Helper.before_load(function (ljs) {
         };
         Mask.prototype.help = function () {
             return window.open('https://github.com/RobinHerbots/Inputmask', '_blank');
-        };
-        Mask.__name = function () {
-            return "mask";
         };
         return Mask;
     }(ExecutorParent_1.ExecutorParent));
@@ -5227,7 +5227,7 @@ module.exports = g;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/mask.tsx */"./javascript/plugins/mask.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/mask.tsx */"./javascript/plugins/mask.tsx");
 
 
 /***/ })

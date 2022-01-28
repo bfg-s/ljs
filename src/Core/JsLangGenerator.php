@@ -2,6 +2,7 @@
 
 namespace Lar\LJS\Core;
 
+use File;
 use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
 
@@ -17,10 +18,10 @@ class JsLangGenerator implements DumpExecute
      */
     public function handle(Command $command)
     {
-        $dirs = \File::directories(resource_path('lang'));
+        $dirs = File::directories(resource_path('lang'));
         $data = [];
         foreach ($dirs as $dir) {
-            $files = \File::allFiles($dir);
+            $files = File::allFiles($dir);
             $lang = basename($dir);
             foreach ($files as $file) {
                 $group = str_replace('.'.$file->getFileInfo()->getExtension(), '', $file->getFilename());
@@ -36,7 +37,7 @@ class JsLangGenerator implements DumpExecute
 
         foreach ($data as $lang => $groups) {
             foreach ($groups as $group => $datum) {
-                if (! is_dir($this->rp($lang))) {
+                if (!is_dir($this->rp($lang))) {
                     mkdir($this->rp($lang), 0777, true);
                 }
                 file_put_contents($this->rp("{$lang}/{$group}.js"), $datum);

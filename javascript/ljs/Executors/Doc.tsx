@@ -7,17 +7,22 @@ export class Doc extends ExecutorParent {
 
     public counters: any
 
-    constructor (ljs: Ljs) {
+    constructor(ljs: Ljs) {
 
         super(ljs);
 
         this.counters = {};
     }
 
+    static __name() {
+
+        return "doc";
+    }
+
     /**
      * Include many scripts
      */
-    scripts () {
+    scripts() {
 
         return map(arguments, (url) => this.script(url));
     }
@@ -26,7 +31,7 @@ export class Doc extends ExecutorParent {
      * Include script
      * @param script_url
      */
-    script (script_url: string) {
+    script(script_url: string) {
 
         let el: any = document.createElement("SCRIPT");
 
@@ -42,7 +47,7 @@ export class Doc extends ExecutorParent {
      *
      * @param value
      */
-    title (value: string) {
+    title(value: string) {
 
         document.title = value;
     }
@@ -52,7 +57,7 @@ export class Doc extends ExecutorParent {
      *
      * @param $event
      */
-    dispatch_event ($event: string) {
+    dispatch_event($event: string) {
 
         return window.ljs._dispatch_event($event, window.ljs);
     }
@@ -61,7 +66,7 @@ export class Doc extends ExecutorParent {
      * Global redirect
      * @param url
      */
-    redirect (url: any) {
+    redirect(url: any) {
 
         if (url) {
 
@@ -74,7 +79,7 @@ export class Doc extends ExecutorParent {
      * @param location_path
      * @param params
      */
-    location (location_path: any, params: any = null) {
+    location(location_path: any, params: any = null) {
 
         if (this.target && this.target.name && !params) {
             params = {};
@@ -99,22 +104,32 @@ export class Doc extends ExecutorParent {
             location_path = location.origin + location.pathname;
         }
 
-        if (location_path === '') { location_path = location.origin + location.pathname; }
-        if (!location_path) { location_path = location.origin + location.pathname; }
+        if (location_path === '') {
+            location_path = location.origin + location.pathname;
+        }
+        if (!location_path) {
+            location_path = location.origin + location.pathname;
+        }
 
 
         if (typeof params !== 'string' && params && location_path) {
 
-            if (!/\?/.test(location_path)) { location_path += '?'; }
-            else { location_path += '&'; }
+            if (!/\?/.test(location_path)) {
+                location_path += '?';
+            } else {
+                location_path += '&';
+            }
 
             location_path += Helper.http_build_query(params);
         }
 
         if (typeof params === 'string') {
 
-            if (!/\?/.test(location_path)) { location_path += '?'; }
-            else { location_path += '&'; }
+            if (!/\?/.test(location_path)) {
+                location_path += '?';
+            } else {
+                location_path += '&';
+            }
 
             location_path += params;
         }
@@ -124,9 +139,7 @@ export class Doc extends ExecutorParent {
             if (window.ljs.$nav) {
 
                 window.ljs.$nav.goTo(location_path);
-            }
-
-            else {
+            } else {
 
                 location = location_path;
             }
@@ -137,7 +150,7 @@ export class Doc extends ExecutorParent {
      * location with query
      * @param params
      */
-    query (params: any = '') {
+    query(params: any = '') {
 
         return this.location('', params);
     }
@@ -145,14 +158,12 @@ export class Doc extends ExecutorParent {
     /**
      * Reload page
      */
-    reload () {
+    reload() {
 
         if (window.ljs.$nav) {
 
             return window.ljs.$nav.reload();
-        }
-
-        else {
+        } else {
 
             return location.reload();
         }
@@ -161,7 +172,7 @@ export class Doc extends ExecutorParent {
     /**
      * History back
      */
-    back () {
+    back() {
 
         window.history.back();
     }
@@ -171,7 +182,7 @@ export class Doc extends ExecutorParent {
      * @param $element
      * @param $ms
      */
-    scroll_to ($element: any = 'body', $ms: number = 1000) {
+    scroll_to($element: any = 'body', $ms: number = 1000) {
 
         let elem = $($element).offset();
 
@@ -195,7 +206,7 @@ export class Doc extends ExecutorParent {
      * Copy data to clipboard and show info
      * @param $data
      */
-    informed_pbcopy ($data: string) {
+    informed_pbcopy($data: string) {
 
         clipboard.writeText($data).then(() => {
             "toast::success".exec("Copied to clipboard");
@@ -206,10 +217,5 @@ export class Doc extends ExecutorParent {
         // }
 
         return $data;
-    }
-
-    static __name () {
-
-        return "doc";
     }
 }

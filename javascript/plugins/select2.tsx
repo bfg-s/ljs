@@ -20,11 +20,16 @@ Helper.before_load((ljs: Ljs) => {
             this.jquery = true;
         }
 
+        static __name() {
+
+            return "select2";
+        }
+
         /**
          * Create simple select2 alias
          * @private
          */
-        __invoke (...args: any[]) {
+        __invoke(...args: any[]) {
 
             return this.init(...args);
         }
@@ -33,7 +38,7 @@ Helper.before_load((ljs: Ljs) => {
          * Create simple select2
          * @param args
          */
-        init (...args: any[]) {
+        init(...args: any[]) {
 
             if (this.target) {
 
@@ -43,7 +48,7 @@ Helper.before_load((ljs: Ljs) => {
             return undefined;
         }
 
-        ajax () {
+        ajax() {
 
             let target = this.target;
 
@@ -66,12 +71,22 @@ Helper.before_load((ljs: Ljs) => {
                             let form: any = {};
                             let d = $(target).parents('form').serializeArray();
                             if (Array.isArray(d)) {
-                                d.map((i: any) => { form[i.name] = i.value; })
+                                d.map((i: any) => {
+                                    form[i.name] = i.value;
+                                })
                             }
                             new_params[`${name}_form`] = form;
                         }
 
-                        window.$jax.get(window.location.href, new_params)
+                        let data = $(":input").serializeArray();
+
+                        data.map(({name, value}) => {
+                            if (String(name)[0] !== '_') {
+                                new_params[name] = value;
+                            }
+                        });
+
+                        window.$jax.head(window.location.href, new_params)
                             .then((data: any) => {
                                 success(data);
                             }).catch(() => failure());
@@ -86,7 +101,7 @@ Helper.before_load((ljs: Ljs) => {
          * @param $args
          * @param $ja_args
          */
-        jax (jax_path: string, $args: any = [], $ja_args: any = null) {
+        jax(jax_path: string, $args: any = [], $ja_args: any = null) {
 
             if (jax_path !== '') {
 
@@ -124,9 +139,7 @@ Helper.before_load((ljs: Ljs) => {
                                 if (data !== undefined) {
 
                                     success(data);
-                                }
-
-                                else {
+                                } else {
 
                                     //failure()
                                     success({results: []});
@@ -149,7 +162,7 @@ Helper.before_load((ljs: Ljs) => {
          * @param text
          * @param selected
          */
-        set (id: any, text: any, selected: boolean = true) {
+        set(id: any, text: any, selected: boolean = true) {
 
             let select2 = $(this.target);
 
@@ -177,11 +190,6 @@ Helper.before_load((ljs: Ljs) => {
             }
 
             return select2;
-        }
-
-        static __name () {
-
-            return "select2";
         }
     }
 

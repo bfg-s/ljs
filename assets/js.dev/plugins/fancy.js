@@ -398,16 +398,6 @@ var ExecutorParent = /** @class */ (function () {
         this.__now_method = null;
         this.jquery = false;
     }
-    /**
-     * preventDefault on event
-     */
-    ExecutorParent.prototype.preventDefault = function () {
-        if (this.event.preventDefault !== undefined) {
-            this.event.preventDefault();
-            return true;
-        }
-        return false;
-    };
     Object.defineProperty(ExecutorParent.prototype, "now_method", {
         /**
          * Now call method
@@ -463,37 +453,6 @@ var ExecutorParent = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    ExecutorParent.prototype.data = function ($name, $default) {
-        if ($default === void 0) { $default = null; }
-        if (this.currentTarget && this.currentTarget.dataset) {
-            var varName = camelCase_1.default($name);
-            if (varName in this.currentTarget.dataset) {
-                var data = this.currentTarget.dataset[varName];
-                if (data === 'true') {
-                    return true;
-                }
-                else if (data === 'false' || data === undefined) {
-                    return false;
-                }
-                else if (data === 'null') {
-                    return null;
-                }
-                else if (data === 'undefined') {
-                    return undefined;
-                }
-                else if (data === '') {
-                    return true;
-                }
-                else {
-                    return data;
-                }
-            }
-            else {
-                return $default;
-            }
-        }
-        return $default;
-    };
     Object.defineProperty(ExecutorParent.prototype, "trace", {
         /**
          * Get trace execute results commands pipeline
@@ -561,6 +520,47 @@ var ExecutorParent = /** @class */ (function () {
     ExecutorParent.__individual_method = function () {
         return "__invoke";
     };
+    /**
+     * preventDefault on event
+     */
+    ExecutorParent.prototype.preventDefault = function () {
+        if (this.event.preventDefault !== undefined) {
+            this.event.preventDefault();
+            return true;
+        }
+        return false;
+    };
+    ExecutorParent.prototype.data = function ($name, $default) {
+        if ($default === void 0) { $default = null; }
+        if (this.currentTarget && this.currentTarget.dataset) {
+            var varName = camelCase_1.default($name);
+            if (varName in this.currentTarget.dataset) {
+                var data = this.currentTarget.dataset[varName];
+                if (data === 'true') {
+                    return true;
+                }
+                else if (data === 'false' || data === undefined) {
+                    return false;
+                }
+                else if (data === 'null') {
+                    return null;
+                }
+                else if (data === 'undefined') {
+                    return undefined;
+                }
+                else if (data === '') {
+                    return true;
+                }
+                else {
+                    return data;
+                }
+            }
+            else {
+                return $default;
+            }
+        }
+        return $default;
+    };
     return ExecutorParent;
 }());
 exports.ExecutorParent = ExecutorParent;
@@ -606,6 +606,9 @@ Helper_1.Helper.before_load(function (ljs) {
             _this.ins = null;
             return _this;
         }
+        class_1.__name = function () {
+            return 'load_modal';
+        };
         class_1.prototype.__call = function ($name, $args) {
             var _this = this;
             if ($args === void 0) { $args = []; }
@@ -625,9 +628,6 @@ Helper_1.Helper.before_load(function (ljs) {
                 this.ins.close();
             }
         };
-        class_1.__name = function () {
-            return 'load_modal';
-        };
         return class_1;
     }(ExecutorParent_1.ExecutorParent)));
     ljs.regExec(/** @class */ (function (_super) {
@@ -635,6 +635,9 @@ Helper_1.Helper.before_load(function (ljs) {
         function class_2() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        class_2.__name = function () {
+            return 'fancy';
+        };
         class_2.prototype.mess = function (items, opts, index) {
             return $.fancybox.open(items, opts, index);
         };
@@ -662,9 +665,6 @@ Helper_1.Helper.before_load(function (ljs) {
         };
         class_2.prototype.help = function () {
             return window.open('https://fancyapps.com/fancybox/3/docs', '_blank');
-        };
-        class_2.__name = function () {
-            return 'fancy';
         };
         return class_2;
     }(ExecutorParent_1.ExecutorParent)));
@@ -9301,7 +9301,7 @@ module.exports = g;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/fancy.tsx */"./javascript/plugins/fancy.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/fancy.tsx */"./javascript/plugins/fancy.tsx");
 
 
 /***/ })

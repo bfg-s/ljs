@@ -2,7 +2,20 @@ import {ExecutorParent} from "../../../ljs/Extends/ExecutorParent";
 
 export class Swal extends ExecutorParent {
 
-    input (title: string, exec: any = null) {
+    static __name() {
+
+        return 'swal';
+    }
+
+    /**
+     * Alert systems aliases
+     */
+    static __aliases() {
+
+        return ["alert"] as any;
+    }
+
+    input(title: string, exec: any = null) {
 
         return window.ljs.swal.fire({
             title: title,
@@ -23,7 +36,7 @@ export class Swal extends ExecutorParent {
         });
     }
 
-    confirm (title: string, success: any = "", cancel: any = "", options: any = {}) {
+    confirm(title: string, success: any = "", cancel: any = "", options: any = {}) {
 
         return window.ljs.swal.fire({
             text: title,
@@ -40,9 +53,7 @@ export class Swal extends ExecutorParent {
                 } else if (typeof success === 'function') {
                     success();
                 }
-            }
-
-            else {
+            } else {
 
                 if (typeof cancel === 'string') {
                     window.ljs.exec(cancel, null, this.storage);
@@ -55,46 +66,33 @@ export class Swal extends ExecutorParent {
         })
     }
 
-    success (title: string, text: string = '', options: any = {}) {
+    success(title: string, text: string = '', options: any = {}) {
 
         return window.ljs.swal.fire({title: title, text: text, type: 'success', ...options});
     }
 
-    warning (title: string, text: string = '', options: any = {}) {
+    warning(title: string, text: string = '', options: any = {}) {
 
         return window.ljs.swal.fire({title: title, text: text, type: 'warning', ...options});
     }
 
-    error (title: string, text: string = '', options: any = {}) {
+    error(title: string, text: string = '', options: any = {}) {
 
         return window.ljs.swal.fire({title: title, text: text, type: 'error', ...options});
     }
 
-    info (title: string, text: string = '', options: any = {}) {
+    info(title: string, text: string = '', options: any = {}) {
 
         return window.ljs.swal.fire({title: title, text: text, type: 'info', ...options});
     }
 
-    question (title: any, text: string = '', options: any = {}) {
+    question(title: any, text: string = '', options: any = {}) {
 
         return window.ljs.swal.fire({title: title, text: text, type: 'question', ...options});
     }
 
-    __invoke (config: any) {
+    __invoke(config: any) {
 
         return window.ljs.swal.fire(config);
-    }
-
-    static __name () {
-
-        return 'swal';
-    }
-
-    /**
-     * Alert systems aliases
-     */
-    static __aliases () {
-
-        return ["alert"] as any;
     }
 }

@@ -23,7 +23,7 @@ Helper.before_load((ljs: Ljs) => {
         csrfToken: ljs.token,
         disableStats: true,
         encrypted: true,
-        enabledTransports: ['ws','wss'],
+        enabledTransports: ['ws', 'wss'],
         disabledTransports: ['sockjs', 'xhr_polling', 'xhr_streaming'],
         namespace: ljs.config('ws_namespace', '')
     });

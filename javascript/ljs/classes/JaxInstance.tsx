@@ -11,7 +11,7 @@ export class JaxInstance implements JaxInterface {
      * JAX Constructor
      * @param ljs
      */
-    constructor (ljs: Ljs) {
+    constructor(ljs: Ljs) {
 
         this.ljs = ljs;
     }
@@ -22,7 +22,7 @@ export class JaxInstance implements JaxInterface {
      * @param params
      * @param storage
      */
-    post (path: string = "/", params: any = {}, storage: any = {}) {
+    post(path: string = "/", params: any = {}, storage: any = {}) {
 
         return this._sendAjax("post", path, params, storage);
     }
@@ -33,7 +33,7 @@ export class JaxInstance implements JaxInterface {
      * @param params
      * @param storage
      */
-    get (path: string = "/", params: any = {}, storage: any = {}) {
+    get(path: string = "/", params: any = {}, storage: any = {}) {
 
         return this._sendAjax("get", path, params, storage);
     }
@@ -44,7 +44,7 @@ export class JaxInstance implements JaxInterface {
      * @param params
      * @param storage
      */
-    head (path: string = "/", params: any = {}, storage: any = {}) {
+    head(path: string = "/", params: any = {}, storage: any = {}) {
 
         return this._sendAjax("head", path, params, storage);
     }
@@ -55,7 +55,7 @@ export class JaxInstance implements JaxInterface {
      * @param params
      * @param storage
      */
-    put (path: string = "/", params: any = {}, storage: any = {}) {
+    put(path: string = "/", params: any = {}, storage: any = {}) {
 
         return this._sendAjax("put", path, params, storage);
     }
@@ -66,7 +66,7 @@ export class JaxInstance implements JaxInterface {
      * @param params
      * @param storage
      */
-    del (path: string = "/", params: any = {}, storage: any = {}) {
+    del(path: string = "/", params: any = {}, storage: any = {}) {
 
         return this._sendAjax("delete", path, params, storage);
     }
@@ -79,11 +79,15 @@ export class JaxInstance implements JaxInterface {
      * @param storage
      * @private
      */
-    _sendAjax (method: string, path: string = "/", params: any = {}, storage: any = {}) {
+    _sendAjax(method: string, path: string = "/", params: any = {}, storage: any = {}) {
 
-        if (typeof path === 'object') { storage = params; params = path; path = location.href; }
+        if (typeof path === 'object') {
+            storage = params;
+            params = path;
+            path = location.href;
+        }
 
-        let $methods: any = {"delete":"delete","get":"get","post":"post","put":"put","head":"head"};
+        let $methods: any = {"delete": "delete", "get": "get", "post": "post", "put": "put", "head": "head"};
 
         if ($methods[method] !== undefined) {
 
@@ -93,9 +97,18 @@ export class JaxInstance implements JaxInterface {
                 window.ljs._detail(`Method: [${method}] Jax`);
             }
 
-            if (method === 'put') {method = 'post';params['_method'] = 'PUT';}
-            if (method === 'head') {method = 'post';params['_method'] = 'HEAD';}
-            if (method === 'delete') {method = 'post';params['_method'] = 'DELETE';}
+            if (method === 'put') {
+                method = 'post';
+                params['_method'] = 'PUT';
+            }
+            if (method === 'head') {
+                method = 'post';
+                params['_method'] = 'HEAD';
+            }
+            if (method === 'delete') {
+                method = 'post';
+                params['_method'] = 'DELETE';
+            }
 
             if (method !== 'get') {
 
@@ -110,9 +123,7 @@ export class JaxInstance implements JaxInterface {
                 });
 
                 params = form;
-            }
-
-            else {
+            } else {
 
                 params = Helper.http_build_query(params);
             }
@@ -133,11 +144,17 @@ export class JaxInstance implements JaxInterface {
 
                         let data: any = {};
 
-                        map(response.responseJSON, (i: any,k: any) => {
+                        map(response.responseJSON, (i: any, k: any) => {
                             if (/^([0-9\:]+)\:/.test(k)) data[k] = i;
                         });
 
-                        window.ljs.exec(data, null, merge({response, status: textStatus, method, path, params}, storage));
+                        window.ljs.exec(data, null, merge({
+                            response,
+                            status: textStatus,
+                            method,
+                            path,
+                            params
+                        }, storage));
                     }
 
                     window.ljs.switchProcess(false);

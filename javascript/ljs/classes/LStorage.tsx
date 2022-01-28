@@ -2,8 +2,7 @@ import map from 'lodash/map';
 import merge from 'lodash/merge';
 import set from 'lodash/set';
 
-export class LStorage implements LStorageInterface
-{
+export class LStorage implements LStorageInterface {
     public ljs: Ljs
     private _group: string
     private _state: any
@@ -13,7 +12,7 @@ export class LStorage implements LStorageInterface
      *
      * @param ljs
      */
-    constructor (ljs: Ljs) {
+    constructor(ljs: Ljs) {
 
         this.ljs = ljs;
 
@@ -28,7 +27,7 @@ export class LStorage implements LStorageInterface
      * Check has group or not
      * @param group
      */
-    static hasGroup (group: string) {
+    static hasGroup(group: string) {
 
         return localStorage.getItem("ljs-" + group) !== null;
     }
@@ -39,11 +38,14 @@ export class LStorage implements LStorageInterface
      * @param defaultData
      * @private
      */
-    _get (name: string, defaultData: any = null) {
+    _get(name: string, defaultData: any = null) {
 
         let item: any = localStorage.getItem("ljs-" + name);
 
-        try { item = JSON.parse(item); } catch (e) {}
+        try {
+            item = JSON.parse(item);
+        } catch (e) {
+        }
 
         return item ? item : defaultData;
     }
@@ -52,7 +54,7 @@ export class LStorage implements LStorageInterface
      * Has group check
      * @param group
      */
-    hasGroup (group: string) {
+    hasGroup(group: string) {
 
         return LStorage.hasGroup(group);
     }
@@ -62,7 +64,7 @@ export class LStorage implements LStorageInterface
      * @param name
      * @param group
      */
-    has (name: string, group: string|null = null) {
+    has(name: string, group: string | null = null) {
 
         let return_data = false;
 
@@ -90,7 +92,7 @@ export class LStorage implements LStorageInterface
      * Get all data from storage
      * @param group
      */
-    getAll (group: string|null = null) {
+    getAll(group: string | null = null) {
 
         let return_data = {};
 
@@ -120,7 +122,7 @@ export class LStorage implements LStorageInterface
      * @param value
      * @param group
      */
-    put (name: string|object, value: any = null, group: string|null = null) {
+    put(name: string | object, value: any = null, group: string | null = null) {
 
         if (typeof name === 'object') {
 
@@ -169,7 +171,7 @@ export class LStorage implements LStorageInterface
      * @param name
      * @param defaultData
      */
-    getWithDefault (name: string, defaultData: any = null) {
+    getWithDefault(name: string, defaultData: any = null) {
 
         let data = this.get(name);
 
@@ -181,7 +183,7 @@ export class LStorage implements LStorageInterface
      * @param name
      * @param group
      */
-    get (name: string|object, group: string|null = null) {
+    get(name: string | object, group: string | null = null) {
 
         let return_data = null;
 
@@ -232,7 +234,7 @@ export class LStorage implements LStorageInterface
      * @param name
      * @param group
      */
-    remove (name: string|object, group: string|null = null) {
+    remove(name: string | object, group: string | null = null) {
 
         if (group !== null) {
 
@@ -282,7 +284,7 @@ export class LStorage implements LStorageInterface
      * @param group
      * @private
      */
-    _set_group (group: string) {
+    _set_group(group: string) {
 
         this._group = "ljs-" + group;
 
@@ -295,7 +297,7 @@ export class LStorage implements LStorageInterface
      * System state getter
      * @private
      */
-    _get_state () {
+    _get_state() {
 
         let _state = localStorage.getItem(this._group);
 
@@ -308,7 +310,7 @@ export class LStorage implements LStorageInterface
      * System state saver
      * @private
      */
-    _save_state () {
+    _save_state() {
 
         localStorage.setItem(this._group, JSON.stringify(this._state));
 

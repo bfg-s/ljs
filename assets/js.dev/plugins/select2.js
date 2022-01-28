@@ -398,16 +398,6 @@ var ExecutorParent = /** @class */ (function () {
         this.__now_method = null;
         this.jquery = false;
     }
-    /**
-     * preventDefault on event
-     */
-    ExecutorParent.prototype.preventDefault = function () {
-        if (this.event.preventDefault !== undefined) {
-            this.event.preventDefault();
-            return true;
-        }
-        return false;
-    };
     Object.defineProperty(ExecutorParent.prototype, "now_method", {
         /**
          * Now call method
@@ -463,37 +453,6 @@ var ExecutorParent = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    ExecutorParent.prototype.data = function ($name, $default) {
-        if ($default === void 0) { $default = null; }
-        if (this.currentTarget && this.currentTarget.dataset) {
-            var varName = camelCase_1.default($name);
-            if (varName in this.currentTarget.dataset) {
-                var data = this.currentTarget.dataset[varName];
-                if (data === 'true') {
-                    return true;
-                }
-                else if (data === 'false' || data === undefined) {
-                    return false;
-                }
-                else if (data === 'null') {
-                    return null;
-                }
-                else if (data === 'undefined') {
-                    return undefined;
-                }
-                else if (data === '') {
-                    return true;
-                }
-                else {
-                    return data;
-                }
-            }
-            else {
-                return $default;
-            }
-        }
-        return $default;
-    };
     Object.defineProperty(ExecutorParent.prototype, "trace", {
         /**
          * Get trace execute results commands pipeline
@@ -561,6 +520,47 @@ var ExecutorParent = /** @class */ (function () {
     ExecutorParent.__individual_method = function () {
         return "__invoke";
     };
+    /**
+     * preventDefault on event
+     */
+    ExecutorParent.prototype.preventDefault = function () {
+        if (this.event.preventDefault !== undefined) {
+            this.event.preventDefault();
+            return true;
+        }
+        return false;
+    };
+    ExecutorParent.prototype.data = function ($name, $default) {
+        if ($default === void 0) { $default = null; }
+        if (this.currentTarget && this.currentTarget.dataset) {
+            var varName = camelCase_1.default($name);
+            if (varName in this.currentTarget.dataset) {
+                var data = this.currentTarget.dataset[varName];
+                if (data === 'true') {
+                    return true;
+                }
+                else if (data === 'false' || data === undefined) {
+                    return false;
+                }
+                else if (data === 'null') {
+                    return null;
+                }
+                else if (data === 'undefined') {
+                    return undefined;
+                }
+                else if (data === '') {
+                    return true;
+                }
+                else {
+                    return data;
+                }
+            }
+            else {
+                return $default;
+            }
+        }
+        return $default;
+    };
     return ExecutorParent;
 }());
 exports.ExecutorParent = ExecutorParent;
@@ -609,6 +609,9 @@ Helper_1.Helper.before_load(function (ljs) {
             _this.jquery = true;
             return _this;
         }
+        Select2.__name = function () {
+            return "select2";
+        };
         /**
          * Create simple select2 alias
          * @private
@@ -653,10 +656,19 @@ Helper_1.Helper.before_load(function (ljs) {
                             var form_1 = {};
                             var d = $(target).parents('form').serializeArray();
                             if (Array.isArray(d)) {
-                                d.map(function (i) { form_1[i.name] = i.value; });
+                                d.map(function (i) {
+                                    form_1[i.name] = i.value;
+                                });
                             }
                             new_params[name + "_form"] = form_1;
                         }
+                        var data = $(":input").serializeArray();
+                        data.map(function (_a) {
+                            var name = _a.name, value = _a.value;
+                            if (String(name)[0] !== '_') {
+                                new_params[name] = value;
+                            }
+                        });
                         window.$jax.get(window.location.href, new_params)
                             .then(function (data) {
                             success(data);
@@ -734,9 +746,6 @@ Helper_1.Helper.before_load(function (ljs) {
                 }
             }
             return select2;
-        };
-        Select2.__name = function () {
-            return "select2";
         };
         return Select2;
     }(ExecutorParent_1.ExecutorParent));
@@ -5983,7 +5992,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/select2.tsx */"./javascript/plugins/select2.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/select2.tsx */"./javascript/plugins/select2.tsx");
 
 
 /***/ })

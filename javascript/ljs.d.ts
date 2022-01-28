@@ -1,23 +1,24 @@
-
 declare interface Window {
     Executor: ExecutorParentInterface,
     StateWatcher: StateWatcherInterface,
     User: any,
     jax: any,
-    state: any|StateMagic,
+    state: any | StateMagic,
     ljs: Ljs,
-    on_apply: any|object
+    on_apply: any | object
     $state: StateInterface
     $jax: JaxInterface
     $nav: any
-    EchoWrapper: LjsEcho|any
+    EchoWrapper: LjsEcho | any
     JaxModel: any
     locales: any
-    switchLocale(locale: string): void
-    __($path: string, $params?: any): any
     phpdebugbar: any
     PhpDebugBar: any
     HTMLDataEvent: any
+
+    switchLocale(locale: string): void
+
+    __($path: string, $params?: any): any
 }
 
 declare interface Ljs {
@@ -32,61 +33,106 @@ declare interface Ljs {
     $storage: LStorageInterface
     $nav: any
     $vue: any
-    help: any|Helper
+    help: any | Helper
     vue: any
     swal: any
     toast: Toastr
     progress: NProgress
-    echo: Echo|null
+    echo: Echo | null
     method: any
-    exec (data: any, params?: any, storage_data?: any): any
-    parse (str: string, storage?: any): any
-    call (command: string, storage?: any): any
-    removeExec (event_name: string): Ljs
-    toExec (name: string, closure: any): Ljs
-    regExec (object: any): Ljs
-    switchProcess (data?: any): Ljs
-    isProcess (): boolean
-    extend (name: string, extendClass: any): Ljs
-    stateWatcher (watchClass: any): Ljs
-    cfg (name: string, value?: any): any
-    config (name: string, default_data?: any): any
-    setCfg (name: string, value: any, save?: boolean): Ljs
-    applyInfo (): boolean
-    applyCleared (): boolean
-    element ($selector: any): {on (events: string, selector: any, data?: any, handler?: any): any}
-    on (events: string, selector: any, data?: any, handler?: any): any
-    onetime (action: any, ms?: number): any
-    instance (): void
-    routeCollection ($collection: any): void
-    route ($name: string, $params?: any): string
-    routeMethods ($name: string): any
-    _get_save_configs (): void
-    _onload_header (headers: string): void
-    _local (): string
-    _dispatch_event (name: string, detail?: any): Ljs
-    _log (data: any, type?: string): void
-    _error (...args: any[]): void
-    _info (...args: any[]): void
-    _detail (...args: any[]): void
-    _warn (...args: any[]): void
-    _find_and_execute_command (key: any, item: any, storage_data: any): any
-    _force_object (obj: any, fool_method: any, params: any, call: boolean, storage: any): any
-    _get_force_object (name: any, return_static: any, storage: any): any
-    _jqueryed (obj: any, name: string): any
-    _query (name: string): any
+
+    exec(data: any, params?: any, storage_data?: any): any
+
+    parse(str: string, storage?: any): any
+
+    call(command: string, storage?: any): any
+
+    removeExec(event_name: string): Ljs
+
+    toExec(name: string, closure: any): Ljs
+
+    regExec(object: any): Ljs
+
+    switchProcess(data?: any): Ljs
+
+    isProcess(): boolean
+
+    extend(name: string, extendClass: any): Ljs
+
+    stateWatcher(watchClass: any): Ljs
+
+    cfg(name: string, value?: any): any
+
+    config(name: string, default_data?: any): any
+
+    setCfg(name: string, value: any, save?: boolean): Ljs
+
+    applyInfo(): boolean
+
+    applyCleared(): boolean
+
+    element($selector: any): { on(events: string, selector: any, data?: any, handler?: any): any }
+
+    on(events: string, selector: any, data?: any, handler?: any): any
+
+    onetime(action: any, ms?: number): any
+
+    instance(): void
+
+    routeCollection($collection: any): void
+
+    route($name: string, $params?: any): string
+
+    routeMethods($name: string): any
+
+    _get_save_configs(): void
+
+    _onload_header(headers: string): void
+
+    _local(): string
+
+    _dispatch_event(name: string, detail?: any): Ljs
+
+    _log(data: any, type?: string): void
+
+    _error(...args: any[]): void
+
+    _info(...args: any[]): void
+
+    _detail(...args: any[]): void
+
+    _warn(...args: any[]): void
+
+    _find_and_execute_command(key: any, item: any, storage_data: any): any
+
+    _force_object(obj: any, fool_method: any, params: any, call: boolean, storage: any): any
+
+    _get_force_object(name: any, return_static: any, storage: any): any
+
+    _jqueryed(obj: any, name: string): any
+
+    _query(name: string): any
 }
 
 declare interface Helper {
     before_load(applyScript: () => void): Helper
+
     document_load(readyScript: () => void): Helper
+
     ready_script(readyFn: () => void): Helper
+
     isArrayOrObject(val: any): boolean
+
     isObject(val: any): boolean
+
     isEmptyObject(val: any): boolean
+
     dot(obj: any, tgt?: any, path?: any, useBrackets?: boolean, keepArray?: boolean, separator?: string): any
-    http_build_query(obj: any, num_prefix?: number|null, temp_key?: string|null): any
-    query_get(name?: string|null): any
+
+    http_build_query(obj: any, num_prefix?: number | null, temp_key?: string | null): any
+
+    query_get(name?: string | null): any
+
     string_is(pattern: string, text: string): boolean
 }
 
@@ -94,13 +140,15 @@ declare interface StateWatcherInterface {
     path: any
     storage: any
     data: any
-    currentTarget?: HTMLElement|any|null
-    target?: HTMLElement|any|null
-    trace?: object|undefined
-    event?: Event|null
+    currentTarget?: HTMLElement | any | null
+    target?: HTMLElement | any | null
+    trace?: object | undefined
+    event?: Event | null
     jq?: any
-    setStorage (storage: any): StateWatcherInterface|any
-    call ($event: string, $name: string, $data: any): StateWatcherInterface|any
+
+    setStorage(storage: any): StateWatcherInterface | any
+
+    call($event: string, $name: string, $data: any): StateWatcherInterface | any
 }
 
 declare interface ExecutorParentInterface {
@@ -108,90 +156,145 @@ declare interface ExecutorParentInterface {
     name: string
     __now_method: any
     now_method: any
-    target: HTMLElement|any|null
-    preventDefault (): boolean
-    data ($name: string, $default: any): any
+    target: HTMLElement | any | null
+
+    preventDefault(): boolean
+
+    data($name: string, $default: any): any
 }
 
 declare interface StateInterface {
-    all (): any
-    get (path: string, defaults?: any): any
-    set (path: string, value: any): any|StateInterface
-    delete (path: string): boolean
-    deleted (paths: any): any|StateInterface
-    has (path: string): boolean
-    make_storage (path: string, storage: any): any|StateInterface
-    merge (set_state: object): any|StateInterface
-    save (path: string): boolean
-    delete_all (): any|StateInterface
-    clear_all (defaults?: any): any|StateInterface
-    watcher (watchClass: StateWatcherInterface): any|StateInterface
-    on (event: any, closure?: any, bind?: any): any|StateInterface
-    off (event?: any, closure?: any): any|StateInterface
+    all(): any
+
+    get(path: string, defaults?: any): any
+
+    set(path: string, value: any): any | StateInterface
+
+    delete(path: string): boolean
+
+    deleted(paths: any): any | StateInterface
+
+    has(path: string): boolean
+
+    make_storage(path: string, storage: any): any | StateInterface
+
+    merge(set_state: object): any | StateInterface
+
+    save(path: string): boolean
+
+    delete_all(): any | StateInterface
+
+    clear_all(defaults?: any): any | StateInterface
+
+    watcher(watchClass: StateWatcherInterface): any | StateInterface
+
+    on(event: any, closure?: any, bind?: any): any | StateInterface
+
+    off(event?: any, closure?: any): any | StateInterface
+
     _callEvent(event_name: string, state_name: string, ...attrs: any[]): void
-    _onceCallEvent (event_name: string, state_name: string, attrs: any): void
+
+    _onceCallEvent(event_name: string, state_name: string, attrs: any): void
+
     _dispatch_event(event_name: string, data: any): StateInterface
-    _correctPath (path: string): string
+
+    _correctPath(path: string): string
 }
 
-declare interface StateMagic extends StateInterface{
+declare interface StateMagic extends StateInterface {
     '*': any
 }
 
 declare interface String {
-    parse(store : object) : string;
-    exec(...params : any[]) : string;
-    so(...params : any[]) : string;
-    call(store : object) : string;
-    to(command : any, params : any[]) : string;
+    parse(store: object): string;
+
+    exec(...params: any[]): string;
+
+    so(...params: any[]): string;
+
+    call(store: object): string;
+
+    to(command: any, params: any[]): string;
 }
 
 declare interface Array<T> {
-    parse(store : object) : object;
-    exec(...params : any[]) : object;
-    call(store : object) : object;
-    tom(command : any) : object;
-    to(command : any, params : any[]) : object;
+    parse(store: object): object;
+
+    exec(...params: any[]): object;
+
+    call(store: object): object;
+
+    tom(command: any): object;
+
+    to(command: any, params: any[]): object;
 }
 
 declare interface JaxInterface {
     ljs: Ljs
-    post (path: string, params?: any, storage?: any): any|Promise<JaxInterface>
-    get (path: string, params?: any, storage?: any): any|Promise<JaxInterface>
-    head (path: string, params?: any, storage?: any): any|Promise<JaxInterface>
-    put (path: string, params?: any, storage?: any): any|Promise<JaxInterface>
-    del (path: string, params?: any, storage?: any): any|Promise<JaxInterface>
-    _sendAjax(method: string, path: string, params: any, storage: any): any|Promise<JaxInterface>
+
+    post(path: string, params?: any, storage?: any): any | Promise<JaxInterface>
+
+    get(path: string, params?: any, storage?: any): any | Promise<JaxInterface>
+
+    head(path: string, params?: any, storage?: any): any | Promise<JaxInterface>
+
+    put(path: string, params?: any, storage?: any): any | Promise<JaxInterface>
+
+    del(path: string, params?: any, storage?: any): any | Promise<JaxInterface>
+
+    _sendAjax(method: string, path: string, params: any, storage: any): any | Promise<JaxInterface>
 }
 
 declare interface JaxExecControllerInterface {
-    with (withs: object): JaxExecControllerInterface
-    call (name: string, params?: any): JaxExecControllerInterface
-    get (name: string|number): any
-    remove (name: string|number): JaxExecControllerInterface
-    send (): any|Promise<JaxExecControllerInterface>
-    onSuccess (data: any, val?:any): JaxExecControllerInterface
-    onError (data: any, val?:any): JaxExecControllerInterface
-    onDone (data: any, val?:any): JaxExecControllerInterface
-    mergeParams (data: object): JaxExecControllerInterface
-    storage (storage: any): JaxExecControllerInterface
-    state (path: string): JaxExecControllerInterface
-    emitGet (): JaxExecControllerInterface
+    with(withs: object): JaxExecControllerInterface
+
+    call(name: string, params?: any): JaxExecControllerInterface
+
+    get(name: string | number): any
+
+    remove(name: string | number): JaxExecControllerInterface
+
+    send(): any | Promise<JaxExecControllerInterface>
+
+    onSuccess(data: any, val?: any): JaxExecControllerInterface
+
+    onError(data: any, val?: any): JaxExecControllerInterface
+
+    onDone(data: any, val?: any): JaxExecControllerInterface
+
+    mergeParams(data: object): JaxExecControllerInterface
+
+    storage(storage: any): JaxExecControllerInterface
+
+    state(path: string): JaxExecControllerInterface
+
+    emitGet(): JaxExecControllerInterface
 }
 
 declare interface LStorageInterface {
     ljs: Ljs
-    _get (name: string, defaultData?: any): any
-    hasGroup (group: string): boolean
-    has (name: string, group?: string|null): boolean
-    getAll (group?: string|null): any
-    put (name: string|object, value?: any, group?: string|null): any|LStorageInterface
-    getWithDefault (name: string, defaultData?: any): any
-    get (name: string|object, group?: string|null): any
-    remove (name: string|object, group?: string|null): any|LStorageInterface
-    _set_group (group: string): any|LStorageInterface
-    _get_state (): any|LStorageInterface
-    _save_state (): any|LStorageInterface
+
+    _get(name: string, defaultData?: any): any
+
+    hasGroup(group: string): boolean
+
+    has(name: string, group?: string | null): boolean
+
+    getAll(group?: string | null): any
+
+    put(name: string | object, value?: any, group?: string | null): any | LStorageInterface
+
+    getWithDefault(name: string, defaultData?: any): any
+
+    get(name: string | object, group?: string | null): any
+
+    remove(name: string | object, group?: string | null): any | LStorageInterface
+
+    _set_group(group: string): any | LStorageInterface
+
+    _get_state(): any | LStorageInterface
+
+    _save_state(): any | LStorageInterface
 }
 
 interface NProgressOptions {
@@ -214,18 +317,27 @@ interface NProgress {
     status: number | null;
 
     configure(options: Partial<NProgressOptions>): NProgress;
+
     set(number: number): NProgress;
+
     isStarted(): boolean;
+
     start(): NProgress;
+
     done(force?: boolean): NProgress;
+
     inc(amount?: number): NProgress;
+
     trickle(): NProgress;
 
     /* Internal */
 
     render(fromStart?: boolean): HTMLDivElement;
+
     remove(): void;
+
     isRendered(): boolean;
+
     getPositioningCSS(): 'translate3d' | 'translate' | 'margin';
 }
 
@@ -453,7 +565,7 @@ interface ToastrDisplayMethod {
     (message: string, title?: string, overrides?: ToastrOptions): JQuery;
 }
 
-type ToastType = 'error'|'info'|'success'|'warning';
+type ToastType = 'error' | 'info' | 'success' | 'warning';
 
 interface ToastMap {
     /**
@@ -486,7 +598,7 @@ interface ToastrResponse {
     /**
      * The current state of the toast.
      */
-    state: 'visible'|'hidden';
+    state: 'visible' | 'hidden';
     /**
      * The datetime the toast was opened.
      */
@@ -506,7 +618,7 @@ interface ToastrResponse {
 }
 
 interface Toastr {
-    clear: { (toast?: JQuery, clearOptions?: {force: boolean}): void; };
+    clear: { (toast?: JQuery, clearOptions?: { force: boolean }): void; };
     remove: {
         /**
          * Removes all toasts (without animation)
@@ -571,7 +683,7 @@ interface Toastr {
 }
 
 interface LjsChannel {
-    
+
     /**
      * The Echo options.
      */
@@ -581,36 +693,36 @@ interface LjsChannel {
      * The echo connector.
      */
     connector: any;
-    
+
     /**
      * Listen for an event on the channel instance.
      */
-    listen(event: string, callback: Function|string|null): LjsChannel|any;
-    
+    listen(event: string, callback: Function | string | null): LjsChannel | any;
+
     /**
      * Listen for a whisper event on the channel instance.
      */
-    listenForWhisper(event: string, callback: Function|string|null): LjsChannel|any;
-    
+    listenForWhisper(event: string, callback: Function | string | null): LjsChannel | any;
+
     /**
      * Listen for an event on the channel instance.
      */
-    notification(callback: Function|string|null): LjsChannel|any;
-    
+    notification(callback: Function | string | null): LjsChannel | any;
+
     /**
      * Stop listening to an event on the channel instance.
      */
-    stopListening(event: string): LjsChannel|any;
-    
+    stopListening(event: string): LjsChannel | any;
+
     /**
      * Stop listening for a whispser event on the channel instance.
      */
-    stopListeningForWhisper(event: string): LjsChannel|any;
+    stopListeningForWhisper(event: string): LjsChannel | any;
 
     /**
      * To broadcast client events
      */
-    whisper(event: string, data: any): LjsChannel|any;
+    whisper(event: string, data: any): LjsChannel | any;
 }
 
 interface LjsPresenceChannel {
@@ -628,17 +740,17 @@ interface LjsPresenceChannel {
     /**
      * Register a callback to be called anytime the member list changes.
      */
-    here(callback: Function|string|null): LjsPresenceChannel|any;
+    here(callback: Function | string | null): LjsPresenceChannel | any;
 
     /**
      * Listen for someone joining the channel.
      */
-    joining(callback: Function|string|null): LjsPresenceChannel|any;
+    joining(callback: Function | string | null): LjsPresenceChannel | any;
 
     /**
      * Listen for someone leaving the channel.
      */
-    leaving(callback: Function|string|null): LjsPresenceChannel|any;
+    leaving(callback: Function | string | null): LjsPresenceChannel | any;
 
     /**
      * Compo presence
@@ -646,16 +758,16 @@ interface LjsPresenceChannel {
      * @param joining
      * @param leaving
      */
-    presence(here: Function|string|null, joining: Function|string|null, leaving: Function|string|null): LjsPresenceChannel|any;
+    presence(here: Function | string | null, joining: Function | string | null, leaving: Function | string | null): LjsPresenceChannel | any;
 }
 
 interface LjsEcho {
-    
+
     /**
      * The echo connector.
      */
     connector: any;
-    
+
     /**
      * The Wrapper options.
      */
@@ -665,52 +777,52 @@ interface LjsEcho {
      * All created chanels
      */
     channels: any;
-    
+
     /**
      * Get a channel instance by name.
      */
-    channel(channel: string): LjsChannel|any;
-    
+    channel(channel: string): LjsChannel | any;
+
     /**
      * Disconnect from the Echo server.
      */
     disconnect(): void;
-    
+
     /**
      * Get a presence channel instance by name.
      */
-    join(channel: string): LjsPresenceChannel|any;
-    
+    join(channel: string): LjsPresenceChannel | any;
+
     /**
      * Leave the given channel, as well as its private and presence variants.
      */
-    leave(channel: string): LjsEcho|any;
-    
+    leave(channel: string): LjsEcho | any;
+
     /**
      * Leave the given channel.
      */
-    leaveChannel(channel: string): LjsEcho|any;
+    leaveChannel(channel: string): LjsEcho | any;
 
     /**
      * Leave tall registered channels.
      */
-    leaveRegistered(): LjsEcho|any;
-    
+    leaveRegistered(): LjsEcho | any;
+
     /**
      * Listen for an event on a channel instance.
      */
-    listen(channel: string, event: string, callback?: Function|string|null): LjsChannel|any;
-    
+    listen(channel: string, event: string, callback?: Function | string | null): LjsChannel | any;
+
     /**
      * Get a private channel instance by name.
      */
-    private(channel: string): LjsChannel|any;
-    
+    private(channel: string): LjsChannel | any;
+
     /**
      * Get a private encrypted channel instance by name.
      */
-    encryptedPrivate(channel: string): LjsChannel|any;
-    
+    encryptedPrivate(channel: string): LjsChannel | any;
+
     /**
      * Get the Socket ID for the connection.
      */

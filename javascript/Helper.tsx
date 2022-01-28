@@ -6,16 +6,14 @@ export class Helper extends Conditions {
      * Execute before load
      * @param applyScript
      */
-    static before_load (applyScript: any) {
+    static before_load(applyScript: any) {
 
         if (typeof applyScript === 'function') {
 
             if (window.ljs !== undefined) {
 
                 applyScript(window.ljs);
-            }
-
-            else {
+            } else {
 
                 document.addEventListener("ljs:before_load", (event: any) => {
 
@@ -31,7 +29,7 @@ export class Helper extends Conditions {
      * Execute on document load
      * @param readyScript
      */
-    static document_load (readyScript: any) {
+    static document_load(readyScript: any) {
 
         if (document.readyState === 'loading') {
 
@@ -49,7 +47,7 @@ export class Helper extends Conditions {
      * Call on ready script
      * @param readyFn
      */
-    static ready_script (readyFn: any) {
+    static ready_script(readyFn: any) {
 
         document.addEventListener('ljs:nav:complete', () => {
 
@@ -76,7 +74,7 @@ export class Helper extends Conditions {
      * @param keepArray
      * @param separator
      */
-    static dot (obj: any, tgt: any = {}, path: any = [], useBrackets: boolean = false, keepArray: boolean = false, separator: string = ".") {
+    static dot(obj: any, tgt: any = {}, path: any = [], useBrackets: boolean = false, keepArray: boolean = false, separator: string = ".") {
 
         let isArray = Array.isArray(obj);
 
@@ -126,7 +124,7 @@ export class Helper extends Conditions {
      * @param num_prefix
      * @param temp_key
      */
-    static http_build_query (obj: any, num_prefix: number|null = null, temp_key: string|null = null) {
+    static http_build_query(obj: any, num_prefix: number | null = null, temp_key: string | null = null) {
 
         let output_string: any = []
 
@@ -145,9 +143,7 @@ export class Helper extends Conditions {
                 if (typeof obj[val] === 'object') {
 
                     output_string.push(key + '=' + JSON.stringify(obj[val]))
-                }
-
-                else {
+                } else {
 
                     let value = encodeURIComponent(String(obj[val]).replace(/[!'()*]/g, escape));
 
@@ -164,13 +160,13 @@ export class Helper extends Conditions {
      * Get query value
      * @param name
      */
-    static query_get (name: string|null = null) {
+    static query_get(name: string | null = null) {
 
         let match,
-            pl     = /\+/g,
+            pl = /\+/g,
             search = /([^&=]+)=?([^&]*)/g,
             decode = (s: any) => decodeURIComponent(s.replace(pl, " ")),
-            query  = window.location.search.substring(1);
+            query = window.location.search.substring(1);
 
         let urlParams: any = {};
 
@@ -182,9 +178,7 @@ export class Helper extends Conditions {
         if (name) {
 
             return urlParams[name];
-        }
-
-        else {
+        } else {
 
             return urlParams;
         }
@@ -197,13 +191,23 @@ export class Helper extends Conditions {
      * @param dec_point
      * @param thousands_sep
      */
-    static number_format(num: any, decimals: number = 0, dec_point: string = '.', thousands_sep: string = ',' ) {
+    static number_format(num: any, decimals: number = 0, dec_point: string = '.', thousands_sep: string = ',') {
         let i, j, kw, kd, km;
-        if( isNaN(decimals = Math.abs(decimals)) ){ decimals = 2; }
-        if( dec_point === undefined ){ dec_point = ","; }
-        if( thousands_sep === undefined ){ thousands_sep = "."; }
+        if (isNaN(decimals = Math.abs(decimals))) {
+            decimals = 2;
+        }
+        if (dec_point === undefined) {
+            dec_point = ",";
+        }
+        if (thousands_sep === undefined) {
+            thousands_sep = ".";
+        }
         i = parseInt(num = (+num || 0).toFixed(decimals)) + "";
-        if( (j = i.length) > 3 ){ j = j % 3; } else{ j = 0; }
+        if ((j = i.length) > 3) {
+            j = j % 3;
+        } else {
+            j = 0;
+        }
         km = (j ? i.substr(0, j) + thousands_sep : "");
         kw = i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands_sep);
         kd = (decimals ? dec_point + Math.abs(num - parseInt(i)).toFixed(decimals).replace(/-/, '0').slice(2) : "");
@@ -225,7 +229,7 @@ export class Helper extends Conditions {
      * MD5 Hash sum
      * @param data
      */
-    static md5 (data: any) {
+    static md5(data: any) {
 
         return require('md5')(data);
     }

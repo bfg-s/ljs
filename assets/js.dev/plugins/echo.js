@@ -7178,7 +7178,7 @@ runtime.setup(pusher_Pusher);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/echo/echo.tsx */"./javascript/plugins/echo/echo.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/echo/echo.tsx */"./javascript/plugins/echo/echo.tsx");
 
 
 /***/ })

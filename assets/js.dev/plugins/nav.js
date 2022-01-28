@@ -391,7 +391,8 @@ var HTMLDataEvent = /** @class */ (function () {
         try {
             exec = JSON.parse(exec);
         }
-        catch (e) { }
+        catch (e) {
+        }
         try {
             params = JSON.parse(params);
         }
@@ -402,7 +403,8 @@ var HTMLDataEvent = /** @class */ (function () {
                     try {
                         i = JSON.parse(i);
                     }
-                    catch (e) { }
+                    catch (e) {
+                    }
                     return i;
                 });
             }
@@ -571,7 +573,8 @@ var Nav = /** @class */ (function () {
             try {
                 _this.ljs.executor.doc.counters = {};
             }
-            catch (e) { }
+            catch (e) {
+            }
             var obj = document.querySelector(_this.ljs.cfg("pjax-container"));
             if (obj) {
                 new HTMLReady_1.HTMLReady(obj);
@@ -5421,7 +5424,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/nav/nav.tsx */"./javascript/plugins/nav/nav.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/nav/nav.tsx */"./javascript/plugins/nav/nav.tsx");
 
 
 /***/ })

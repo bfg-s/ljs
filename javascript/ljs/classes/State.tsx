@@ -1,7 +1,6 @@
 import {StateInstance} from "./StateInstance";
 
-export class State
-{
+export class State {
     public all: any = {}
     public prox: any
 
@@ -14,17 +13,17 @@ export class State
         return this.prox;
     }
 
-    deleteProperty (that: State, property: string) {
+    deleteProperty(that: State, property: string) {
 
         return window.ljs.$state ? window.ljs.$state.delete(property) : null;
     }
 
-    has (that: State, property: string) {
+    has(that: State, property: string) {
 
         return window.ljs.$state ? window.ljs.$state.has(property) : false;
     }
 
-    set (that: State, property: string, value: any) {
+    set(that: State, property: string, value: any) {
 
         if (window.ljs.$state) {
 
@@ -34,11 +33,11 @@ export class State
         return undefined;
     }
 
-    get (that: State, property: string) {
+    get(that: State, property: string) {
 
         let state: StateInstance;
         if (!window.ljs.$state) return;
-        else  state = window.ljs.$state;
+        else state = window.ljs.$state;
 
         if (property === 'all') {
 
@@ -53,7 +52,7 @@ export class State
         return state.get(property)
     }
 
-    ownKeys () {
+    ownKeys() {
 
         return Reflect.ownKeys(StateInstance.state);
     }

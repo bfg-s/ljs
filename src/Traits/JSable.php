@@ -23,7 +23,7 @@ trait JSable
      */
     public function js()
     {
-        if (! JSable::$store) {
+        if (!JSable::$store) {
             JSable::$store = new LJS();
         }
 

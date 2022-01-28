@@ -54,7 +54,7 @@ export class EchoWrapper implements LjsEcho {
      * @param event
      * @param callback
      */
-    listen(channel: string, event: string, callback: Function|string) {
+    listen(channel: string, event: string, callback: Function | string) {
         return this.channel(channel).listen(event, callback)
     }
 

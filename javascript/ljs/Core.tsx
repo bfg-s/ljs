@@ -11,14 +11,14 @@ import get from 'lodash/get';
 /**
  * Build core
  */
-export class Core extends Helper{
+export class Core extends Helper {
 
     static loaded: boolean = false;
 
     /**
      * Make window global classes
      */
-    static globalBootstrap () {
+    static globalBootstrap() {
 
         window.Executor = require('./Extends/ExecutorParent')['ExecutorParent'];
         window.StateWatcher = require('./Extends/StateWatcher')['StateWatcher'];
@@ -37,7 +37,7 @@ export class Core extends Helper{
      * @param $path
      * @param $params
      */
-    static lang ($path: string, $params: any = {}) {
+    static lang($path: string, $params: any = {}) {
 
         let result = get(window.locales, $path);
 
@@ -50,12 +50,12 @@ export class Core extends Helper{
         return result === undefined ? $path : result;
     }
 
-    static switchLocale (locale: string) {
+    static switchLocale(locale: string) {
 
         let locales = window.locales ? Object.keys(window.locales) : []
 
         locales.map((group) => {
-            $.getScript( `/locales/${locale}/${group}.js`);
+            $.getScript(`/locales/${locale}/${group}.js`);
         });
 
         window.ljs._dispatch_event('locale:switched', locale);
@@ -64,9 +64,9 @@ export class Core extends Helper{
     /**
      * Make JavaScript prototypes
      */
-    static jsPrototypes () {
+    static jsPrototypes() {
 
-        String.prototype.parse = function (store:any = {}) {
+        String.prototype.parse = function (store: any = {}) {
 
             return window.ljs.parse(this.toString(), store);
         };
@@ -113,7 +113,7 @@ export class Core extends Helper{
     /**
      * Make ljs instance
      */
-    static makeInstance () {
+    static makeInstance() {
 
         if (!this.loaded) {
 
@@ -127,11 +127,11 @@ export class Core extends Helper{
 
         return this;
     }
-    
+
     /**
      * Set state loaded ljs
      */
-    static loadedLjs () {
+    static loadedLjs() {
 
         if (!this.loaded) {
 

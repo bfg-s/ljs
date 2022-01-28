@@ -5,6 +5,7 @@ namespace Lar\LJS\Core;
 use Composer\Json\JsonFormatter;
 use Illuminate\Console\Command;
 use Lar\Developer\Commands\Dump\DumpExecute;
+use Route;
 
 /**
  * Class JsRouteGenerator.
@@ -22,7 +23,7 @@ class JsRouteGenerator implements DumpExecute
         $host = 'global';
 
         /** @var \Illuminate\Routing\Route $route */
-        foreach (\Route::getRoutes()->getRoutes() as $route) {
+        foreach (Route::getRoutes()->getRoutes() as $route) {
             if (isset($route->action['as'])) {
                 $domain = $route->getDomain();
                 $routes_list[$domain ? $domain : $host][$route->getName()] = [

@@ -10,7 +10,7 @@ export class EchoChannel implements LjsChannel {
     /**
      * The echo connector.
      */
-    connector: LjsChannel|any;
+    connector: LjsChannel | any;
 
     /**
      * Channel constructor
@@ -27,7 +27,7 @@ export class EchoChannel implements LjsChannel {
      * @param event
      * @param callback
      */
-    listen(event: string, callback: Function|string|null = null) {
+    listen(event: string, callback: Function | string | null = null) {
         this.options.event = event;
         this.connector.listen(EchoHelp.format(this.options, event), EchoHelp.cb_formatter(this.options, callback, this.connector));
         return this;
@@ -38,7 +38,7 @@ export class EchoChannel implements LjsChannel {
      * @param event
      * @param callback
      */
-    listenForWhisper(event: string, callback: Function|string|null = null) {
+    listenForWhisper(event: string, callback: Function | string | null = null) {
         this.options.event = event;
         this.connector.listenForWhisper(event, EchoHelp.cb_formatter(this.options, callback, this.connector));
         return this;
@@ -48,7 +48,7 @@ export class EchoChannel implements LjsChannel {
      * Listen for an event on the channel instance.
      * @param callback
      */
-    notification(callback: Function|string|null = null) {
+    notification(callback: Function | string | null = null) {
         this.connector.notification(EchoHelp.cb_formatter(this.options, callback, this.connector));
         return this;
     }
@@ -78,7 +78,7 @@ export class EchoChannel implements LjsChannel {
      * @param event
      * @param data
      */
-    whisper (event: string, data: any) {
+    whisper(event: string, data: any) {
         this.connector.whisper(event, data);
         return this;
     }

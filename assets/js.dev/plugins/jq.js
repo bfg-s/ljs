@@ -398,16 +398,6 @@ var ExecutorParent = /** @class */ (function () {
         this.__now_method = null;
         this.jquery = false;
     }
-    /**
-     * preventDefault on event
-     */
-    ExecutorParent.prototype.preventDefault = function () {
-        if (this.event.preventDefault !== undefined) {
-            this.event.preventDefault();
-            return true;
-        }
-        return false;
-    };
     Object.defineProperty(ExecutorParent.prototype, "now_method", {
         /**
          * Now call method
@@ -463,37 +453,6 @@ var ExecutorParent = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    ExecutorParent.prototype.data = function ($name, $default) {
-        if ($default === void 0) { $default = null; }
-        if (this.currentTarget && this.currentTarget.dataset) {
-            var varName = camelCase_1.default($name);
-            if (varName in this.currentTarget.dataset) {
-                var data = this.currentTarget.dataset[varName];
-                if (data === 'true') {
-                    return true;
-                }
-                else if (data === 'false' || data === undefined) {
-                    return false;
-                }
-                else if (data === 'null') {
-                    return null;
-                }
-                else if (data === 'undefined') {
-                    return undefined;
-                }
-                else if (data === '') {
-                    return true;
-                }
-                else {
-                    return data;
-                }
-            }
-            else {
-                return $default;
-            }
-        }
-        return $default;
-    };
     Object.defineProperty(ExecutorParent.prototype, "trace", {
         /**
          * Get trace execute results commands pipeline
@@ -561,6 +520,47 @@ var ExecutorParent = /** @class */ (function () {
     ExecutorParent.__individual_method = function () {
         return "__invoke";
     };
+    /**
+     * preventDefault on event
+     */
+    ExecutorParent.prototype.preventDefault = function () {
+        if (this.event.preventDefault !== undefined) {
+            this.event.preventDefault();
+            return true;
+        }
+        return false;
+    };
+    ExecutorParent.prototype.data = function ($name, $default) {
+        if ($default === void 0) { $default = null; }
+        if (this.currentTarget && this.currentTarget.dataset) {
+            var varName = camelCase_1.default($name);
+            if (varName in this.currentTarget.dataset) {
+                var data = this.currentTarget.dataset[varName];
+                if (data === 'true') {
+                    return true;
+                }
+                else if (data === 'false' || data === undefined) {
+                    return false;
+                }
+                else if (data === 'null') {
+                    return null;
+                }
+                else if (data === 'undefined') {
+                    return undefined;
+                }
+                else if (data === '') {
+                    return true;
+                }
+                else {
+                    return data;
+                }
+            }
+            else {
+                return $default;
+            }
+        }
+        return $default;
+    };
     return ExecutorParent;
 }());
 exports.ExecutorParent = ExecutorParent;
@@ -604,6 +604,36 @@ Helper_1.Helper.before_load(function (ljs) {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         /**
+         * Static jQuery call for target object
+         * @param $name
+         * @param $args
+         * @private
+         */
+        jQuery.__call = function ($name, $args) {
+            if ($args === void 0) { $args = []; }
+            if (this.self.target) {
+                var jq = $(this.self.target);
+                return jq[$name].apply(jq, $args);
+            }
+            if (true) {
+                ljs._error('Undefined object target!');
+            }
+            return undefined;
+        };
+        /**
+         * Self object
+         */
+        jQuery.jquery = function () {
+            return $(this.self.target);
+        };
+        /**
+         * Class name for call
+         * @private
+         */
+        jQuery.__name = function () {
+            return "$";
+        };
+        /**
          * Selector adapter
          * @param $select
          * @private
@@ -640,29 +670,6 @@ Helper_1.Helper.before_load(function (ljs) {
                 ljs._error('Undefined object selector!');
             }
             return undefined;
-        };
-        /**
-         * Static jQuery call for target object
-         * @param $name
-         * @param $args
-         * @private
-         */
-        jQuery.__call = function ($name, $args) {
-            if ($args === void 0) { $args = []; }
-            if (this.self.target) {
-                var jq = $(this.self.target);
-                return jq[$name].apply(jq, $args);
-            }
-            if (true) {
-                ljs._error('Undefined object target!');
-            }
-            return undefined;
-        };
-        /**
-         * Self object
-         */
-        jQuery.jquery = function () {
-            return $(this.self.target);
         };
         /**
          * Apply many objects attributes
@@ -712,13 +719,6 @@ Helper_1.Helper.before_load(function (ljs) {
          */
         jQuery.prototype['eval'] = function (data) {
             $.globalEval(data);
-        };
-        /**
-         * Class name for call
-         * @private
-         */
-        jQuery.__name = function () {
-            return "$";
         };
         return jQuery;
     }(ExecutorParent_1.ExecutorParent));
@@ -6448,7 +6448,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/jq.tsx */"./javascript/plugins/jq.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/jq.tsx */"./javascript/plugins/jq.tsx");
 
 
 /***/ })

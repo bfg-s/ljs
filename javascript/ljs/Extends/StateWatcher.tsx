@@ -13,7 +13,7 @@ export class StateWatcher implements StateWatcherInterface {
      * Data getter
      * @returns {*}
      */
-    get data () {
+    get data() {
 
         return this.storage.data ? this.storage.data : {};
     }
@@ -22,7 +22,7 @@ export class StateWatcher implements StateWatcherInterface {
      * Target getter
      * @returns {*}
      */
-    get target () {
+    get target() {
 
         return this.storage.target ? this.storage.target : null;
     }
@@ -31,7 +31,7 @@ export class StateWatcher implements StateWatcherInterface {
      * Storage setter
      * @param storage
      */
-    setStorage (storage: any) {
+    setStorage(storage: any) {
 
         this.storage = storage;
 
@@ -44,7 +44,7 @@ export class StateWatcher implements StateWatcherInterface {
      * @param $name
      * @param $data
      */
-    call ($event: string, $name: string, $data: any) {
+    call($event: string, $name: string, $data: any) {
 
         let old_name = $name;
 
@@ -53,7 +53,7 @@ export class StateWatcher implements StateWatcherInterface {
         if (this.path && typeof this.path === 'string') {
 
             $name = $name.replace(`${this.path}.`, '');
-            
+
             stop = $name === old_name;
         }
 

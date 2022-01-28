@@ -7,14 +7,17 @@ Helper.before_load((ljs: Ljs) => {
 
     class Mask extends ExecutorParent {
 
-        __invoke ($mask: any) {
+        static __name() {
+
+            return "mask";
+        }
+
+        __invoke($mask: any) {
 
             if (this.target && $mask) {
 
                 return Inputmask($mask).mask(this.target);
-            }
-
-            else {
+            } else {
 
                 if (process.env.NODE_ENV === 'development') {
                     ljs._error('Not found object for input mask!');
@@ -22,14 +25,9 @@ Helper.before_load((ljs: Ljs) => {
             }
         }
 
-        help () {
+        help() {
 
             return window.open('https://github.com/RobinHerbots/Inputmask', '_blank')
-        }
-
-        static __name () {
-
-            return "mask";
         }
     }
 

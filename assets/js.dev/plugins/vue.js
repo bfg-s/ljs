@@ -398,16 +398,6 @@ var ExecutorParent = /** @class */ (function () {
         this.__now_method = null;
         this.jquery = false;
     }
-    /**
-     * preventDefault on event
-     */
-    ExecutorParent.prototype.preventDefault = function () {
-        if (this.event.preventDefault !== undefined) {
-            this.event.preventDefault();
-            return true;
-        }
-        return false;
-    };
     Object.defineProperty(ExecutorParent.prototype, "now_method", {
         /**
          * Now call method
@@ -463,37 +453,6 @@ var ExecutorParent = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    ExecutorParent.prototype.data = function ($name, $default) {
-        if ($default === void 0) { $default = null; }
-        if (this.currentTarget && this.currentTarget.dataset) {
-            var varName = camelCase_1.default($name);
-            if (varName in this.currentTarget.dataset) {
-                var data = this.currentTarget.dataset[varName];
-                if (data === 'true') {
-                    return true;
-                }
-                else if (data === 'false' || data === undefined) {
-                    return false;
-                }
-                else if (data === 'null') {
-                    return null;
-                }
-                else if (data === 'undefined') {
-                    return undefined;
-                }
-                else if (data === '') {
-                    return true;
-                }
-                else {
-                    return data;
-                }
-            }
-            else {
-                return $default;
-            }
-        }
-        return $default;
-    };
     Object.defineProperty(ExecutorParent.prototype, "trace", {
         /**
          * Get trace execute results commands pipeline
@@ -561,6 +520,47 @@ var ExecutorParent = /** @class */ (function () {
     ExecutorParent.__individual_method = function () {
         return "__invoke";
     };
+    /**
+     * preventDefault on event
+     */
+    ExecutorParent.prototype.preventDefault = function () {
+        if (this.event.preventDefault !== undefined) {
+            this.event.preventDefault();
+            return true;
+        }
+        return false;
+    };
+    ExecutorParent.prototype.data = function ($name, $default) {
+        if ($default === void 0) { $default = null; }
+        if (this.currentTarget && this.currentTarget.dataset) {
+            var varName = camelCase_1.default($name);
+            if (varName in this.currentTarget.dataset) {
+                var data = this.currentTarget.dataset[varName];
+                if (data === 'true') {
+                    return true;
+                }
+                else if (data === 'false' || data === undefined) {
+                    return false;
+                }
+                else if (data === 'null') {
+                    return null;
+                }
+                else if (data === 'undefined') {
+                    return undefined;
+                }
+                else if (data === '') {
+                    return true;
+                }
+                else {
+                    return data;
+                }
+            }
+            else {
+                return $default;
+            }
+        }
+        return $default;
+    };
     return ExecutorParent;
 }());
 exports.ExecutorParent = ExecutorParent;
@@ -598,6 +598,15 @@ var VueExecutor = /** @class */ (function (_super) {
     function VueExecutor() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    /**
+     * Class name for call
+     *
+     * @returns {string}
+     * @private
+     */
+    VueExecutor.__name = function () {
+        return "vue";
+    };
     VueExecutor.prototype.init = function () {
         if (this.target) {
             var pjax_1 = window.ljs.config('pjax-container');
@@ -654,15 +663,6 @@ var VueExecutor = /** @class */ (function (_super) {
             }
             window.ljs.$vue[group_1][name_1] = vue;
         }
-    };
-    /**
-     * Class name for call
-     *
-     * @returns {string}
-     * @private
-     */
-    VueExecutor.__name = function () {
-        return "vue";
     };
     return VueExecutor;
 }(ExecutorParent_1.ExecutorParent));
@@ -842,7 +842,11 @@ Helper_1.Helper.before_load(function (ljs) {
         computed: {
             echo: function () {
                 // @ts-ignore
-                return window.EchoWrapper ? new window.EchoWrapper({ namespace: this.$options.namespace, bind: this }) : null;
+                return window.EchoWrapper ? new window.EchoWrapper({
+                    // @ts-ignore
+                    namespace: this.$options.namespace,
+                    bind: this
+                }) : null;
             },
             jax: function () {
                 // @ts-ignore
@@ -20536,7 +20540,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/vue/vue.tsx */"./javascript/plugins/vue/vue.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/vue/vue.tsx */"./javascript/plugins/vue/vue.tsx");
 
 
 /***/ })

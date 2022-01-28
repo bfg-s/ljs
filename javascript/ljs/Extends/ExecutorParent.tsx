@@ -1,6 +1,6 @@
 import camelCase from 'lodash/camelCase';
 
-export abstract class ExecutorParent implements ExecutorParentInterface{
+export abstract class ExecutorParent implements ExecutorParentInterface {
 
     static ljs: any;
     static storage: any;
@@ -14,7 +14,7 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
     /**
      * Executor constructor
      */
-    constructor (ljs: Ljs) {
+    constructor(ljs: Ljs) {
 
         ExecutorParent.ljs = ljs
         ExecutorParent.storage = {};
@@ -27,24 +27,9 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
     }
 
     /**
-     * preventDefault on event
-     */
-    preventDefault () {
-
-        if (this.event.preventDefault !== undefined) {
-
-            this.event.preventDefault();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Now call method
      */
-    get now_method () {
+    get now_method() {
 
         return this.__now_method;
     }
@@ -52,28 +37,26 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
     /**
      * Get relation object
      */
-    get target () {
+    get target() {
 
         let obj = undefined;
 
         if (this.storage.object) {
 
             obj = this.storage.object;
-        }
-
-        else if (this.storage.target) {
+        } else if (this.storage.target) {
 
             obj = this.storage.target;
-        }
-
-        else if (this.storage.event && this.storage.event.target) {
+        } else if (this.storage.event && this.storage.event.target) {
 
             obj = this.storage.event.target;
         }
 
         if (obj) {
 
-            if (obj.executors === undefined) { obj.executors = {}; }
+            if (obj.executors === undefined) {
+                obj.executors = {};
+            }
 
             let name = (this.constructor as any).__name();
             if (name) {
@@ -88,14 +71,12 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
     /**
      * Get current target object
      */
-    get currentTarget () {
+    get currentTarget() {
 
         if (this.storage.event && this.storage.event.currentTarget) {
 
             return this.storage.event.currentTarget;
-        }
-
-        else if (this.target) {
+        } else if (this.target) {
 
             return this.target;
         }
@@ -103,34 +84,10 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
         return document;
     }
 
-    data ($name: string, $default: any = null) {
-
-        if (this.currentTarget && this.currentTarget.dataset) {
-
-            let varName = camelCase($name);
-
-            if (varName in this.currentTarget.dataset) {
-
-                let data = this.currentTarget.dataset[varName];
-                if (data === 'true') { return true; }
-                else if (data === 'false' || data === undefined) { return false; }
-                else if (data === 'null') { return null; }
-                else if (data === 'undefined') { return undefined; }
-                else if (data === '') { return true; }
-                else { return data; }
-            }
-            else {
-                return $default;
-            }
-        }
-
-        return $default;
-    }
-
     /**
      * Get trace execute results commands pipeline
      */
-    get trace () {
+    get trace() {
 
         if (this.storage.trace) {
 
@@ -143,7 +100,7 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
     /**
      * Get event data
      */
-    get event () {
+    get event() {
 
         if (this.storage.event) {
 
@@ -156,7 +113,7 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
     /**
      * Create jQuery current target element
      */
-    get jq () {
+    get jq() {
 
         return $(this.currentTarget);
     }
@@ -164,7 +121,7 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
     /**
      * Public storage
      */
-    get storage () {
+    get storage() {
 
         return ExecutorParent.storage;
     }
@@ -173,7 +130,7 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
      * Class name for call
      * @private
      */
-    static __name () {
+    static __name() {
 
         return '';
     }
@@ -182,7 +139,7 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
      * Aliases from object
      * @private
      */
-    static __aliases () {
+    static __aliases() {
 
         return [];
     }
@@ -191,8 +148,53 @@ export abstract class ExecutorParent implements ExecutorParentInterface{
      * Individual method name getter
      * @private
      */
-    static __individual_method () {
+    static __individual_method() {
 
         return "__invoke";
+    }
+
+    /**
+     * preventDefault on event
+     */
+    preventDefault() {
+
+        if (this.event.preventDefault !== undefined) {
+
+            this.event.preventDefault();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    data($name: string, $default: any = null) {
+
+        if (this.currentTarget && this.currentTarget.dataset) {
+
+            let varName = camelCase($name);
+
+            if (varName in this.currentTarget.dataset) {
+
+                let data = this.currentTarget.dataset[varName];
+                if (data === 'true') {
+                    return true;
+                } else if (data === 'false' || data === undefined) {
+                    return false;
+                } else if (data === 'null') {
+                    return null;
+                } else if (data === 'undefined') {
+                    return undefined;
+                } else if (data === '') {
+                    return true;
+                } else {
+                    return data;
+                }
+            } else {
+                return $default;
+            }
+        }
+
+        return $default;
     }
 }

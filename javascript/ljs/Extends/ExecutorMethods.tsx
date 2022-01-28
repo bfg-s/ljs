@@ -15,21 +15,31 @@ export class ExecutorMethods {
      * @param storage_data
      * @returns {null}
      */
-    exec (data: any, params: any = null, storage_data: any = {}) {
+    exec(data: any, params: any = null, storage_data: any = {}) {
 
-        if (typeof data === "string") { let n = data; data = {}; data[n] = params; }
+        if (typeof data === "string") {
+            let n = data;
+            data = {};
+            data[n] = params;
+        }
 
         let returns: any = [];
 
         map(data, (item: any, keys: any) => {
 
-            if (isNumber(keys)) { keys = item; item = null; }
+            if (isNumber(keys)) {
+                keys = item;
+                item = null;
+            }
 
             let numRegExp = /^([0-9\:]+)\:/,
                 $m = numRegExp.exec(keys),
                 $id: any = 0;
 
-            if ($m) { keys = keys.replace(numRegExp, ""); $id = $m[1]; }
+            if ($m) {
+                keys = keys.replace(numRegExp, "");
+                $id = $m[1];
+            }
 
             storage_data["response_id"] = $id;
 
@@ -54,10 +64,10 @@ export class ExecutorMethods {
                         send_now = null;
                         break;
                     case "*":
-                        send_now = returns[i-1];
+                        send_now = returns[i - 1];
                         break;
                     case ">>":
-                        send_now = key_map[i-1].call(storage_data);
+                        send_now = key_map[i - 1].call(storage_data);
                         break;
                     case (key.match(/^[0-9]\>$/) || {}).input:
                         let int_num = parseInt(key);
@@ -78,13 +88,16 @@ export class ExecutorMethods {
                             if (process.env.NODE_ENV === 'development') {
                                 (this as any)._detail("Execute data:", key.trim(), "Params:", send_now, "Storage:", storage_data);
                             }
-                            returns.push((this as any)._find_and_execute_command(key.trim(), send_now, merge(storage_data, {trace: returns, last: returns[i]})));
+                            returns.push((this as any)._find_and_execute_command(key.trim(), send_now, merge(storage_data, {
+                                trace: returns,
+                                last: returns[i]
+                            })));
                             i++;
                         }
                 }
             });
         });
-        return returns[returns.length-1];
+        return returns[returns.length - 1];
     }
 
     /**
@@ -94,7 +107,7 @@ export class ExecutorMethods {
      * @param storage
      * @returns {*}
      */
-    parse (str: string, storage: any = {}) {
+    parse(str: string, storage: any = {}) {
 
         //console.log(str, isString(str));
 
@@ -108,12 +121,10 @@ export class ExecutorMethods {
 
                 if (command === result) result = "";
 
-                if (str===command) {
+                if (str === command) {
 
                     str = result;
-                }
-
-                else {
+                } else {
 
                     if (isObject(result)) {
 
@@ -135,7 +146,7 @@ export class ExecutorMethods {
      * @param storage
      * @returns {undefined|*}
      */
-    call (command: string, storage: any = {}) {
+    call(command: string, storage: any = {}) {
 
         if (isString(command) && /^[\>\>]*([a-z0-9\_\-\:\.\$]+)(\((.*?)\)){0,1}$/i.test(command)) {
 
@@ -167,7 +178,7 @@ export class ExecutorMethods {
      * @param name
      * @param closure
      */
-    toExec (name: string, closure: any) {
+    toExec(name: string, closure: any) {
 
         if (typeof name === "object") {
 
@@ -202,7 +213,7 @@ export class ExecutorMethods {
      * Register class executor
      * @param object
      */
-    regExec (object: any) {
+    regExec(object: any) {
 
         if (typeof object !== "function") {
 

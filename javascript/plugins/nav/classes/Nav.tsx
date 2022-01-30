@@ -39,6 +39,12 @@ export class Nav {
         }
     }
 
+    readyObject (obj: any) {
+        if (obj) {
+            new HTMLReady(obj);
+        }
+    }
+
     reload() {
 
         this.goTo(window.location.href);

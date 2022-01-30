@@ -489,6 +489,11 @@ var Nav = /** @class */ (function () {
             window.location = path;
         }
     };
+    Nav.prototype.readyObject = function (obj) {
+        if (obj) {
+            new HTMLReady_1.HTMLReady(obj);
+        }
+    };
     Nav.prototype.reload = function () {
         this.goTo(window.location.href);
     };
@@ -5424,7 +5429,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/nav/nav.tsx */"./javascript/plugins/nav/nav.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/nav/nav.tsx */"./javascript/plugins/nav/nav.tsx");
 
 
 /***/ })

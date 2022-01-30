@@ -9301,7 +9301,7 @@ module.exports = g;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/fancy.tsx */"./javascript/plugins/fancy.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/fancy.tsx */"./javascript/plugins/fancy.tsx");
 
 
 /***/ })

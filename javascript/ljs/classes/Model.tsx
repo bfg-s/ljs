@@ -102,7 +102,21 @@ export class Model {
                         resolve(data);
                     }
                 } else {
-                    reject({status: target.status, statusText: target.statusText});
+                    let enc = new TextDecoder();
+                    // @ts-ignore
+                    let data = enc.decode(target.response);
+                    try { // @ts-ignore
+                        data = JSON.parse(data);
+                    } catch (e) {
+                    }
+                    if (typeof data === 'object' && '$exec' in data) {
+                        // @ts-ignore
+                        window.ljs.exec(data.$exec);
+                        unset(data, '$exec');
+                    }
+                    this.applyStates(state, data);
+                    //resolve(data);
+                    reject({data, status: target.status, statusText: target.statusText});
                 }
                 window.ljs.switchProcess(false);
             }, false);

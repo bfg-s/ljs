@@ -3019,7 +3019,22 @@ var Model = /** @class */ (function () {
                     }
                 }
                 else {
-                    reject({ status: target.status, statusText: target.statusText });
+                    var enc = new TextDecoder();
+                    // @ts-ignore
+                    var data = enc.decode(target.response);
+                    try { // @ts-ignore
+                        data = JSON.parse(data);
+                    }
+                    catch (e) {
+                    }
+                    if (typeof data === 'object' && '$exec' in data) {
+                        // @ts-ignore
+                        window.ljs.exec(data.$exec);
+                        unset_1.default(data, '$exec');
+                    }
+                    _this.applyStates(state, data);
+                    //resolve(data);
+                    reject({ data: data, status: target.status, statusText: target.statusText });
                 }
                 window.ljs.switchProcess(false);
             }, false);

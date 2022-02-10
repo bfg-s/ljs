@@ -59,7 +59,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         }
 
         if (app()->runningInConsole()) {
-            DumpAutoload::addToExecute(JsRouteGenerator::class);
+            //DumpAutoload::addToExecute(JsRouteGenerator::class);
             //DumpAutoload::addToExecute(JsLangGenerator::class);
         }
 

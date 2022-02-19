@@ -3018,6 +3018,12 @@ var Model = /** @class */ (function () {
                         resolve(data);
                     }
                 }
+                else if (target.status === 419) {
+                    // window.ljs.$jax.get(location.pathname).then((a: any) => {
+                    //     console.log(a);
+                    // });
+                    confirm('This page has expired.\nWould you like to refresh the page?') && window.location.reload();
+                }
                 else {
                     var enc = new TextDecoder();
                     // @ts-ignore

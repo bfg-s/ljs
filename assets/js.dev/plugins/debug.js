@@ -3981,7 +3981,7 @@ module.exports = g;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/vako/vendor/lar/ljs/javascript/plugins/debug/debug.tsx */"./javascript/plugins/debug/debug.tsx");
+module.exports = __webpack_require__(/*! /Users/xsaven/PhpstormProjects/lar/vendor/lar/ljs/javascript/plugins/debug/debug.tsx */"./javascript/plugins/debug/debug.tsx");
 
 
 /***/ })

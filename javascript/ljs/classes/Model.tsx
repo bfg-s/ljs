@@ -104,9 +104,10 @@ export class Model {
                     // window.ljs.$jax.get(location.pathname).then((a: any) => {
                     //     console.log(a);
                     // });
-                    confirm(
-                        'This page has expired.\nWould you like to refresh the page?'
-                    ) && window.location.reload()
+                    // confirm(
+                    //     'This page has expired.\nWould you like to refresh the page?'
+                    // ) && window.location.reload()
+                    window.location.reload();
                 } else {
                     let enc = new TextDecoder();
                     // @ts-ignore

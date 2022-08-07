@@ -8,12 +8,12 @@
         "js",
         "core"
     ],
-    "homepage": "https://bitbucket.org/lar-repo/ljs",
+    "homepage": "https://github.com/bfg-s/ljs",
     "license": "MIT",
     "authors": [
         {
-            "name": "xsaven",
-            "email": "dev.xsaven@gmail.com"
+            "name": "bfg",
+            "email": "bfg.script@gmail.com"
         }
     ],
     "prefer-stable": true,

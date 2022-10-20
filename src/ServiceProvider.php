@@ -63,7 +63,7 @@ class ServiceProvider extends ServiceProviderIlluminate
             //DumpAutoload::addToExecute(JsLangGenerator::class);
         }
 
-        $this->publishes([__DIR__.'/../assets' => public_path('ljs')], ['ljs-assets', 'laravel-assets']);
+        $this->publishes([__DIR__.'/../assets' => public_path('ljs')], ['laravel-assets']);
         //Tag::registerComponent("ajax_form", ajaxForm::class);
     }
 

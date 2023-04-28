@@ -2,8 +2,8 @@
 
 namespace Lar\LJS;
 
-use Arr;
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Lar\Developer\Commands\DumpAutoload;
 use Lar\Layout\Core\LConfigs;

@@ -79,7 +79,14 @@ class ServiceProvider extends ServiceProviderIlluminate
 
         $jax_route = md5(config('app.url'));
         Route::post($jax_route, '\Lar\LJS\JaxController@index')
-            ->middleware(['web', 'lang'])->name('jax.executor');
+            ->middleware([
+                \App\Http\Middleware\EncryptCookies::class,
+                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                \Illuminate\Session\Middleware\StartSession::class,
+                \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+                \Illuminate\Routing\Middleware\SubstituteBindings::class,
+                'lang'
+            ])->name('jax.executor');
 
         LConfigs::add('jax', $jax_route);
 

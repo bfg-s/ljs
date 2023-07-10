@@ -43,6 +43,11 @@ class ServiceProvider extends ServiceProviderIlluminate
     ];
 
     /**
+     * @var array
+     */
+    protected static array $jaxMiddlewares = [];
+
+    /**
      * Bootstrap services.
      *
      * @return void
@@ -65,6 +70,19 @@ class ServiceProvider extends ServiceProviderIlluminate
 
         $this->publishes([__DIR__.'/../assets' => public_path('ljs')], ['laravel-assets', 'ljs-assets']);
         //Tag::registerComponent("ajax_form", ajaxForm::class);
+
+        $jax_route = md5(config('app.url'));
+        Route::post($jax_route, '\Lar\LJS\JaxController@index')
+            ->middleware(array_merge([
+                \App\Http\Middleware\EncryptCookies::class,
+                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                \Illuminate\Session\Middleware\StartSession::class,
+                \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+                \Illuminate\Routing\Middleware\SubstituteBindings::class,
+                'lang'
+            ], static::$jaxMiddlewares))->name('jax.executor');
+
+        LConfigs::add('jax', $jax_route);
     }
 
     /**
@@ -76,19 +94,6 @@ class ServiceProvider extends ServiceProviderIlluminate
     {
         $this->registerRouteMiddleware();
         $this->commands($this->commands);
-
-        $jax_route = md5(config('app.url'));
-        Route::post($jax_route, '\Lar\LJS\JaxController@index')
-            ->middleware([
-                \App\Http\Middleware\EncryptCookies::class,
-                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-                \Illuminate\Session\Middleware\StartSession::class,
-                \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-                \Illuminate\Routing\Middleware\SubstituteBindings::class,
-                'lang'
-            ])->name('jax.executor');
-
-        LConfigs::add('jax', $jax_route);
 
         JaxController::$list = array_merge(JaxController::$list, Arr::dot(config('executors', [])));
     }

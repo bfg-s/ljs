@@ -45,7 +45,7 @@ class ServiceProvider extends ServiceProviderIlluminate
     /**
      * @var array
      */
-    protected static array $jaxMiddlewares = [];
+    public static array $jaxMiddlewares = [];
 
     /**
      * Bootstrap services.

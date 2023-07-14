@@ -11,9 +11,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Lar\Layout\Core\LConfigs;
 use ReflectionException;
-use Str;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -187,7 +187,7 @@ class JaxController
             array_map(
                 'ucfirst',
                 array_map(
-                    'Str::camel',
+                    '\Illuminate\Support\Str::camel',
                     explode(
                         '.', $executor
                     )
